@@ -1,0 +1,31 @@
+name: Tests
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      # TeX + poppler so the render tests run instead of skipping;
+      # texlive-pictures carries circuitikz, texlive-latex-extra the
+      # standalone class.
+      - name: Install TeX toolchain
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y --no-install-recommends \
+            texlive texlive-pictures texlive-latex-extra poppler-utils
+
+      - name: Install package
+        run: pip install -e ".[mcp]"
+
+      - name: Run tests
+        run: python -m unittest discover -s tests -p 'test_*.py' -v
