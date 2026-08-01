@@ -57,13 +57,19 @@ without an image only make sense composed into a larger figure.
 
 `\bootGndL{...}{...}`
 
+<img src="libraries/bootGndL.svg" alt="bootGndL">
+
 ### bootGndR
 
 `\bootGndR{...}{...}`
 
+<img src="libraries/bootGndR.svg" alt="bootGndR">
+
 ### bootGndD
 
 `\bootGndD{...}{...}`
+
+<img src="libraries/bootGndD.svg" alt="bootGndD">
 
 ### bootPort
 
@@ -104,6 +110,8 @@ without an image only make sense composed into a larger figure.
 ### constsymbol
 
 `\constsymbol{...}{...}`
+
+<img src="libraries/constsymbol.svg" alt="constsymbol">
 
 ### constcircle
 
@@ -173,17 +181,25 @@ Constants: `\esdVdd` = 5.8, `\esdPin` = 3.4, `\esdRight` = 9.8, `\esdLow` = 1.7,
 
 `\esdDiode{...}{...}{...}{...}{...}`
 
+<img src="libraries/esdDiode.svg" alt="esdDiode">
+
 ### esdggn
 
 `\esdggn{...}{...}{...}{...}{...}{...}`
+
+<img src="libraries/esdggn.svg" alt="esdggn">
 
 ### esdZapIn
 
 `\esdZapIn{...}`
 
+<img src="libraries/esdZapIn.svg" alt="esdZapIn">
+
 ### esdZapOut
 
 `\esdZapOut{...}`
+
+<img src="libraries/esdZapOut.svg" alt="esdZapOut">
 
 
 ## gmc — gm-C filter blocks
@@ -230,9 +246,13 @@ Constants: `\gmcW` = 1.5, `\gmcHi` = 1.5, `\gmcHo` = 0.8
 
 `\gmcVcap{...}{...}{...}`
 
+<img src="libraries/gmcVcap.svg" alt="gmcVcap">
+
 ### gmcHcap
 
 `\gmcHcap{...}{...}{...}`
+
+<img src="libraries/gmcHcap.svg" alt="gmcHcap">
 
 ### gmcDiffFrame
 
@@ -257,6 +277,8 @@ Constants: `\gmcW` = 1.5, `\gmcHi` = 1.5, `\gmcHo` = 0.8
 ### fetblock
 
 `\fetblock{...}{...}`
+
+<img src="libraries/fetblock.svg" alt="fetblock">
 
 ### fetterminal
 
@@ -342,6 +364,8 @@ Constants: `\planeR` = 1.8, `\planeXmax` = 3.1, `\planeYmax` = 2.9, `\planeMark`
 
 `\planeCircle`
 
+<img src="libraries/planeCircle.svg" alt="planeCircle">
+
 ### planePole
 
 `\planePole{...}{...}{...}`
@@ -400,6 +424,8 @@ Constants: `\scYgnd` = 0, `\scYin` = 1.8, `\scXota` = 4.6, `\scXctwo` = 4.0, `\s
 
 `\scSwOpen{...}{...}`
 
+<img src="libraries/scSwOpen.svg" alt="scSwOpen">
+
 ### scSwClosed
 
 `\scSwClosed{...}{...}`
@@ -436,6 +462,8 @@ Constants: `\scYgnd` = 0, `\scYin` = 1.8, `\scXota` = 4.6, `\scXctwo` = 4.0, `\s
 
 `\scWaveEdge{...}{...}{...}{...}`
 
+<img src="libraries/scWaveEdge.svg" alt="scWaveEdge">
+
 ### scWaveFrame
 
 `\scWaveFrame{...}`
@@ -460,6 +488,8 @@ Constants: `\sfgR` = 0.25, `\sfgBw` = 1.0, `\sfgBh` = 0.65
 
 `\sfgSum{...}{...}`
 
+<img src="libraries/sfgSum.svg" alt="sfgSum">
+
 ### sfgBox
 
 `\sfgBox{...}{...}{...}`
@@ -470,9 +500,13 @@ Constants: `\sfgR` = 0.25, `\sfgBw` = 1.0, `\sfgBh` = 0.65
 
 `\sfgDot{...}{...}`
 
+<img src="libraries/sfgDot.svg" alt="sfgDot">
+
 ### sfgMix
 
 `\sfgMix{...}{...}`
+
+<img src="libraries/sfgMix.svg" alt="sfgMix">
 
 ### sfgAmp
 
@@ -487,6 +521,8 @@ Constants: `\sfgR` = 0.25, `\sfgBw` = 1.0, `\sfgBh` = 0.65
 ### sfgTall
 
 `\sfgTall{...}{...}{...}{...}{...}`
+
+<img src="libraries/sfgTall.svg" alt="sfgTall">
 
 
 ## spec — spectra sketches
@@ -511,6 +547,8 @@ Constants: `\specHalf` = 1.2, `\specXmax` = 3.5, `\specVh` = 1.9, `\specToneH` =
 
 `\specBump{...}`
 
+<img src="libraries/specBump.svg" alt="specBump">
+
 ### specTone
 
 `\specTone{...}{...}{...}`
@@ -518,6 +556,8 @@ Constants: `\specHalf` = 1.2, `\specXmax` = 3.5, `\specVh` = 1.9, `\specToneH` =
 ### specBand
 
 `\specBand{...}{...}{...}{...}`
+
+<img src="libraries/specBand.svg" alt="specBand">
 
 ### specBlock
 
@@ -528,4 +568,6 @@ Constants: `\specHalf` = 1.2, `\specXmax` = 3.5, `\specVh` = 1.9, `\specToneH` =
 ### specWire
 
 `\specWire{...}{...}{...}`
+
+<img src="libraries/specWire.svg" alt="specWire">
 

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="43.627pt" height="76.226pt" viewBox="0 0 43.627 76.226">
+<defs>
+<g>
+<g id="glyph-0-0">
+<path d="M 2.3125 -5.390625 L 0.890625 -4.65625 L 0.890625 -4.546875 C 0.984375 -4.59375 1.0625 -4.625 1.09375 -4.640625 C 1.25 -4.6875 1.375 -4.71875 1.453125 -4.71875 C 1.625 -4.71875 1.703125 -4.609375 1.703125 -4.34375 L 1.703125 -0.734375 C 1.703125 -0.484375 1.640625 -0.296875 1.5 -0.21875 C 1.390625 -0.15625 1.28125 -0.125 0.9375 -0.125 L 0.9375 0 L 3.140625 0 L 3.140625 -0.125 C 2.515625 -0.125 2.375 -0.203125 2.375 -0.59375 L 2.375 -5.375 Z M 2.3125 -5.390625 "/>
+</g>
+</g>
+<clipPath id="clip-0">
+<path clip-rule="nonzero" d="M 21 40 L 43.628906 40 L 43.628906 67 L 21 67 Z M 21 40 "/>
+</clipPath>
+<clipPath id="clip-1">
+<path clip-rule="nonzero" d="M 39 71 L 43.628906 71 L 43.628906 76.226562 L 39 76.226562 Z M 39 71 "/>
+</clipPath>
+<clipPath id="clip-2">
+<path clip-rule="nonzero" d="M 39 43 L 43.628906 43 L 43.628906 48 L 39 48 Z M 39 43 "/>
+</clipPath>
+</defs>
+<path fill="none" stroke-width="0.79701" stroke-linecap="butt" stroke-linejoin="miter" stroke="rgb(0%, 0%, 0%)" stroke-opacity="1" stroke-miterlimit="10" d="M 9.921 50.572656 L 9.921 35.986719 L -3.969625 35.986719 M -3.969625 20.705469 L 9.921 20.705469 L 9.921 6.119531 " transform="matrix(1, 0, 0, -1, 31.579, 74.1)"/>
+<path fill="none" stroke-width="1.59404" stroke-linecap="butt" stroke-linejoin="miter" stroke="rgb(0%, 0%, 0%)" stroke-opacity="1" stroke-miterlimit="10" d="M -3.969625 39.260156 L -3.969625 17.432031 M -7.301656 35.986719 L -7.301656 20.705469 " transform="matrix(1, 0, 0, -1, 31.579, 74.1)"/>
+<path fill-rule="nonzero" fill="rgb(0%, 0%, 0%)" fill-opacity="1" d="M 32.875 53.394531 L 32.875 55.378906 L 37.089844 53.394531 L 32.875 51.410156 Z M 32.875 53.394531 "/>
+<g clip-path="url(#clip-0)">
+<path fill="none" stroke-width="0.79701" stroke-linecap="butt" stroke-linejoin="miter" stroke="rgb(0%, 0%, 0%)" stroke-opacity="1" stroke-miterlimit="10" d="M 1.296 20.705469 L 1.296 18.721094 L 5.510844 20.705469 L 1.296 22.689844 Z M 1.296 20.705469 " transform="matrix(1, 0, 0, -1, 31.579, 74.1)"/>
+</g>
+<path fill="none" stroke-width="0.79701" stroke-linecap="butt" stroke-linejoin="miter" stroke="rgb(0%, 0%, 0%)" stroke-opacity="1" stroke-miterlimit="10" d="M -7.301656 28.346094 L -18.254781 28.346094 " transform="matrix(1, 0, 0, -1, 31.579, 74.1)"/>
+<path fill="none" stroke-width="0.79701" stroke-linecap="butt" stroke-linejoin="miter" stroke="rgb(0%, 0%, 0%)" stroke-opacity="1" stroke-miterlimit="10" d="M 9.921 50.174219 L 9.921 -0.0015625 " transform="matrix(1, 0, 0, -1, 31.579, 74.1)"/>
+<path fill="none" stroke-width="0.79701" stroke-linecap="butt" stroke-linejoin="miter" stroke="rgb(0%, 0%, 0%)" stroke-opacity="1" stroke-miterlimit="10" d="M 9.921 6.517969 L 9.921 28.346094 " transform="matrix(1, 0, 0, -1, 31.579, 74.1)"/>
+<g clip-path="url(#clip-1)">
+<path fill-rule="nonzero" fill="rgb(0%, 0%, 0%)" fill-opacity="1" d="M 43.625 74.101562 C 43.625 72.925781 42.675781 71.972656 41.5 71.972656 C 40.328125 71.972656 39.375 72.925781 39.375 74.101562 C 39.375 75.273438 40.328125 76.226562 41.5 76.226562 C 42.675781 76.226562 43.625 75.273438 43.625 74.101562 Z M 43.625 74.101562 "/>
+</g>
+<g clip-path="url(#clip-2)">
+<path fill-rule="nonzero" fill="rgb(0%, 0%, 0%)" fill-opacity="1" d="M 43.625 45.753906 C 43.625 44.578125 42.675781 43.628906 41.5 43.628906 C 40.328125 43.628906 39.375 44.578125 39.375 45.753906 C 39.375 46.925781 40.328125 47.878906 41.5 47.878906 C 42.675781 47.878906 43.625 46.925781 43.625 45.753906 Z M 43.625 45.753906 "/>
+</g>
+<path fill="none" stroke-width="0.79701" stroke-linecap="butt" stroke-linejoin="miter" stroke="rgb(0%, 0%, 0%)" stroke-opacity="1" stroke-miterlimit="10" d="M -17.856344 28.346094 L -28.348531 28.346094 " transform="matrix(1, 0, 0, -1, 31.579, 74.1)"/>
+<path fill="none" stroke-width="0.79701" stroke-linecap="butt" stroke-linejoin="miter" stroke="rgb(0%, 0%, 0%)" stroke-opacity="1" stroke-miterlimit="10" d="M -28.348531 28.346094 L -28.348531 70.865625 " transform="matrix(1, 0, 0, -1, 31.579, 74.1)"/>
+<path fill="none" stroke-width="0.79701" stroke-linecap="butt" stroke-linejoin="miter" stroke="rgb(0%, 0%, 0%)" stroke-opacity="1" stroke-miterlimit="10" d="M -28.348531 28.346094 L -28.348531 35.432031 M -28.348531 35.432031 L -28.348531 42.521875 L -26.930563 43.228906 M -26.930563 43.228906 L -25.512594 43.935937 L -28.348531 45.353906 M -28.348531 45.353906 L -31.180563 46.771875 L -28.348531 48.189844 M -28.348531 48.189844 L -25.512594 49.607812 L -28.348531 51.025781 M -28.348531 51.025781 L -31.180563 52.44375 L -28.348531 53.857812 M -28.348531 53.857812 L -25.512594 55.275781 L -28.348531 56.69375 M -28.348531 56.69375 L -31.180563 58.111719 L -29.762594 58.81875 M -29.762594 58.81875 L -28.344625 59.529687 L -28.344625 66.615625 M -28.344625 66.615625 L -28.344625 73.701562 " transform="matrix(1, 0, 0, -1, 31.579, 74.1)"/>
+<path fill-rule="nonzero" fill="rgb(0%, 0%, 0%)" fill-opacity="1" d="M 5.359375 45.753906 C 5.359375 44.578125 4.40625 43.628906 3.230469 43.628906 C 2.058594 43.628906 1.105469 44.578125 1.105469 45.753906 C 1.105469 46.925781 2.058594 47.878906 3.230469 47.878906 C 4.40625 47.878906 5.359375 46.925781 5.359375 45.753906 Z M 5.359375 45.753906 "/>
+<g fill="rgb(100%, 0%, 0%)" fill-opacity="1">
+<use xlink:href="#glyph-0-0" x="26.036" y="21.519"/>
+</g>
+</svg>

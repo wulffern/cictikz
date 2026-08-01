@@ -68,22 +68,44 @@ def constants_of(text: str) -> list[tuple[str, str]]:
     return re.findall(r"\\newcommand\{\\(\w+)\}\{(-?[\d.]+)\}", text)
 
 
-def guess_args(n: int) -> str:
-    """Positional macros in these libraries lead with coordinates and end
-    with labels; (0,0)-anchored numbers plus $x$ labels cover most."""
-    vals = ["0", "0", "1", "$x$", "$y$", "$z$", "$w$"][:n]
-    return "".join("{%s}" % v for v in vals)
+def _arg_candidates(n: int) -> list[str]:
+    """Argument guesses, tried in order. The libraries mix conventions:
+    coordinates, then sometimes labels; a few take a coordinate NAME
+    first (ports, switches) or are numeric throughout (anything doing
+    arithmetic on its arguments chokes on a $label$)."""
+    numeric = ["0", "0", "1", "1", "1", "1", "1"][:n]
+    labelled = ["0", "0", "1", "$x$", "$y$", "$z$", "$w$"][:n]
+    named = ["a"] + numeric[:-1] if n else []
+    out = []
+    for vals in (labelled, numeric, named):
+        args = "".join("{%s}" % v for v in vals)
+        if args not in out:
+            out.append(args)
+    return out
+
+
+_EMPTY_FLOOR = None
+
+
+def _empty_size() -> int:
+    """Size of a render that draws nothing, so 'compiled but empty'
+    specimens are told apart from genuinely small symbols."""
+    global _EMPTY_FLOOR
+    if _EMPTY_FLOOR is None:
+        res = r.render_tex(r.wrap_body("\\draw (0,0) ++(0,0);"))
+        _EMPTY_FLOOR = res.pdf_path.stat().st_size if res.ok else 950
+    return _EMPTY_FLOOR
 
 
 def try_render(name: str, nargs: int):
-    args = guess_args(nargs)
-    for body in (
-        f"\\draw (0,0) \\{name}{args};",  # path-fragment style
-        f"\\{name}{args}",  # absolute \draw-internal style
-    ):
-        result = r.render_tex(r.wrap_body(body))
-        if result.ok and result.pdf_path.stat().st_size > 1800:
-            return result.pdf_path
+    for args in _arg_candidates(nargs):
+        for body in (
+            f"\\draw (0,0) \\{name}{args};",  # path-fragment style
+            f"\\{name}{args}",  # absolute \draw-internal style
+        ):
+            result = r.render_tex(r.wrap_body(body))
+            if result.ok and result.pdf_path.stat().st_size > _empty_size() + 40:
+                return result.pdf_path
     return None
 
 
