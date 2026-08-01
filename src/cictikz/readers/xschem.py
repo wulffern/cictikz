@@ -98,8 +98,43 @@ def _pick_variant(cands: list[tuple[str, dict]], rot: int, flip: int):
     return (*cands[0], False)
 
 
-def read_sch(source: str | Path, registry: SymbolRegistry | None = None) -> Schematic:
-    """Parse .sch text (or a path to it) into a Schematic."""
+def read_sym_geometry(path: Path) -> dict:
+    """Bounding box and pin positions of a .sym file, in raw xschem units
+    (y down, untransformed): {"bbox": [x1,y1,x2,y2], "pins": {name: [x,y]}}."""
+    xs, ys = [], []
+    pins = {}
+    for tag, fields in _tokens(path.read_text()):
+        if tag == "B" and fields[0][1] == "5":
+            x1, y1, x2, y2 = (float(f[1]) for f in fields[1:5])
+            props = _props(fields[5][1]) if len(fields) > 5 else {}
+            pins[props.get("name", f"p{len(pins)}")] = [(x1 + x2) / 2, (y1 + y2) / 2]
+        elif tag in ("L", "B"):
+            xs += [float(fields[1][1]), float(fields[3][1])]
+            ys += [float(fields[2][1]), float(fields[4][1])]
+        elif tag == "P" and len(fields) >= 2:
+            n = int(fields[1][1])
+            coords = [float(f[1]) for f in fields[2 : 2 + 2 * n]]
+            xs += coords[0::2]
+            ys += coords[1::2]
+    if not xs:
+        xs, ys = [-20, 20], [-20, 20]
+    return {"bbox": [min(xs), min(ys), max(xs), max(ys)], "pins": pins}
+
+
+def read_sch(
+    source: str | Path,
+    registry: SymbolRegistry | None = None,
+    sym_dirs: list[Path] | None = None,
+    keep_labels: bool = False,
+) -> Schematic:
+    """Parse .sch text (or a path to it) into a Schematic.
+
+    sym_dirs: directories to resolve foreign .sym references against; a
+    resolved symbol keeps its real bounding box and pin positions, so
+    the TikZ writer reproduces the original placement instead of a
+    generic box. keep_labels: emit lab_pin markers as visible Labels
+    (positional conversions want the net names where the author put
+    them)."""
     registry = registry or SymbolRegistry.load()
     path = Path(source) if not str(source).lstrip().startswith("v {") else None
     text = path.read_text() if path else str(source)
@@ -123,6 +158,11 @@ def read_sch(source: str | Path, registry: SymbolRegistry | None = None) -> Sche
             fx, fy = x / SCALE, -y / SCALE
             if sym == "devices/lab_pin.sym" or sym == "devices/lab_wire.sym":
                 labels_at.append((x, y, props.get("lab", "")))
+                if keep_labels:
+                    # above the wire point, like xschem draws it
+                    sch.add(Label(props.get("lab", ""), pos=(fx, fy), anchor="south"))
+            elif sym.startswith("cborder/") or sym.endswith("/title.sym"):
+                pass  # sheet frame furniture, not circuit
             elif sym in PORT_DIRECTION:
                 sch.add(Port(props.get("lab", ""), pos=(fx, fy),
                              direction=PORT_DIRECTION[sym]))
@@ -139,9 +179,15 @@ def read_sch(source: str | Path, registry: SymbolRegistry | None = None) -> Sche
                 sch.add(inst)
                 inst_meta[inst.name] = {**meta, "xy": (x, y), "rot": rot, "flip": flip}
             else:
+                geom = None
+                for d in sym_dirs or []:
+                    cand = Path(d).expanduser() / sym
+                    if cand.exists():
+                        geom = read_sym_geometry(cand)
+                        break
                 sch.add(Instance(props.get("name", f"X{len(sch.instances) + 1}"),
                                  f"unknown:{sym}", pos=(fx, fy), rot=rot,
-                                 flip=bool(flip)))
+                                 flip=bool(flip), geom=geom))
         elif tag == "N":
             x1, y1, x2, y2 = (float(f[1]) for f in fields[:4])
             props = _props(fields[4][1]) if len(fields) > 4 else {}

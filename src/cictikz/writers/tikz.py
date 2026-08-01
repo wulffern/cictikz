@@ -33,15 +33,18 @@ def write_tikz(sch: Schematic, registry: SymbolRegistry | None = None) -> str:
 
     for inst in sch.instances:
         if inst.symbol.startswith("unknown:"):
-            # Foreign xschem symbol with no TikZ mapping: a labelled box
-            # keeps the schematic readable and the instance visible.
-            x, y = inst.pos
-            out.append(
-                f"\\draw {_pt((x - 0.6, y - 0.4))} rectangle {_pt((x + 0.6, y + 0.4))};"
-            )
             short = inst.symbol.removeprefix("unknown:").rsplit("/", 1)[-1].removesuffix(".sym")
-            label = f"{inst.name}: {short}".replace("_", "\\_")
-            out.append(f"\\node[anchor=center] at {_pt(inst.pos)} {{{label}}};")
+            if inst.geom:
+                out += _geom_box(inst, short)
+            else:
+                # No .sym geometry available: a generic labelled box keeps
+                # the schematic readable and the instance visible.
+                x, y = inst.pos
+                out.append(
+                    f"\\draw {_pt((x - 0.6, y - 0.4))} rectangle {_pt((x + 0.6, y + 0.4))};"
+                )
+                label = f"{inst.name}: {short}".replace("_", "\\_")
+                out.append(f"\\node[anchor=center] at {_pt(inst.pos)} {{{label}}};")
             continue
         sym = registry.get(inst.symbol)
         if inst.flip and sym.mirror:
@@ -75,15 +78,54 @@ def write_tikz(sch: Schematic, registry: SymbolRegistry | None = None) -> str:
     for port in sch.ports:
         if _drawn_by_macro(port, sch, registry):
             continue  # e.g. the lvnmos gate label already draws this port
-        out.append(f"\\draw {_pt(port.pos)} {PORT_MACRO[port.direction]}{{{port.net}}};")
+        net = port.net if "$" in port.net else port.net.replace("_", "\\_")
+        out.append(f"\\draw {_pt(port.pos)} {PORT_MACRO[port.direction]}{{{net}}};")
 
     for lab in sch.labels:
-        out.append(f"\\node[anchor={lab.anchor}] at {_pt(lab.pos)} {{{lab.text}}};")
+        text = lab.text if "$" in lab.text else lab.text.replace("_", "\\_")
+        out.append(f"\\node[anchor={lab.anchor}] at {_pt(lab.pos)} {{{text}}};")
 
     for dot in _junctions(sch, registry):
         out.append(f"\\fill {_pt(dot)} circle (0.075);")
 
     return "\n".join(out) + "\n"
+
+
+def _geom_box(inst, short: str) -> list[str]:
+    """A foreign block drawn at its true size with pins where its .sym
+    puts them - this is what preserves an authored floorplan."""
+    from .xschem import SCALE, transform
+
+    flip = 1 if inst.flip else 0
+
+    def to_fig(px, py):
+        tx, ty = transform(px, py, inst.rot, flip)
+        return (inst.pos[0] + tx / SCALE, inst.pos[1] - ty / SCALE)
+
+    bx1, by1, bx2, by2 = inst.geom["bbox"]
+    (cx1, cy1), (cx2, cy2) = to_fig(bx1, by1), to_fig(bx2, by2)
+    lo = (min(cx1, cx2), min(cy1, cy2))
+    hi = (max(cx1, cx2), max(cy1, cy2))
+    out = [f"\\draw {_pt(lo)} rectangle {_pt(hi)};"]
+    name = short.replace("_", "\\_")
+    cx, cy = (lo[0] + hi[0]) / 2, (lo[1] + hi[1]) / 2
+    # name below the box, as xschem prints it - centering collides with
+    # pin text in small blocks
+    out.append(f"\\node[anchor=north west] at {_pt((lo[0], lo[1]))} {{{name}}};")
+    for pname, (px, py) in inst.geom["pins"].items():
+        fx, fy = to_fig(px, py)
+        # pin text sits just inside the edge the pin is on; top/bottom
+        # pins get rotated text (xschem-style) so neighbours don't collide
+        dx, dy = fx - cx, fy - cy
+        if abs(dx) * (hi[1] - lo[1]) >= abs(dy) * (hi[0] - lo[0]):
+            opts = "anchor=west" if dx < 0 else "anchor=east"
+        else:
+            opts = "anchor=west, rotate=90" if dy < 0 else "anchor=east, rotate=90"
+        label = pname.replace("_", "\\_")
+        out.append(
+            f"\\node[{opts}] at {_pt((fx, fy))} {{\\scriptsize {label}}};"
+        )
+    return out
 
 
 def _drawn_by_macro(port, sch: Schematic, registry: SymbolRegistry) -> bool:

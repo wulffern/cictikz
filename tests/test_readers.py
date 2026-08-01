@@ -150,3 +150,31 @@ class TestXschemReader(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestSymGeometry(unittest.TestCase):
+    def test_geometry_box_preserves_placement(self):
+        import tempfile
+        from pathlib import Path
+
+        d = Path(tempfile.mkdtemp())
+        (d / "lib").mkdir()
+        (d / "lib" / "blk.sym").write_text(
+            "v {xschem version=3.0.0 file_version=1.2 }\n"
+            "L 4 -60 -40 60 -40 {}\nL 4 -60 40 60 40 {}\n"
+            "B 5 -62.5 -2.5 -57.5 2.5 {name=IN dir=in}\n"
+            "B 5 57.5 -2.5 62.5 2.5 {name=OUT dir=out}\n"
+        )
+        sch = read_sch(
+            "v {xschem version=3.0.0 file_version=1.2 }\n"
+            "C {lib/blk.sym} 400 -200 0 0 {name=X1}\n",
+            REG, sym_dirs=[d],
+        )
+        inst = sch.instances[0]
+        self.assertEqual(inst.geom["bbox"], [-60, -40, 60, 40])
+        self.assertEqual(inst.geom["pins"]["IN"], [-60.0, 0.0])
+        out = write_tikz(sch, REG)
+        # box corners at (pos +- bbox)/SCALE: (400-60)/40=8.5 ... y 5-1=4
+        self.assertIn(r"\draw (8.5,4) rectangle (11.5,6);", out)
+        self.assertIn("IN", out)
+        self.assertIn("blk", out)

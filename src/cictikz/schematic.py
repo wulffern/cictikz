@@ -22,6 +22,10 @@ class Instance:
     rot: int = 0  # quarter turns CCW (xschem backend only; TikZ macros do not rotate)
     flip: bool = False
     conns: dict[str, str] = field(default_factory=dict)  # pin name -> net name
+    # For unknown:* symbols whose .sym file was resolved: raw xschem-unit
+    # geometry {"bbox": [x1,y1,x2,y2], "pins": {name: [x,y]}}, so writers
+    # can draw a true-sized box with pins where the original put them.
+    geom: dict | None = None
 
 
 @dataclass
