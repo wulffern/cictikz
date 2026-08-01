@@ -300,9 +300,9 @@ def _read_path(kind, body, sch, coords, counter, registry, line, text, offset):
                 iname = args[0] if sym.nargs and args and args[0] else f"X{counter['inst']}"
                 sch.add(Instance(iname, sym.name, pos=cursor, args=args))
                 for p in sym.pins:
-                    coords[f"{iname}.{p.name}"] = (
-                        cursor[0] + p.grid_xy[0], cursor[1] + p.grid_xy[1],
-                    )
+                    pt = (cursor[0] + p.grid_xy[0], cursor[1] + p.grid_xy[1])
+                    coords[f"{iname}.{p.name}"] = pt  # circuitikz anchor style
+                    coords[f"{iname}_{p.name}"] = pt  # gate coordinate style
                 for cname, (ex, ey) in (sym.exports or {}).items():
                     coords[cname] = (round(cursor[0] + ex, 6), round(cursor[1] + ey, 6))
                 # macro arguments that label a port (the lvnmos gate label)

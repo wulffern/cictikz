@@ -71,7 +71,11 @@ without a dot are **not** connected — never draw a hop.
 
 Resistors are always the hand-rolled zig-zag (`\vresistor` /
 `\hresistor`). Never draw circuitikz's own `to [resistor]` or `to [R]`
-bipole: it is visibly larger and the two styles must not mix.
+bipole: it is visibly larger and the two styles must not mix. The same
+goes for every circuitikz bipole with a house alternative (capacitors,
+impedances, sources) — reach for the library macro first. Logic gates
+are the hand-rolled `\cicNand`, `\cicNor`, `\cicAnd`, `\cicOr`,
+`\cicInv`, `\cicBuf`, not the squat circuitikz port shapes.
 
 The preamble does **not** load the TikZ `calc` library, so
 `($(a)+(1,0)$)` fails — use named `\coordinate`s and `|-` / `-|`
