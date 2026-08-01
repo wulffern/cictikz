@@ -19,9 +19,12 @@ number — rather than guessing. In dialect:
   anchors). Arrowed or dashed strokes are treated as *annotation* and
   never become wires, per the house style.
 
-Out of dialect, deliberately: raw circuitikz bipoles (`to[R]`,
-`to[cI]`), component node shapes (`node[pnp]`), the TikZ `calc`
-library, pgfplots, and figure-local multi-argument macros.
+Element bipoles the library has no macro for — `to[I]`, `to[cI]`,
+`to[V]`, `to[L]` and friends — are accepted and round-trip verbatim as
+`bipole:` instances. Out of dialect, deliberately: bipoles that *do*
+have a house macro (`to[R]`, `to[C]`, `to[D]` — use the macros),
+component node shapes (`node[pnp]`), the TikZ `calc` library, pgfplots,
+and figure-local multi-argument macros.
 
 ## The IR
 
