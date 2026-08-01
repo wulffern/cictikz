@@ -55,11 +55,21 @@ class TestTikzWriter(unittest.TestCase):
         with self.assertRaises(ValueError):
             write_tikz(sch)
 
-    def test_rot_rejected(self):
+    def test_flip_uses_mirror_variant(self):
         sch = Schematic("t")
-        sch.add(Instance("M1", "vnmos", rot=1))
+        sch.add(Instance("M1", "vnmos", flip=True))
+        self.assertIn(r"\vmnmos{M1}", write_tikz(sch))
+
+    def test_flip_without_mirror_rejected(self):
+        sch = Schematic("t")
+        sch.add(Instance("G1", "vground", flip=True))
         with self.assertRaises(ValueError):
             write_tikz(sch)
+
+    def test_rot_noted_not_rejected(self):
+        sch = Schematic("t")
+        sch.add(Instance("M1", "vnmos", rot=1))
+        self.assertIn("rot=1", write_tikz(sch))
 
     @unittest.skipUnless(shutil.which("pdflatex"), "pdflatex not on PATH")
     def test_output_compiles(self):
@@ -80,10 +90,15 @@ class TestXschemWriter(unittest.TestCase):
             self.assertIn(record, self.out)
 
     def test_instances_and_labels(self):
-        self.assertIn("C {sky130_fd_pr/nfet_01v8.sym} 0 0 0 0 {name=M1}", self.out)
-        # drain at (0, 1.6) -> (0, -64): lab_pin carries the net there
-        self.assertIn("C {devices/lab_pin.sym} 0 -60 0 0", self.out)  # snapped to 10
-        self.assertIn("lab=vo", self.out)
+        # instance sits at pos + origin (mid-channel), carries params
+        self.assertIn(
+            "C {sky130_fd_pr/nfet_01v8.sym} 0 -30 0 0 {name=M1 L=0.15 W=1 nf=1 m=1}",
+            self.out,
+        )
+        # lab_pins land exactly on the verified pin boxes:
+        self.assertIn("C {devices/lab_pin.sym} 20 -60 0 0 {name=l3 lab=vo}", self.out)  # drain
+        self.assertIn("C {devices/lab_pin.sym} -20 -30 0 0 {name=l2 lab=vi}", self.out)  # gate
+        self.assertIn("C {devices/res.sym} 0 -100 0 0 {name=R1 value=1k}", self.out)
         self.assertIn("C {devices/opin.sym} 30 -60 0 0 {name=p1 lab=vo}", self.out)
 
     def test_named_wire_becomes_net_record(self):

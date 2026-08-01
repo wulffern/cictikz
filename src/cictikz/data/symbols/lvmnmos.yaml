@@ -44,11 +44,47 @@ exports:
   cicmos:
   - 0
   - 1.6
+arg_ports:
+  '2': gate
+mirror: lvnmos
 xschem:
   sym: sky130_fd_pr/nfet_01v8.sym
-  pin_map:
-    drain: D
-    gate: G
-    source: S
-  scale: 40
+  origin:
+  - 0
+  - 0.8
+  pin_xy:
+    drain:
+    - 20
+    - -30
+    gate:
+    - -20
+    - 0
+    source:
+    - 20
+    - 30
+  flip: 1
+  params: L=0.15 W=1 nf=1 m=1
+  aliases:
+    JNW_TR_SKY130A/JNWTR_NCHDL.sym:
+      pin_xy:
+        drain:
+        - 40
+        - -30
+        gate:
+        - 0
+        - 0
+        source:
+        - 40
+        - 30
+    SUN_TR_SKY130NM/SUNTR_NCHDL.sym:
+      pin_xy:
+        drain:
+        - 40
+        - -30
+        gate:
+        - 0
+        - 0
+        source:
+        - 40
+        - 30
 example: \draw (0,0) \vground \lvmnmos{M1}{$v_i$};

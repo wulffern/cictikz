@@ -44,6 +44,16 @@ def sym_path(sym: SymbolDef) -> str:
     return f"cictikz/{sym.name}.sym"
 
 
+def transform(x: float, y: float, rot: int, flip: int) -> tuple[float, float]:
+    """xschem instance transform on a pin offset: flip mirrors x, then
+    each rot step maps (x,y) -> (-y,x). Verified against the netlister."""
+    if flip:
+        x = -x
+    for _ in range(rot % 4):
+        x, y = -y, x
+    return x, y
+
+
 def write_sch(sch: Schematic, registry: SymbolRegistry | None = None) -> str:
     registry = registry or SymbolRegistry.load()
     out = [HEADER]
@@ -59,26 +69,47 @@ def write_sch(sch: Schematic, registry: SymbolRegistry | None = None) -> str:
             out.append(f"C {{{path}}} {x} {y} {rot} {flip} {{name={inst.name}}}")
             continue
         sym = registry.get(inst.symbol)
-        out.append(f"C {{{sym_path(sym)}}} {x} {y} {rot} {flip} {{name={inst.name}}}")
+        meta = sym.xschem or {}
+        rot = (rot + meta.get("rot", 0)) % 4
+        flip = flip ^ int(meta.get("flip", 0))
+        ox, oy = meta.get("origin", (0, 0))
+        x, y = _xy((inst.pos[0] + ox, inst.pos[1] + oy))
+        props = f"name={inst.name}"
+        if meta.get("params"):
+            props += " " + meta["params"]
+        out.append(f"C {{{sym_path(sym)}}} {x} {y} {rot} {flip} {{{props}}}")
+        if meta.get("net"):
+            continue  # a label-type symbol (gnd/vdd) IS the net label
         pins = {p.name: p for p in sym.pins}
+        pin_xy = meta.get("pin_xy", {})
         for pin, net in inst.conns.items():
             if pin not in pins:
                 raise ValueError(
                     f"{inst.name}: symbol '{sym.name}' has no pin '{pin}' "
                     f"(pins: {', '.join(pins)})"
                 )
-            px, py = _xy(
-                (inst.pos[0] + pins[pin].grid_xy[0], inst.pos[1] + pins[pin].grid_xy[1])
-            )
+            if pin in pin_xy:
+                # verified symbol geometry: land exactly on the pin box
+                dx, dy = transform(*pin_xy[pin], rot, flip)
+                px, py = int(x + dx), int(y + dy)
+            else:
+                px, py = _xy(
+                    (inst.pos[0] + pins[pin].grid_xy[0], inst.pos[1] + pins[pin].grid_xy[1])
+                )
             nlab += 1
             out.append(
                 f"C {{devices/lab_pin.sym}} {px} {py} 0 0 {{name=l{nlab} lab={net}}}"
             )
 
-    for i, port in enumerate(sch.ports, start=1):
+    seen_ports = set()
+    for port in sch.ports:
+        if port.net in seen_ports:
+            continue  # one ipin/opin per net, however many pins carry the label
+        seen_ports.add(port.net)
         x, y = _xy(port.pos)
         out.append(
-            f"C {{{PORT_SYM[port.direction]}}} {x} {y} 0 0 {{name=p{i} lab={port.net}}}"
+            f"C {{{PORT_SYM[port.direction]}}} {x} {y} 0 0 "
+            f"{{name=p{len(seen_ports)} lab={port.net}}}"
         )
 
     for wire in sch.wires:

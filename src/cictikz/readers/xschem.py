@@ -15,7 +15,7 @@ from pathlib import Path
 
 from ..schematic import Instance, Label, Port, Schematic, Wire
 from ..symbols import SymbolRegistry
-from ..writers.xschem import SCALE, sym_path
+from ..writers.xschem import SCALE, sym_path, transform
 
 PIN_SNAP = 12 / SCALE  # one xschem grid-snap of slack when attaching labels
 
@@ -71,16 +71,31 @@ def _props(raw: str) -> dict[str, str]:
     return dict(re.findall(r"(\w+)=(\S+)", raw))
 
 
-def _reverse_map(registry: SymbolRegistry) -> dict[str, str]:
-    """xschem sym path -> canonical registry symbol. Several macros share
-    one .sym (vnmos/vmnmos/lvnmos...); the shortest name wins so a plain
-    nfet comes back as vnmos, not lvmnmos."""
-    table: dict[str, str] = {}
+def _reverse_map(registry: SymbolRegistry) -> dict[str, list[tuple[str, dict]]]:
+    """xschem sym path -> [(registry symbol, effective xschem meta)].
+    Primary paths and aliases both resolve; several macros share one .sym
+    (vnmos/vmnmos/lvnmos...), so candidates are kept sorted with the
+    shortest name first and disambiguated by rot/flip at the call site."""
+    table: dict[str, list[tuple[str, dict]]] = {}
     for name in registry.names():
-        path = sym_path(registry.get(name))
-        if path not in table or (len(name), name) < (len(table[path]), table[path]):
-            table[path] = name
+        sym = registry.get(name)
+        meta = dict(sym.xschem or {})
+        aliases = meta.pop("aliases", {}) or {}
+        table.setdefault(sym_path(sym), []).append((name, meta))
+        for path, overrides in aliases.items():
+            table.setdefault(path, []).append((name, {**meta, **(overrides or {})}))
+    for cands in table.values():
+        cands.sort(key=lambda c: (len(c[0]), c[0]))
     return table
+
+
+def _pick_variant(cands: list[tuple[str, dict]], rot: int, flip: int):
+    """Prefer the variant whose baked-in rot/flip matches the instance
+    (vmnmos for a flipped nfet, hresistor for a rot-1 res)."""
+    for name, meta in cands:
+        if meta.get("rot", 0) == rot and meta.get("flip", 0) == flip:
+            return name, meta, True
+    return (*cands[0], False)
 
 
 def read_sch(source: str | Path, registry: SymbolRegistry | None = None) -> Schematic:
@@ -92,7 +107,8 @@ def read_sch(source: str | Path, registry: SymbolRegistry | None = None) -> Sche
 
     sch = Schematic(name)
     rev = _reverse_map(registry)
-    labels_at: list[tuple[float, float, str]] = []  # lab_pin positions, figure units
+    labels_at: list[tuple[float, float, str]] = []  # lab_pin positions, xschem units
+    inst_meta: dict[str, dict] = {}  # instance -> effective xschem meta + placement
 
     for tag, fields in _tokens(text):
         if tag == "C":
@@ -106,13 +122,22 @@ def read_sch(source: str | Path, registry: SymbolRegistry | None = None) -> Sche
             )
             fx, fy = x / SCALE, -y / SCALE
             if sym == "devices/lab_pin.sym" or sym == "devices/lab_wire.sym":
-                labels_at.append((fx, fy, props.get("lab", "")))
+                labels_at.append((x, y, props.get("lab", "")))
             elif sym in PORT_DIRECTION:
                 sch.add(Port(props.get("lab", ""), pos=(fx, fy),
                              direction=PORT_DIRECTION[sym]))
             elif sym in rev:
-                sch.add(Instance(props.get("name", f"X{len(sch.instances) + 1}"),
-                                 rev[sym], pos=(fx, fy), rot=rot, flip=bool(flip)))
+                name_, meta, matched = _pick_variant(rev[sym], rot, flip)
+                ox, oy = meta.get("origin", (0, 0))
+                inst = Instance(
+                    props.get("name", f"X{len(sch.instances) + 1}"), name_,
+                    pos=(round(fx - ox, 6), round(fy - oy, 6)),
+                    # a matched variant absorbs the instance transform
+                    rot=0 if matched else rot,
+                    flip=False if matched else bool(flip),
+                )
+                sch.add(inst)
+                inst_meta[inst.name] = {**meta, "xy": (x, y), "rot": rot, "flip": flip}
             else:
                 sch.add(Instance(props.get("name", f"X{len(sch.instances) + 1}"),
                                  f"unknown:{sym}", pos=(fx, fy), rot=rot,
@@ -128,22 +153,49 @@ def read_sch(source: str | Path, registry: SymbolRegistry | None = None) -> Sche
                 sch.add(Label(text_, pos=(x / SCALE, -y / SCALE)))
         # v/G/K/V/S/E/B/L/P records carry no schematic content we keep.
 
-    _attach_labels(sch, labels_at, registry)
+    _attach_labels(sch, labels_at, inst_meta, registry)
     return sch
 
 
-def _attach_labels(sch, labels_at, registry):
+def _xschem_pin_points(sch, inst_meta, registry):
+    """(instance, pin) -> xschem-space position, using verified pin_xy
+    geometry where available and TikZ grid geometry as the fallback."""
+    points = {}
+    for inst in sch.instances:
+        if inst.symbol.startswith("unknown:"):
+            continue
+        sym = registry.get(inst.symbol)
+        meta = inst_meta.get(inst.name, {})
+        pin_xy = meta.get("pin_xy", {})
+        for p in sym.pins:
+            if p.name in pin_xy:
+                x0, y0 = meta["xy"]
+                dx, dy = transform(
+                    *pin_xy[p.name], meta.get("rot", 0), meta.get("flip", 0)
+                )
+                points[(inst.name, p.name)] = (x0 + dx, y0 + dy)
+            else:
+                points[(inst.name, p.name)] = (
+                    (inst.pos[0] + p.grid_xy[0]) * SCALE,
+                    -(inst.pos[1] + p.grid_xy[1]) * SCALE,
+                )
+    return points
+
+
+def _attach_labels(sch, labels_at, inst_meta, registry):
     """Turn lab_pin markers into conns on the nearest coincident pin and
-    net names on coincident wire endpoints."""
-    points = sch.pin_points(registry)
+    net names on coincident wire endpoints. Comparison happens in xschem
+    units with one grid-snap of slack."""
+    snap = PIN_SNAP * SCALE
+    points = _xschem_pin_points(sch, inst_meta, registry)
     for lx, ly, net in labels_at:
         for (iname, pname), (px, py) in points.items():
-            if abs(px - lx) <= PIN_SNAP and abs(py - ly) <= PIN_SNAP:
+            if abs(px - lx) <= snap and abs(py - ly) <= snap:
                 inst = next(i for i in sch.instances if i.name == iname)
                 inst.conns.setdefault(pname, net)
         for wire in sch.wires:
             if wire.net:
                 continue
             for wx, wy in (wire.points[0], wire.points[-1]):
-                if abs(wx - lx) <= PIN_SNAP and abs(wy - ly) <= PIN_SNAP:
+                if abs(wx * SCALE - lx) <= snap and abs(-wy * SCALE - ly) <= snap:
                     wire.net = net

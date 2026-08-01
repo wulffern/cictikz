@@ -26,29 +26,57 @@ def mos(name, macro, nargs, kind, mirror, labeled):
     arg_doc = ["instance name (becomes circuitikz node, e.g. M1)"]
     if labeled:
         arg_doc.append("gate port label, e.g. $v_i$ (empty {} suppresses the port)")
-    ex_name = "M1"
-    ex = (f"\\draw (0,0) \\vground \\{name}{{{ex_name}}}"
+    ex = (f"\\draw (0,0) \\vground \\{name}{{M1}}"
           + ("{$v_i$}" if labeled else "") + ";")
+    # Drawn upward, an nmos enters at the source, a pmos at the drain
+    # (measured from the circuitikz anchors).
+    top, bot = ("drain", "source") if kind == "nmos" else ("source", "drain")
+    # xschem pin offsets measured from the installed .sym files; nfet has
+    # D up (y = -30), pfet has S up. Wrapper aliases carry their own maps.
+    if kind == "nmos":
+        pin_xy = {"drain": [20, -30], "gate": [-20, 0], "source": [20, 30]}
+        sym = "sky130_fd_pr/nfet_01v8.sym"
+        aliases = {
+            "JNW_TR_SKY130A/JNWTR_NCHDL.sym":
+                {"pin_xy": {"drain": [40, -30], "gate": [0, 0], "source": [40, 30]}},
+            "SUN_TR_SKY130NM/SUNTR_NCHDL.sym":
+                {"pin_xy": {"drain": [40, -30], "gate": [0, 0], "source": [40, 30]}},
+        }
+    else:
+        pin_xy = {"source": [20, -30], "gate": [-20, 0], "drain": [20, 30]}
+        sym = "sky130_fd_pr/pfet_01v8.sym"
+        aliases = {
+            "JNW_TR_SKY130A/JNWTR_PCHDL.sym":
+                {"pin_xy": {"source": [40, -30], "gate": [0, 0], "drain": [40, 30]}},
+            "SUN_TR_SKY130NM/SUNTR_PCHDL.sym":
+                {"pin_xy": {"source": [40, -30], "gate": [0, 0], "drain": [40, 30]}},
+        }
+    partner = {"vnmos": "vmnmos", "vmnmos": "vnmos", "vpmos": "vmpmos",
+               "vmpmos": "vpmos", "lvnmos": "lvmnmos", "lvmnmos": "lvnmos",
+               "lvpmos": "lvmpmos", "lvmpmos": "lvpmos"}[name]
     return {
         "name": name, "macro": "\\" + name, "nargs": nargs,
         "arg_doc": arg_doc,
-        "description": f"{kind.upper()} transistor, vertical, drain up"
+        "description": f"{kind.upper()} transistor, vertical, {top} up"
                        + (", gate on the right (mirrored)" if mirror else ", gate on the left")
                        + (", with optional gate input port" if labeled else "")
                        + "; gate pin is the end of the gate lead",
         "entry": [0, 0], "exit": [0, 1.6],
         "height_grid": 1.6, "width_grid": 1.1,
         "pins": [
-            {"name": "drain", "grid_xy": [0, 1.6], "direction": "inout"},
+            {"name": top, "grid_xy": [0, 1.6], "direction": "inout"},
             {"name": "gate", "grid_xy": [gx, 0.8], "direction": "in"},
-            {"name": "source", "grid_xy": [0, 0], "direction": "inout"},
+            {"name": bot, "grid_xy": [0, 0], "direction": "inout"},
         ],
         "nodes": ["<inst>.drain", "<inst>.gate", "<inst>.source", "<inst>.bulk"],
         "exports": ({"cicmos": [0, 1.6]} if labeled else {}),
+        "arg_ports": ({"2": "gate"} if labeled else {}),
+        "mirror": partner,
         "xschem": {
-            "sym": f"sky130_fd_pr/{'nfet' if kind=='nmos' else 'pfet'}_01v8.sym",
-            "pin_map": {"drain": "D", "gate": "G", "source": "S"},
-            "scale": 40,
+            "sym": sym, "origin": [0, 0.8], "pin_xy": pin_xy,
+            "flip": 1 if mirror else 0,
+            "params": "L=0.15 W=1 nf=1 m=1",
+            "aliases": aliases,
         },
         "example": ex,
     }
@@ -60,7 +88,7 @@ def twoterm(name, orient, desc, span=1.6, label=True, pinnames=("minus", "plus")
     horiz = orient == "h"
     end = [span, 0] if horiz else [0, span]
     end_name = next(v for k, v in END_COORD.items() if k in name)
-    return {
+    d = {
         "exports": {"cStart": [0, 0], end_name: end},
         "name": name, "macro": "\\" + name, "nargs": 1 if label else 0,
         "arg_doc": ["value label, e.g. $R_s$"] if label else [],
@@ -74,6 +102,40 @@ def twoterm(name, orient, desc, span=1.6, label=True, pinnames=("minus", "plus")
         "example": ("\\draw (0,0) \\%s{%s};" % (name, "$Z$")) if label
                    else "\\draw (0,0) \\%s;" % name,
     }
+    # Verified mappings: devices/res.sym has P up / M down at (0,-30)/(0,30),
+    # capa.sym p/m likewise; the horizontal variants use xschem rot=1
+    # (each rot step maps a pin (x,y) -> (-y,x), netlist-verified).
+    if "resistor" in name:
+        d["xschem"] = {
+            "sym": "devices/res.sym", "origin": [0.8, 0] if horiz else [0, 0.8],
+            "pin_xy": {"plus": [0, -30], "minus": [0, 30]},
+            "rot": 1 if horiz else 0, "params": "value=1k",
+            "aliases": {
+                "sky130_fd_pr/res_high_po.sym": {},
+                "JNW_TR_SKY130A/JNWTR_RPPO16.sym":
+                    {"rot": 0, "origin": [0, 0],
+                     "pin_xy": {"minus": [0, 0], "plus": [80, 0]}}
+                    if horiz else None,
+            },
+        }
+        if not horiz:
+            del d["xschem"]["aliases"]["JNW_TR_SKY130A/JNWTR_RPPO16.sym"]
+        else:
+            d["xschem"]["aliases"]["JNW_TR_SKY130A/JNWTR_RPPO16.sym"] = \
+                {"rot": 0, "origin": [0, 0],
+                 "pin_xy": {"minus": [0, 0], "plus": [80, 0]}}
+    elif "capacitor" in name:
+        d["xschem"] = {
+            "sym": "devices/capa.sym", "origin": [0.8, 0] if horiz else [0, 0.8],
+            "pin_xy": {"plus": [0, -30], "minus": [0, 30]},
+            "rot": 1 if horiz else 0, "params": "value=1p",
+        }
+        if not horiz:
+            d["xschem"]["aliases"] = {
+                "JNW_TR_SKY130A/JNWTR_CAPX1.sym":
+                    {"pin_xy": {"plus": [0, -60], "minus": [0, 10]}},
+            }
+    return d
 
 SYMS = []
 
@@ -99,6 +161,8 @@ SYMS += [
     {
         "name": "vground", "macro": "\\vground", "nargs": 0, "arg_doc": [],
         "exports": {"cStart": [0, 0]},
+        "xschem": {"sym": "devices/gnd.sym", "origin": [0, 0],
+                   "pin_xy": {"term": [0, 0]}, "params": "lab=GND", "net": "GND"},
         "description": "Ground symbol (three shrinking bars, downward). Path returns to entry.",
         "entry": [0, 0], "exit": [0, 0],
         "height_grid": 0.2, "width_grid": 0.4,
@@ -108,6 +172,8 @@ SYMS += [
     {
         "name": "vsupply", "macro": "\\vsupply", "nargs": 0, "arg_doc": [],
         "exports": {"vSupplyStart": [0, 0]},
+        "xschem": {"sym": "devices/vdd.sym", "origin": [0, 0],
+                   "pin_xy": {"term": [0, 0]}, "params": "lab=VDD", "net": "VDD"},
         "description": "Supply symbol (upward stub with slash). Path returns to entry.",
         "entry": [0, 0], "exit": [0, 0],
         "height_grid": 0.4, "width_grid": 0.4,
@@ -116,6 +182,9 @@ SYMS += [
     },
     {
         "name": "vvsource", "macro": "\\vvsource", "nargs": 1,
+        "xschem": {"sym": "devices/vsource.sym", "origin": [0, -1.2],
+                   "pin_xy": {"plus": [0, -30], "minus": [0, 30]},
+                   "params": "value=1.8"},
         "arg_doc": ["source label, e.g. $V_{DD}$"],
         "description": "Voltage source, vertical, drawn DOWNWARD 1.5 grid from entry",
         "entry": [0, 0], "exit": [0, -2.4],

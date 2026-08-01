@@ -32,3 +32,26 @@ pins:
   grid_xy: *id001
   direction: inout
 example: \draw (0,0) \vcapacitor{$Z$};
+xschem:
+  sym: devices/capa.sym
+  origin:
+  - 0
+  - 0.8
+  pin_xy:
+    plus:
+    - 0
+    - -30
+    minus:
+    - 0
+    - 30
+  rot: 0
+  params: value=1p
+  aliases:
+    JNW_TR_SKY130A/JNWTR_CAPX1.sym:
+      pin_xy:
+        plus:
+        - 0
+        - -60
+        minus:
+        - 0
+        - 10

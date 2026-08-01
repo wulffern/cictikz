@@ -32,3 +32,17 @@ pins:
   grid_xy: *id001
   direction: inout
 example: \draw (0,0) \hcapacitor{$Z$};
+xschem:
+  sym: devices/capa.sym
+  origin:
+  - 0.8
+  - 0
+  pin_xy:
+    plus:
+    - 0
+    - -30
+    minus:
+    - 0
+    - 30
+  rot: 1
+  params: value=1p

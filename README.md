@@ -34,7 +34,12 @@ cictikz draw spec.json --fmt tikz   # schematic IR (JSON) -> TikZ or xschem
 cictikz tikz2sch fig.tex            # dialect TikZ -> xschem .sch
 cictikz sch2tikz circuit.sch        # any xschem .sch -> dialect TikZ
 cictikz export-symlib DIR           # generate cictikz/*.sym for xschem
+cictikz watch fig.tex               # live preview: recompile on save, browser follows
 ```
+
+`watch` is the iteration loop: edit the file in any editor (or let an AI
+edit it), and the browser shows the new render half a second later —
+compile errors appear inline instead of a stale image.
 
 The TikZ-to-xschem direction accepts only the cictikz dialect (registry
 macros, moves, named coordinates, `--`/`|-`/`-|`/`to[short]` wires) and

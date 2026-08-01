@@ -126,6 +126,14 @@ class Schematic:
         names: dict = {}
         for port in self.ports:
             names[find(("port", port.net))] = port.net
+        # Supply symbols name their whole net (vground -> GND, vsupply -> VDD)
+        for inst in self.instances:
+            if inst.symbol.startswith("unknown:"):
+                continue
+            net = (registry.get(inst.symbol).xschem or {}).get("net")
+            if net:
+                for p in registry.get(inst.symbol).pins:
+                    names.setdefault(find(("pin", inst.name, p.name)), net)
         for inst in self.instances:
             for pname, net in inst.conns.items():
                 names.setdefault(find(("pin", inst.name, pname)), net)
@@ -141,15 +149,22 @@ class Schematic:
                 names[root] = f"net{counter}"
             return names[root]
 
+        # a pin deserves a net name when anything else shares its group:
+        # another pin (stacked devices abut), a wire, or a port
+        members: dict = {}
+        for iname, pname in pin_pts:
+            members.setdefault(find(("pin", iname, pname)), []).append(1)
+        for wi in range(len(self.wires)):
+            members.setdefault(find(("wire", wi)), []).append(1)
+        for port in self.ports:
+            members.setdefault(find(("port", port.net)), []).append(1)
+
         for inst in self.instances:
             for (iname, pname), p in pin_pts.items():
                 if iname != inst.name or pname in inst.conns:
                     continue
                 root = find(("pin", iname, pname))
-                # only name pins that actually touch something else
-                if root in names or any(
-                    find(("wire", wi)) == root for wi in range(len(self.wires))
-                ):
+                if root in names or len(members.get(root, [])) >= 2:
                     inst.conns[pname] = name_of(root)
         for wi, wire in enumerate(self.wires):
             if wire.net is None:

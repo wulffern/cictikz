@@ -30,8 +30,7 @@ class TestTikzReader(unittest.TestCase):
                          {"vground", "lvnmos", "vresistor"})
         m1 = next(i for i in sch.instances if i.name == "M1")
         self.assertEqual(m1.args, ["M1", "$v_i$"])
-        self.assertEqual(len(sch.ports), 1)
-        self.assertEqual(sch.ports[0].net, "vo")
+        self.assertEqual({p.net for p in sch.ports}, {"vo", "v_i"})
         self.assertEqual(sch.wires[0].points, [(0, 1.6), (0.8, 1.6)])
 
     def test_round_trip_tikz(self):
@@ -102,22 +101,42 @@ class TestXschemReader(unittest.TestCase):
         self.assertEqual(sch.ports[0].direction, "out")
 
     def test_unknown_symbol_kept_opaque_and_lossless(self):
-        text = write_sch(amp(), REG) + "C {devices/res.sym} 200 -100 1 0 {name=R9}\n"
+        text = write_sch(amp(), REG) + "C {devices/npn.sym} 200 -100 1 0 {name=Q9}\n"
         sch = read_sch(text, REG)
-        r9 = next(i for i in sch.instances if i.name == "R9")
-        self.assertEqual(r9.symbol, "unknown:devices/res.sym")
-        self.assertEqual(r9.rot, 1)
-        self.assertIn("C {devices/res.sym} 200 -100 1 0 {name=R9}", write_sch(sch, REG))
+        q9 = next(i for i in sch.instances if i.name == "Q9")
+        self.assertEqual(q9.symbol, "unknown:devices/npn.sym")
+        self.assertEqual(q9.rot, 1)
+        self.assertIn("C {devices/npn.sym} 200 -100 1 0 {name=Q9}", write_sch(sch, REG))
 
     def test_unknown_symbol_becomes_labelled_box_in_tikz(self):
         sch = read_sch(
             "v {xschem version=3.0.0 file_version=1.2 }\n"
-            "C {devices/res.sym} 40 -40 0 0 {name=R9}\n",
+            "C {devices/npn.sym} 40 -40 0 0 {name=Q9}\n",
             REG,
         )
         out = write_tikz(sch, REG)
         self.assertIn("rectangle", out)
-        self.assertIn("R9: res", out)
+        self.assertIn("Q9: npn", out)
+
+    def test_known_devices_map_back_with_variants(self):
+        # a rot-1 res comes back as the horizontal macro, a flipped nfet
+        # as the mirrored one; instance transforms are absorbed.
+        sch = read_sch(
+            "v {xschem version=3.0.0 file_version=1.2 }\n"
+            "C {devices/res.sym} 0 0 1 0 {name=R1 value=1k}\n"
+            "C {sky130_fd_pr/nfet_01v8.sym} 200 0 0 1 {name=M1}\n"
+            "C {JNW_TR_SKY130A/JNWTR_NCHDL.sym} 400 0 0 0 {name=M2}\n"
+            "C {devices/lab_pin.sym} 440 -30 0 0 {name=l1 lab=dnet}\n",
+            REG,
+        )
+        by = {i.name: i for i in sch.instances}
+        self.assertEqual(by["R1"].symbol, "hresistor")
+        self.assertEqual((by["R1"].rot, by["R1"].flip), (0, False))
+        self.assertEqual(by["M1"].symbol, "vmnmos")
+        self.assertFalse(by["M1"].flip)
+        # wrapper alias: pin geometry differs from the sky130 fet
+        self.assertEqual(by["M2"].symbol, "vnmos")
+        self.assertEqual(by["M2"].conns.get("drain"), "dnet")
 
     def test_multiline_props_parse(self):
         text = (

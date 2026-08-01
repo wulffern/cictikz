@@ -93,6 +93,17 @@ def draw(specfile, fmt, output):
         click.echo(text, nl=False)
 
 
+@main.command()
+@click.argument("texfile", type=click.Path(exists=True, path_type=Path))
+@click.option("--port", default=8317, show_default=True)
+@click.option("--no-browser", is_flag=True, help="Don't open the browser automatically.")
+def watch(texfile, port, no_browser):
+    """Live preview: recompile TEXFILE on every save, auto-refresh in the browser."""
+    from .watch import serve
+
+    serve(texfile, port=port, open_browser=not no_browser)
+
+
 @main.command("tikz2sch")
 @click.argument("texfile", type=click.Path(exists=True, path_type=Path))
 @click.option("-o", "--output", type=click.Path(path_type=Path), default=None)

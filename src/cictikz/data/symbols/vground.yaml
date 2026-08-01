@@ -11,6 +11,17 @@ exports:
   cStart:
   - 0
   - 0
+xschem:
+  sym: devices/gnd.sym
+  origin:
+  - 0
+  - 0
+  pin_xy:
+    term:
+    - 0
+    - 0
+  params: lab=GND
+  net: GND
 description: Ground symbol (three shrinking bars, downward). Path returns to entry.
 entry:
 - 0

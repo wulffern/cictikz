@@ -40,16 +40,21 @@ def write_tikz(sch: Schematic, registry: SymbolRegistry | None = None) -> str:
                 f"\\draw {_pt((x - 0.6, y - 0.4))} rectangle {_pt((x + 0.6, y + 0.4))};"
             )
             short = inst.symbol.removeprefix("unknown:").rsplit("/", 1)[-1].removesuffix(".sym")
-            out.append(
-                f"\\node[anchor=center] at {_pt(inst.pos)} {{{inst.name}: {short}}};"
-            )
+            label = f"{inst.name}: {short}".replace("_", "\\_")
+            out.append(f"\\node[anchor=center] at {_pt(inst.pos)} {{{label}}};")
             continue
         sym = registry.get(inst.symbol)
-        if inst.rot or inst.flip:
+        if inst.flip and sym.mirror:
+            sym = registry.get(sym.mirror)  # flip is the mirrored macro variant
+        elif inst.flip:
             raise ValueError(
-                f"{inst.name}: rot/flip are not expressible with the TikZ macros - "
-                "pick the mirrored macro variant instead (e.g. vmnmos)"
+                f"{inst.name}: flip is not expressible - symbol '{sym.name}' "
+                "has no mirrored variant"
             )
+        if inst.rot:
+            # The macros cannot rotate; draw unrotated but say so, since
+            # the layout will differ from the xschem original.
+            out.append(f"% NOTE: {inst.name} had rot={inst.rot} in xschem; drawn unrotated.")
         args = list(inst.args)
         if sym.nargs and not args:
             # First documented argument is the instance name by library
@@ -68,6 +73,8 @@ def write_tikz(sch: Schematic, registry: SymbolRegistry | None = None) -> str:
         out.append("\\draw " + " -- ".join(_pt(p) for p in wire.points) + ";")
 
     for port in sch.ports:
+        if _drawn_by_macro(port, sch, registry):
+            continue  # e.g. the lvnmos gate label already draws this port
         out.append(f"\\draw {_pt(port.pos)} {PORT_MACRO[port.direction]}{{{port.net}}};")
 
     for lab in sch.labels:
@@ -77,6 +84,24 @@ def write_tikz(sch: Schematic, registry: SymbolRegistry | None = None) -> str:
         out.append(f"\\fill {_pt(dot)} circle (0.075);")
 
     return "\n".join(out) + "\n"
+
+
+def _drawn_by_macro(port, sch: Schematic, registry: SymbolRegistry) -> bool:
+    """True when a macro argument already draws this port (arg_ports),
+    so emitting a \\portIn would double it."""
+    for inst in sch.instances:
+        if inst.symbol.startswith("unknown:"):
+            continue
+        sym = registry.get(inst.symbol)
+        for argno, pin in (sym.arg_ports or {}).items():
+            if len(inst.args) < int(argno) or not inst.args[int(argno) - 1].strip():
+                continue
+            pdef = next(p for p in sym.pins if p.name == pin)
+            px = inst.pos[0] + pdef.grid_xy[0]
+            py = inst.pos[1] + pdef.grid_xy[1]
+            if abs(px - port.pos[0]) <= SNAP and abs(py - port.pos[1]) <= SNAP:
+                return True
+    return False
 
 
 def _junctions(sch: Schematic, registry: SymbolRegistry) -> list[tuple[float, float]]:

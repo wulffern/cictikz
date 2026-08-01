@@ -11,6 +11,17 @@ exports:
   vSupplyStart:
   - 0
   - 0
+xschem:
+  sym: devices/vdd.sym
+  origin:
+  - 0
+  - 0
+  pin_xy:
+    term:
+    - 0
+    - 0
+  params: lab=VDD
+  net: VDD
 description: Supply symbol (upward stub with slash). Path returns to entry.
 entry:
 - 0

@@ -9,7 +9,7 @@ nargs: 2
 arg_doc:
 - instance name (becomes circuitikz node, e.g. M1)
 - gate port label, e.g. $v_i$ (empty {} suppresses the port)
-description: PMOS transistor, vertical, drain up, gate on the right (mirrored),
+description: PMOS transistor, vertical, source up, gate on the right (mirrored),
   with optional gate input port; gate pin is the end of the gate lead
 entry:
 - 0
@@ -20,7 +20,7 @@ exit:
 height_grid: 1.6
 width_grid: 1.1
 pins:
-- name: drain
+- name: source
   grid_xy:
   - 0
   - 1.6
@@ -30,7 +30,7 @@ pins:
   - 0.98
   - 0.8
   direction: in
-- name: source
+- name: drain
   grid_xy:
   - 0
   - 0
@@ -44,11 +44,47 @@ exports:
   cicmos:
   - 0
   - 1.6
+arg_ports:
+  '2': gate
+mirror: lvpmos
 xschem:
   sym: sky130_fd_pr/pfet_01v8.sym
-  pin_map:
-    drain: D
-    gate: G
-    source: S
-  scale: 40
+  origin:
+  - 0
+  - 0.8
+  pin_xy:
+    source:
+    - 20
+    - -30
+    gate:
+    - -20
+    - 0
+    drain:
+    - 20
+    - 30
+  flip: 1
+  params: L=0.15 W=1 nf=1 m=1
+  aliases:
+    JNW_TR_SKY130A/JNWTR_PCHDL.sym:
+      pin_xy:
+        source:
+        - 40
+        - -30
+        gate:
+        - 0
+        - 0
+        drain:
+        - 40
+        - 30
+    SUN_TR_SKY130NM/SUNTR_PCHDL.sym:
+      pin_xy:
+        source:
+        - 40
+        - -30
+        gate:
+        - 0
+        - 0
+        drain:
+        - 40
+        - 30
 example: \draw (0,0) \vground \lvmpmos{M1}{$v_i$};

@@ -305,6 +305,16 @@ def _read_path(kind, body, sch, coords, counter, registry, line, text, offset):
                     )
                 for cname, (ex, ey) in (sym.exports or {}).items():
                     coords[cname] = (round(cursor[0] + ex, 6), round(cursor[1] + ey, 6))
+                # macro arguments that label a port (the lvnmos gate label)
+                for argno, pin in (sym.arg_ports or {}).items():
+                    label = args[int(argno) - 1] if len(args) >= int(argno) else ""
+                    if label.strip():
+                        pdef = next(p for p in sym.pins if p.name == pin)
+                        sch.add(Port(
+                            _sanitize_net(label),
+                            pos=(cursor[0] + pdef.grid_xy[0], cursor[1] + pdef.grid_xy[1]),
+                            direction="in",
+                        ))
                 exit_ = sym.exit
             cursor = (round(cursor[0] + exit_[0], 6), round(cursor[1] + exit_[1], 6))
             have_cursor = True

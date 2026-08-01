@@ -32,3 +32,31 @@ pins:
   grid_xy: *id001
   direction: inout
 example: \draw (0,0) \hresistor{$Z$};
+xschem:
+  sym: devices/res.sym
+  origin:
+  - 0.8
+  - 0
+  pin_xy:
+    plus:
+    - 0
+    - -30
+    minus:
+    - 0
+    - 30
+  rot: 1
+  params: value=1k
+  aliases:
+    sky130_fd_pr/res_high_po.sym: {}
+    JNW_TR_SKY130A/JNWTR_RPPO16.sym:
+      rot: 0
+      origin:
+      - 0
+      - 0
+      pin_xy:
+        minus:
+        - 0
+        - 0
+        plus:
+        - 80
+        - 0

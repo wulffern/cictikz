@@ -35,8 +35,10 @@ class SymbolDef:
     pins: list[PinDef]
     example: str
     nodes: list[str] = field(default_factory=list)  # circuitikz anchors, e.g. M1.gate
-    xschem: dict | None = None  # {sym, pin_map, scale}
+    xschem: dict | None = None  # {sym, origin, pin_xy, rot, flip, params, aliases}
     exports: dict | None = None  # coordinates the macro leaves behind, e.g. {resEnd: [0, 1.6]}
+    mirror: str | None = None  # the mirrored macro variant, e.g. vnmos <-> vmnmos
+    arg_ports: dict | None = None  # macro args that label a port, e.g. {"2": "gate"}
 
     def signature(self) -> str:
         args = "".join("{%s}" % d for d in self.arg_doc) if self.nargs else ""
@@ -64,6 +66,8 @@ def _load_one(text: str) -> SymbolDef:
         nodes=d.get("nodes", []),
         xschem=d.get("xschem"),
         exports={k: tuple(v) for k, v in (d.get("exports") or {}).items()} or None,
+        mirror=d.get("mirror"),
+        arg_ports=d.get("arg_ports") or None,
     )
 
 

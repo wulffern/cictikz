@@ -32,3 +32,19 @@ pins:
   grid_xy: *id001
   direction: inout
 example: \draw (0,0) \vresistor{$Z$};
+xschem:
+  sym: devices/res.sym
+  origin:
+  - 0
+  - 0.8
+  pin_xy:
+    plus:
+    - 0
+    - -30
+    minus:
+    - 0
+    - 30
+  rot: 0
+  params: value=1k
+  aliases:
+    sky130_fd_pr/res_high_po.sym: {}
