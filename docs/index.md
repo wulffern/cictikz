@@ -6,7 +6,9 @@ course, grid = 1.6, one transistor tall — together with everything an AI
 assistant (or a human) needs to draw with it:
 
 - a **[symbol library](symbols.md)** with machine-readable pin geometry
-  (43 symbols, one YAML each, rendered gallery),
+  (49 symbols, one YAML each, rendered gallery), plus
+  **[eleven domain libraries](libraries.md)** (switched-cap, signal-flow,
+  ESD, MOS cartoons, ...),
 - a **reproducible renderer**: `pdflatex` with pinned
   `SOURCE_DATE_EPOCH` and a source-hashed work directory, so identical
   source rebuilds byte-identical PDFs,
