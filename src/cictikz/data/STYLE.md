@@ -69,6 +69,10 @@ Transistor instance names become circuitikz node names, so `(M1.gate)`,
 Junction dots are `\fill (x,y) circle (0.075);`. Wires that cross
 without a dot are **not** connected — never draw a hop.
 
+Resistors are always the hand-rolled zig-zag (`\vresistor` /
+`\hresistor`). Never draw circuitikz's own `to [resistor]` or `to [R]`
+bipole: it is visibly larger and the two styles must not mix.
+
 The preamble does **not** load the TikZ `calc` library, so
 `($(a)+(1,0)$)` fails — use named `\coordinate`s and `|-` / `-|`
 instead. No `shapes.geometric` either (no `ellipse` node — use a

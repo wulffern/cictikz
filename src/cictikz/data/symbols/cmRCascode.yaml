@@ -20,7 +20,7 @@ pins:
 - name: in
   grid_xy:
   - 0
-  - 4.7
+  - 5.3
   direction: in
 - name: out
   grid_xy:
@@ -28,10 +28,16 @@ pins:
   - 3.7
   direction: out
 exports:
+  cmRStart:
+  - 0
+  - 0
   cStart:
   - 0
-  - 0
+  - 3.2
   resCon:
   - 0
-  - 4.2
+  - 4.8
+  resEnd:
+  - 0
+  - 4.8
 example: \draw (0,0) \cmRCascode;

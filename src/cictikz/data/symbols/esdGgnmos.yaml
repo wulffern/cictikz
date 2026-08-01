@@ -28,9 +28,15 @@ pins:
   - 3.2
   direction: inout
 exports:
+  esdStart:
+  - 0
+  - 0
   cStart:
-  - 0
-  - 0
+  - -1
+  - -1.6
+  esdRbot:
+  - -1
+  - -1.6
   top:
   - 0
   - 3.2

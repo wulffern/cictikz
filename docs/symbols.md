@@ -75,7 +75,7 @@ entry `[0, 0]` — exit `[0, 0]`
 | pin | [0.5, 3.2] | inout |
 | core | [-1, 3.2] | inout |
 
-exported coordinates: `cStart`, `top`
+exported coordinates: `esdStart`, `cStart`, `esdRbot`, `top`
 
 ```latex
 \draw (0,0) \esdGgnmos;
@@ -909,10 +909,10 @@ entry `[0, 0]` — exit `[0, 0]`
 
 | pin | position | direction |
 |---|---|---|
-| in | [0, 4.7] | in |
+| in | [0, 5.3] | in |
 | out | [2.5, 3.7] | out |
 
-exported coordinates: `cStart`, `resCon`
+exported coordinates: `cmRStart`, `cStart`, `resCon`, `resEnd`
 
 ```latex
 \draw (0,0) \cmRCascode;
