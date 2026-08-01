@@ -2,6 +2,10 @@
 
 AI-driven TikZ circuit schematics.
 
+**Docs:** [overview](docs/index.md) · [CLI](docs/cli.md) ·
+[MCP server](docs/mcp.md) · [dialect & converters](docs/dialect.md) ·
+[symbol gallery](docs/symbols.md)
+
 A standalone Python package that ships the full aic2026 TikZ macro
 vocabulary as package data — `cictikz_lib` (the `ckt_lib` schematic
 dialect, grid = 1.6, one transistor tall) plus the domain libraries
