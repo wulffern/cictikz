@@ -409,6 +409,9 @@ MORE = [
     block("cicBuf", 1, "Buffer (triangle, no bubble), hand-rolled house shape",
           [0.9, 0], [("in", [0, 0], "in"), ("out", [0.9, 0], "out")],
           arg_doc=["instance name"]),
+    block("cicInvM", 1, "Inverter pointing left (for feedback paths); in right, out left",
+          [-1.1, 0], [("in", [0, 0], "in"), ("out", [-1.1, 0], "out")],
+          arg_doc=["instance name"]),
 ]
 
 for s in MORE:

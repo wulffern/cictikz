@@ -17,6 +17,7 @@ so this page doubles as a compile test of the library.
 | [`\cicBuf`](#cicbuf) | Buffer (triangle, no bubble), hand-rolled house shape |
 | [`\cicH`](#cich) | Transfer-function box H(s) |
 | [`\cicInv`](#cicinv) | Inverter, hand-rolled house shape; exports <n>_in/_out |
+| [`\cicInvM`](#cicinvm) | Inverter pointing left (for feedback paths); in right, out left |
 | [`\cicNand`](#cicnand) | NAND gate, hand-rolled house shape; exports <n>_in1/_in2/_out |
 | [`\cicNor`](#cicnor) | NOR gate, hand-rolled house shape |
 | [`\cicOr`](#cicor) | OR gate, hand-rolled house shape |
@@ -834,6 +835,27 @@ entry `[0, 0]` — exit `[1.1, 0]`
 
 ```latex
 \draw (0,0) \cicInv{x};
+```
+
+### cicInvM
+
+<img src="symbols/cicInvM.svg" alt="cicInvM">
+
+Inverter pointing left (for feedback paths); in right, out left
+
+```latex
+\cicInvM{instance name}
+```
+
+entry `[0, 0]` — exit `[-1.1, 0]`
+
+| pin | position | direction |
+|---|---|---|
+| in | [0, 0] | in |
+| out | [-1.1, 0] | out |
+
+```latex
+\draw (0,0) \cicInvM{x};
 ```
 
 ### cicNand
