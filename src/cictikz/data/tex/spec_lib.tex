@@ -11,9 +11,9 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \definecolor{specgreen}{rgb}{0.00,0.50,0.00}  % = armygreen
-\definecolor{tonered}{rgb}{1.00,0.00,0.00}   % house red
-\definecolor{tonemag}{rgb}{0.00,0.00,1.00}   % house blue; the second tone pair
-\definecolor{bandorange}{rgb}{0.00,0.00,0.00}  % filters are annotation: black
+\definecolor{toneA}{rgb}{1.00,0.00,0.00}   % first tone pair: house red
+\definecolor{toneB}{rgb}{0.00,0.00,1.00}   % second tone pair: house blue
+\definecolor{specfilter}{rgb}{0.00,0.00,0.00}  % filters are annotation: black
 \newcommand{\specHalf}{1.2}      % f_s/2
 \newcommand{\specXmax}{3.5}      % axis half length
 \newcommand{\specVh}{1.9}        % vertical axis height
@@ -48,7 +48,7 @@
 % baseline. Used for both the anti-alias low pass and the subsampling
 % bandpass, so the two read as the same kind of object.
 \newcommand{\specBand}[4]{%
-  \draw[bandorange, very thick, rounded corners=3pt]
+  \draw[specfilter, very thick, rounded corners=3pt]
     (#1-#2-\specSkirt,#4) -- (#1-#2,#4+#3)
     -- (#1+#2,#4+#3) -- (#1+#2+\specSkirt,#4);
 }
