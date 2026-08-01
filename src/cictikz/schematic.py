@@ -65,8 +65,8 @@ class Schematic:
         """(instance, pin) -> absolute position, from the symbol metadata."""
         points = {}
         for inst in self.instances:
-            if inst.symbol.startswith("unknown:"):
-                continue  # opaque foreign symbol: no pin metadata
+            if inst.symbol.startswith("unknown:") or inst.symbol.startswith("bipole:"):
+                continue  # opaque foreign symbol or raw element: no pin metadata
             sym = registry.get(inst.symbol)
             for p in sym.pins:
                 points[(inst.name, p.name)] = (

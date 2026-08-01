@@ -32,6 +32,13 @@ def write_tikz(sch: Schematic, registry: SymbolRegistry | None = None) -> str:
     out = [BANNER]
 
     for inst in sch.instances:
+        if inst.symbol.startswith("bipole:") and inst.geom:
+            # circuitikz element with no house macro: verbatim round-trip
+            end = inst.geom["end"]
+            out.append(
+                f"\\draw {_pt(inst.pos)} to [{inst.geom['opts']}] {_pt(end)};"
+            )
+            continue
         if inst.symbol.startswith("unknown:"):
             short = inst.symbol.removeprefix("unknown:").rsplit("/", 1)[-1].removesuffix(".sym")
             if inst.geom:
@@ -132,7 +139,7 @@ def _drawn_by_macro(port, sch: Schematic, registry: SymbolRegistry) -> bool:
     """True when a macro argument already draws this port (arg_ports),
     so emitting a \\portIn would double it."""
     for inst in sch.instances:
-        if inst.symbol.startswith("unknown:"):
+        if inst.symbol.startswith("unknown:") or inst.symbol.startswith("bipole:"):
             continue
         sym = registry.get(inst.symbol)
         for argno, pin in (sym.arg_ports or {}).items():

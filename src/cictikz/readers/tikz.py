@@ -23,6 +23,11 @@ from ..symbols import SymbolRegistry
 
 PORT_MACROS = {"portIn": "in", "portmIn": "in", "portOut": "out"}
 
+# Element bipoles the library has no macro for; they stay circuitikz and
+# round-trip verbatim as bipole: instances.
+_ELEMENT_BIPOLES = {"I", "cI", "sI", "V", "sV", "cV", "L", "full diode",
+                    "battery", "sqV", "vsourcesin"}
+
 # A coordinate component: a number or arithmetic on numbers, braced or
 # bare - TikZ allows both (0,\grid/4) and ({\grid+0.5},0), and constants
 # (\grid, local \newcommand values) are substituted before tokenizing.
@@ -212,6 +217,17 @@ def _read_path(kind, body, sch, coords, counter, registry, line, text, offset):
     def arrive(pt, connected):
         nonlocal cursor, have_cursor, pending
         pt = (round(pt[0], 6), round(pt[1], 6))  # kill float accumulation
+        if isinstance(pending, tuple) and pending[0] == "elem":
+            flush()
+            counter["inst"] += 1
+            sch.add(Instance(
+                f"B{counter['inst']}", f"bipole:{pending[1].split(',', 1)[0].strip()}",
+                pos=cursor, geom={"end": [pt[0], pt[1]], "opts": pending[1]},
+            ))
+            cursor = pt
+            have_cursor = True
+            pending = None
+            return
         if connected:
             if not wire:
                 wire.append(cursor)
@@ -257,13 +273,20 @@ def _read_path(kind, body, sch, coords, counter, registry, line, text, offset):
             if re.search(r"(->|<-|dashed|dotted)", popts):
                 annotation = True
         elif m.group("to"):
-            for opt in m.group("toopts").split(","):
-                if not _ALLOWED_TO.fullmatch(opt.strip()):
-                    raise DialectError(
-                        f"to[{m.group('toopts')}] uses a bipole outside the dialect",
-                        lineno(m.start()),
-                    )
-            pending = "--"
+            opts = m.group("toopts")
+            head = opts.split(",", 1)[0].strip()
+            if head in _ELEMENT_BIPOLES:
+                # an element the library has no macro for (current source,
+                # inductor, ...): allowed as an element instance
+                pending = ("elem", opts)
+            else:
+                for opt in opts.split(","):
+                    if not _ALLOWED_TO.fullmatch(opt.strip()):
+                        raise DialectError(
+                            f"to[{opts}] uses a bipole outside the dialect",
+                            lineno(m.start()),
+                        )
+                pending = "--"
         elif m.group("node"):
             sch.add(Label(m.group("ntext"), pos=cursor, anchor=_node_anchor(m.group("nopts"), lineno(m.start()))))
         elif m.group("circle"):

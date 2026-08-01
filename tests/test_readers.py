@@ -178,3 +178,21 @@ class TestSymGeometry(unittest.TestCase):
         self.assertIn(r"\draw (8.5,4) rectangle (11.5,6);", out)
         self.assertIn("IN", out)
         self.assertIn("blk", out)
+
+
+class TestElementBipoles(unittest.TestCase):
+    def test_current_source_accepted_and_round_trips(self):
+        body = (
+            "\\draw (0,0) \\vground \\vnmos{M1};\n"
+            "\\draw (2,0) to [I, l=$I_B$] (2,1.6);\n"
+        )
+        sch = read_tikz(body, REG)
+        bip = next(i for i in sch.instances if i.symbol.startswith("bipole:"))
+        self.assertEqual(bip.symbol, "bipole:I")
+        self.assertEqual(bip.geom["end"], [2, 1.6])
+        out = write_tikz(sch, REG)
+        self.assertIn("to [I, l=$I_B$] (2,1.6)", out)
+
+    def test_unknown_bipole_still_rejected(self):
+        with self.assertRaises(DialectError):
+            read_tikz(r"\draw (0,0) to [nR] (0,1.6);", REG)
