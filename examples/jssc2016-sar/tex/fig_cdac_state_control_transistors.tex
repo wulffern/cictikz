@@ -1,0 +1,210 @@
+\documentclass[varwidth=true, border=0pt, convert={size=640x}]{standalone}
+%\usepackage[utf8]{inputenc}
+%\usepackage[english]{babel}
+\usepackage{pgf,circuitikz,tikz}
+\usetikzlibrary{circuits.logic.US}
+
+\pgfdeclareshape{cwnot}
+	{
+	  \anchor{center}{\pgfpointorigin}
+	  \savedanchor\northwest{%
+		\pgf@y= \pgfkeysvalueof{/tikz/circuitikz/bipoles/length}
+		\pgf@y=\pgfkeysvalueof{/tikz/circuitikz/bipoles/not port/height}\pgf@y
+		\pgf@y=.5\pgf@y
+		\pgf@x= \pgfkeysvalueof{/tikz/circuitikz/bipoles/length}
+		\pgf@x=-\pgfkeysvalueof{/tikz/circuitikz/bipoles/not port/width}\pgf@x
+		\pgf@x=.5\pgf@x
+	  }
+	  \savedanchor\left{%
+	  	\pgf@y=0pt
+	  }
+	  \anchor{in}{
+		\northwest
+		\pgf@y=0pt
+	  }
+	  \anchor{out}{
+		\northwest
+		\pgf@y=0pt
+		\pgf@x=-\pgf@x
+	  }
+	  \anchor{center}{
+	  	\pgfpointorigin
+	  }
+	  \anchor{east}{
+	  	\left
+	  	\pgf@x=-.8\pgf@x  
+	  }
+	  \anchor{west}{
+	  	\left
+	  }
+	  \anchor{south}{
+		\northwest
+		\pgf@x=0pt
+		\pgf@y=-\pgf@y
+	  }
+	  \anchor{north}{
+		\northwest
+		\pgf@x=0pt
+	  }
+	  	  \anchor{south west}{
+		\northwest
+		\pgf@y=-\pgf@y
+	  }
+	  \anchor{north east}{
+		\northwest
+		\pgf@x=-\pgf@x
+	  }
+	  \anchor{north west}{
+		\northwest
+	  }
+	  \anchor{south east}{
+		\northwest
+		\pgf@x=-\pgf@x
+		\pgf@y=-\pgf@y
+	  }	  
+	  \backgroundpath{			
+			\pgfsetcolor{\pgfkeysvalueof{/tikz/circuitikz/color}}	
+			
+			
+			\northwest
+			\pgf@circ@res@up = \pgf@y 
+			\pgf@circ@res@down = -\pgf@y
+			\pgf@circ@res@right = -\pgf@x
+			\pgf@circ@res@left = \pgf@x
+			
+		\pgf@circ@res@other = \pgfkeysvalueof{/tikz/circuitikz/bipoles/not port/circle width}\pgf@circ@res@right
+						
+	\pgfscope
+		\pgfsetlinewidth{2\pgflinewidth}
+		\pgftransformxshift{.7\pgf@circ@res@left}
+		\pgf@circ@res@step=\pgf@circ@res@right
+		\advance\pgf@circ@res@step by -\pgf@circ@res@left
+		\pgf@circ@res@step=.7\pgf@circ@res@step
+		
+		\pgfpathmoveto{\pgfpoint{\pgf@circ@res@step-\pgf@circ@res@other}{0pt}}
+		\pgfpathlineto{\pgfpoint{0pt}{\pgf@circ@res@up}}
+		\pgfpathlineto{\pgfpoint{0pt}{\pgf@circ@res@down}}
+		\pgfpathlineto{\pgfpoint{\pgf@circ@res@step-\pgf@circ@res@other}{0pt}}
+		\pgfusepath{draw}
+		\pgfpathellipse
+			{\pgfpoint{\pgf@circ@res@step-.5\pgf@circ@res@other}{0pt}}
+			{\pgfpoint{.5\pgf@circ@res@other}{0pt}}
+			{\pgfpoint{0pt}{.5\pgf@circ@res@other}}
+		\pgfusepath{draw}
+	\endpgfscope
+		
+		\pgfpathmoveto{\pgfpoint{\pgf@circ@res@left}{0pt}}
+		\pgfpathlineto{\pgfpoint{.7\pgf@circ@res@left}{0pt}}
+		
+		\pgfpathmoveto{\pgfpoint{\pgf@circ@res@right}{0pt}}
+		\pgfpathlineto{\pgfpoint{.7\pgf@circ@res@right}{0pt}}
+	
+		\pgfusepath{draw}
+	  
+	  }
+	}
+
+\pagestyle{empty}
+\begin{document}
+\begin{center}
+\ctikzset{tripoles/mos style/arrows}
+\ctikzset{tripoles/pmos style/emptycircle}
+
+
+
+
+
+\begin{circuitikz}[circuit logic US, thick,stdsize/.style={font=\footnotesize},scale=0.9,
+  transform shape] \
+
+
+
+\begin{scope}
+\draw
+ (0,0) node [ground] {}
+    to [Tnmos, n=mn4, l=$M_{N4}$] ++(0,1.6) 
+    to [Tnmos, n=mn5, l=$M_{N5}$] ++(0,1.6)
+    to [Tnmos, n=mn6, l=$M_{N6}$] ++(0,1.6)
+    to [short, *-*] ++(1,0) ++(-1,0)
+    to [Tpmos, n=mp4, l=$M_{P4}$] ++(0,1.6)
+    node [rground, yscale=-1] {}
+    ++(0,0.3) node [anchor=south] {$V_{\mathit{DD}}$}
+(mn4.gate) to [short,o-] ++(0,0) node [anchor=east] {$P$}
+(mn5.gate) to [short,o-] ++(0,0) node [anchor=east] {$\overline{EO}$}
+(mn6.gate) to [short,o-] ++(0,0) node [anchor=east] {$EI$}
+    (mp4.gate) to [short,o-] ++(0,0) node [anchor=east] {$\overline{CK}$};
+
+    \draw
+     (2,3.2) node [ground] {}
+    to [Tnmos, n=mn7, l=$M_{N7}$] ++(0,1.6)
+    to [short, *-*] ++(1,0) ++(-1,0)
+    ++(0.5,0.1) node [anchor=south] {$CN0$} ++(-0.5,-0.1)
+    to [Tpmos, n=mp7, l=$M_{P7}$] ++(0,1.6)
+    node [rground, yscale=-1] {}
+    ++(0,0.3) node [anchor=south] {$V_{\mathit{REF}}$}
+    (mn7.gate) to [short,-] (mp7.gate)
+
+    ;
+    \draw
+    (4,3.2) node [ground] {}
+    to [Tnmos, n=mn8, l=$M_{N8}$] ++(0,1.6)
+    to [short, *-o] ++(1,0) ++(-1,0)
+    ++(0.5,0.1) node [anchor=south] {$CP0$} ++(-0.5,-0.1)
+    to [Tpmos, n=mp8, l=$M_{P8}$] ++(0,1.6)
+    node [rground, yscale=-1] {}
+    ++(0,0.3) node [anchor=south] {$V_{\mathit{REF}}$}
+    (mn8.gate) to [short,-] (mp8.gate)
+    ;
+\end{scope}
+
+
+\begin{scope}[xshift=6cm]
+\draw
+ (0,0) node [ground] {}
+    to [Tnmos, n=mn4, l=$M_{N4}$] ++(0,1.6) 
+    to [Tnmos, n=mn5, l=$M_{N5}$] ++(0,1.6)
+    to [Tnmos, n=mn6, l=$M_{N6}$] ++(0,1.6)
+    to [short, *-*] ++(1,0) ++(-1,0)
+    to [Tpmos, n=mp4, l=$M_{P4}$] ++(0,1.6)
+    node [rground, yscale=-1] {}
+    ++(0,0.3) node [anchor=south] {$V_{\mathit{DD}}$}
+(mn4.gate) to [short,o-] ++(0,0) node [anchor=east] {$P$}
+(mn5.gate) to [short,o-] ++(0,0) node [anchor=east] {$\overline{EO}$}
+(mn6.gate) to [short,o-] ++(0,0) node [anchor=east] {$EI$}
+    (mp4.gate) to [short,o-] ++(0,0) node [anchor=east] {$\overline{CK}$};
+
+    \draw
+     (2,3.2) node [ground] {}
+    to [Tnmos, n=mn7, l=$M_{N7}$] ++(0,1.6)
+    to [short, *-*] ++(1,0) ++(-1,0)
+    ++(0.5,0.1) node [anchor=south] {$CN0$} ++(-0.5,-0.1)
+    to [Tpmos, n=mp7, l=$M_{P7}$] ++(0,1.6)
+    node [rground, yscale=-1] {}
+    ++(0,0.3) node [anchor=south] {$V_{\mathit{REF}}$}
+    (mn7.gate) to [short,-] (mp7.gate)
+
+    ;
+    \draw
+    (4,3.2) node [ground] {}
+    to [Tnmos, n=mn8, l=$M_{N8}$] ++(0,1.6)
+    to [short, *-o] ++(1,0) ++(-1,0)
+    ++(0.5,0.1) node [anchor=south] {$CP0$} ++(-0.5,-0.1)
+    to [Tpmos, n=mp8, l=$M_{P8}$] ++(0,1.6)
+    node [rground, yscale=-1] {}
+    ++(0,0.3) node [anchor=south] {$V_{\mathit{REF}}$}
+    (mn8.gate) to [short,-] (mp8.gate)
+    ;
+\end{scope}
+
+
+%    \draw (7,4.8) node [not gate] (inv1) {};
+%    \draw (inv1.output) ++(0.5,0) node [not gate] (inv2) {};
+%    \draw  (6,4.8) to [short, *-] (inv1.input);
+%    \draw  (inv1.output) to [short, -] (inv2.input);
+%    \draw (inv2.output) to [short, -o] ++(0.5,0);
+
+
+
+\end{circuitikz}
+\end{center}
+\end{document}

@@ -26,6 +26,10 @@ Committed `.svg` previews sit next to each figure.
 | fig_prior_art | prior-art architecture comparison |
 | fig_process | process cross-section cartoon |
 | fig_core_measurements | measured core waveforms |
+| fig_cdac_state_control_transistors | CDAC state control at transistor level (from the 2015 working repo) |
+| fig_sch_di | clock input: RC into the Schmitt IO inverter chain (2015 working repo) |
+| fig_capacitors | the capacitor-array layout, metal by metal (2015 working repo) |
+| fig_ciccreator | the compiler methodology flow (2015 working repo) |
 
 Figures needing the paper's measurement data or die photographs
 (toplevel, simulation, wideadcs, diephoto, methodology, table) are not

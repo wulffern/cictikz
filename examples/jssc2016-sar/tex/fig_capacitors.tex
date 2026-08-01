@@ -1,0 +1,41 @@
+% \documentclass[varwidth=true, border=0pt]{standalone}
+% \usepackage{circuitikz}
+% \ctikzset{tripoles/mos style/arrows}
+% \ctikzset{tripoles/pmos style/emptycircle}
+
+% \usetikzlibrary{patterns}
+% \pagestyle{empty}
+% \begin{document}
+\input{../tex/fig_header}
+
+  \input{../tex/SAR_ESSCIRC16_28N}
+  \input{../tex/legend}
+
+  \libSARESSCIRConesixtwoeightNtex
+
+  \begin{circuitikz}[very thin, scale=1,
+    transform shape]
+    
+  \pgftext[at=\pgfpoint{34in}{-0.1in},left,base]
+          {\pgfimage[interpolate=true,height=7.38in,width=10in]{../graphics/3dcapacitor.pdf}}
+
+    \begin{scope}[shift={(0,0)},font=\Huge,scale=1]
+\setboolean{cicaddtext}{false}
+      \figCAPthreetwoCCV
+\setboolean{cicaddtext}{true}
+    \end{scope}
+
+    \begin{scope}[shift={(0,-3)},scale=2.5]
+      \figLEGENDMoneMfour
+    \end{scope}
+
+    \begin{scope}[shift={(39,-3)},scale=2.0]
+    \draw[black,font=\Huge] (0,0) node [anchor=south] ()  {a) };
+    \end{scope}
+
+    \begin{scope}[shift={(39in,-3)},scale=2.0]
+    \draw[black,font=\Huge] (0,0) node [anchor=south] ()  {b) };
+    \end{scope}
+  \end{circuitikz}
+
+\end{document}

@@ -1,0 +1,158 @@
+
+
+\documentclass[crop,varwidth]{standalone}
+\usepackage{times}
+\usepackage{enumitem}
+
+\usepackage{tikz,pgfplots}
+\usetikzlibrary{shapes.geometric, arrows}
+\pgfplotsset{
+        table/search path={../graphics},
+    }
+\usepackage{ifthen}
+\usepackage{calc}
+\usetikzlibrary{patterns}
+
+\pagestyle{empty}
+\begin{document}
+
+
+
+
+\tikzstyle{action} = [rectangle, rounded corners, minimum width=2cm,
+minimum height=0.5cm,text centered, draw=black]
+
+\tikzstyle{arrow} = [thick,->,>=stealth]
+
+\tikzstyle{process} = [rectangle, minimum width=2cm, minimum height=1cm, text centered, draw=black]
+\tikzstyle{decision} = [diamond, minimum width=2cm, minimum height=1cm, text centered, draw=black]
+
+%\tikzstyle{io} = [trapezium, trapezium left angle=70, trapezium right angle=110, minimum width=3cm, minimum height=1cm, text centered, draw=black, fill=blue!30]
+
+\begin{tikzpicture}[scale=1,
+    transform shape,node distance=2cm]
+
+
+
+\node [action, rounded corners,anchor=west,text width=6cm] at (10,10) (create) {
+%\vbox{
+%\begin{varwidth}
+%\varwidth {
+    {
+\textbf{Compiler}
+%\begin{itemize}
+%\item Read object definition file, SPICE netlist, and technology file
+
+Foreach cell in object definition file:
+\begin{enumerate}
+\item Find parent cells, class and netlist
+\item Apply object definition file regular expressions to netlist
+\item Create instance of class
+\item Read connectivity and instances from netlist
+\item Place instances
+\item Route 
+\item Add ports
+%        \item \texttt{[0]}
+%        \item \texttt{[1]}
+%        \item \texttt{[2]}
+    \end{enumerate}
+%\item Write outputs (SKILL, GDS, SPICE)
+%\end{itemize}
+%\end{varwidth}
+%}
+}};
+%\node (create) [action, below of=morecells]
+
+\draw (create.north west) ++(-1,0) node [process,anchor=north
+east,minimum width=4cm]
+(spice) {SPICE Netlist};
+\draw (create.west) ++(-1,0) node [process,anchor=east,minimum width=4cm] (objdef)
+{Object Definition File};
+
+\draw (create.south west) ++(-1,0) node [process,anchor=south east,minimum width=4cm] (tech)
+{Technology File};
+
+\draw (spice.west) ++(-1,0) node [action,anchor=east, text width=3cm] (adopt)
+{Adopt schematic netlist to compiler};
+
+\draw (adopt.south west) ++(-3,-1) node [process,anchor=east, text width=3cm] (sch)
+{Architecture exploration Schematic};
+
+\draw (sch.south east) ++(0.5,-0.5) node [action,anchor=north, text width=3cm] (tb)
+{Testbench};
+
+\draw (tb.south west) ++(-0.5,-0.5) node [action,anchor=north, text width=3cm] (arch)
+{Simulation};
+
+
+
+\draw (sch.north east) ++(0,1) node [action,anchor=south, text width=3cm] (hand)
+{Hand Analysis};
+
+\draw (sch.north west) ++(-0.5,1) node [action,anchor=south, text width=3cm] (compiled)
+{Existing compiled designs};
+
+
+%Outputs
+\draw (create.south) ++(0,-2) node [process,anchor=north, text width=3cm] (skill)
+{SKILL};
+\draw (skill.west) ++(-1,0) node [process,anchor=east] (gsch) {Generated technology dependent Schematic and Layout}
+;
+
+
+\draw (gsch.west) ++(-1,0) node [process,anchor=east] (glpe)
+{Extracted Parasitic Netlist};
+
+\draw (adopt.south) ++(0,-2) node [action,anchor=north, text
+width=3cm] (gsim) {Layout simulation};
+
+\draw (gsim.south) ++(0,-1) node [action,anchor=north, text
+width=3cm] (gdrc) {DRC/LVS};
+
+
+\draw (hand.north west) ++(0,1) node [font=\Large] (a1)
+{1. Architecture Exploration};
+
+\draw (spice.north west) ++(0,0.5) node [font=\Large] (a1) {2. Input
+  preperation};
+
+\draw (create.north) ++(0,0.5) node [font=\Large] (a1)
+{3. Compilation};
+
+\draw (gsch.north) ++(0,0.5) node [font=\Large] (a1) {4. Verification
+  and redesign};
+
+
+
+
+\draw [arrow] (tech.east) -- (create);
+\draw [arrow] (objdef.east) -- (create);
+\draw [arrow] (spice.east) -- (create);
+\draw [arrow] (hand) -- (sch);
+\draw [arrow] (compiled) -- (sch);
+\draw [arrow] (sch.east) to [out=-45,in=90] (tb.north);
+\draw [arrow] (tb.south) to [out=-90,in=45] (arch.east);
+\draw [arrow] (tb.east) -- (gsim);
+\draw [arrow] (arch.west) to [out=135,in=225] (sch.west);
+\draw [arrow] (sch) -- (adopt);
+\draw [arrow] (adopt) -- (spice);
+
+\draw [arrow] (gdrc.east) --(objdef);
+\draw [arrow] (gdrc.east) --(tech);
+
+\draw [arrow] (gsim.east) --(spice);
+\draw [arrow] (gsim.east) --(objdef);
+\draw [arrow] (gsim.east) --(tech);
+
+\draw [arrow] (create) -- (skill);
+\draw [arrow] (skill.west) -- (gsch.east);
+\draw [arrow] (gsch.west) -- (glpe.east);
+\draw [arrow] (glpe.north) to [out=90,in=225] (gsim.west);
+\draw [arrow] (glpe.west) to [out=180,in=-100] (compiled.south);
+\draw [arrow] (gsch.north west) to [out=135,in=-90] (gdrc.south);
+
+
+
+\end{tikzpicture}
+
+\end{document}
