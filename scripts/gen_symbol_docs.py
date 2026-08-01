@@ -57,6 +57,15 @@ def categorise(names):
             yield title, bucket
 
 
+def img_tag(svg_path: Path, rel: str, alt: str, scale: float = 2.4) -> str:
+    """SVGs come out at TeX natural size - a ground symbol is 12pt wide,
+    invisible on the page. Stamp an explicit pixel width, scaled."""
+    import re as _re
+    m = _re.search(r'width="([\d.]+)pt"', svg_path.read_text())
+    width = int(float(m.group(1)) * scale) if m else 120
+    return f'<img src="{rel}" alt="{alt}" width="{max(width, 30)}">'
+
+
 def main():
     reg = SymbolRegistry.load()
     OUT.mkdir(parents=True, exist_ok=True)
@@ -97,7 +106,7 @@ def main():
         for name in bucket:
             sym = reg.get(name)
             lines.append(f"### {name}\n")
-            lines.append(f'<img src="symbols/{name}.svg" alt="{name}">\n')
+            lines.append(img_tag(OUT / f"{name}.svg", f"symbols/{name}.svg", name) + "\n")
             lines.append(f"{sym.description}\n")
             lines.append("```latex")
             lines.append(sym.signature())

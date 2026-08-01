@@ -109,6 +109,15 @@ def try_render(name: str, nargs: int):
     return None
 
 
+def img_tag(svg_path: Path, rel: str, alt: str, scale: float = 2.4) -> str:
+    """SVGs come out at TeX natural size - a ground symbol is 12pt wide,
+    invisible on the page. Stamp an explicit pixel width, scaled."""
+    import re as _re
+    m = _re.search(r'width="([\d.]+)pt"', svg_path.read_text())
+    width = int(float(m.group(1)) * scale) if m else 120
+    return f'<img src="{rel}" alt="{alt}" width="{max(width, 30)}">'
+
+
 def main():
     OUT.mkdir(parents=True, exist_ok=True)
     lines = [
@@ -144,7 +153,7 @@ def main():
             lines.append(f"`{sig}`\n")
             if pdf:
                 r.pdf_to_svg(pdf, OUT / f"{name}.svg")
-                lines.append(f'<img src="libraries/{name}.svg" alt="{name}">\n')
+                lines.append(img_tag(OUT / f"{name}.svg", f"libraries/{name}.svg", name) + "\n")
                 print("rendered", name)
             else:
                 print("listed  ", name)

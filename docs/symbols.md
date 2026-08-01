@@ -68,7 +68,7 @@ so this page doubles as a compile test of the library.
 
 ### esdGgnmos
 
-<img src="symbols/esdGgnmos.svg" alt="esdGgnmos">
+<img src="symbols/esdGgnmos.svg" alt="esdGgnmos" width="268">
 
 Grounded-gate NMOS ESD clamp with gate resistor
 
@@ -91,7 +91,7 @@ exported coordinates: `esdStart`, `cStart`, `esdRbot`, `top`
 
 ### lvmnmos
 
-<img src="symbols/lvmnmos.svg" alt="lvmnmos">
+<img src="symbols/lvmnmos.svg" alt="lvmnmos" width="111">
 
 NMOS transistor, vertical, drain up, gate on the right (mirrored), with optional gate input port; gate pin is the end of the gate lead
 
@@ -119,7 +119,7 @@ xschem: `sky130_fd_pr/nfet_01v8.sym`
 
 ### lvmpmos
 
-<img src="symbols/lvmpmos.svg" alt="lvmpmos">
+<img src="symbols/lvmpmos.svg" alt="lvmpmos" width="111">
 
 PMOS transistor, vertical, source up, gate on the right (mirrored), with optional gate input port; gate pin is the end of the gate lead
 
@@ -147,7 +147,7 @@ xschem: `sky130_fd_pr/pfet_01v8.sym`
 
 ### lvnmos
 
-<img src="symbols/lvnmos.svg" alt="lvnmos">
+<img src="symbols/lvnmos.svg" alt="lvnmos" width="111">
 
 NMOS transistor, vertical, drain up, gate on the left, with optional gate input port; gate pin is the end of the gate lead
 
@@ -175,7 +175,7 @@ xschem: `sky130_fd_pr/nfet_01v8.sym`
 
 ### lvpmos
 
-<img src="symbols/lvpmos.svg" alt="lvpmos">
+<img src="symbols/lvpmos.svg" alt="lvpmos" width="111">
 
 PMOS transistor, vertical, source up, gate on the left, with optional gate input port; gate pin is the end of the gate lead
 
@@ -203,7 +203,7 @@ xschem: `sky130_fd_pr/pfet_01v8.sym`
 
 ### trNmos
 
-<img src="symbols/trNmos.svg" alt="trNmos">
+<img src="symbols/trNmos.svg" alt="trNmos" width="159">
 
 NMOS with labelled Gate/Drain/Source terminals (teaching figure)
 
@@ -227,7 +227,7 @@ exported coordinates: `cStart`
 
 ### vmnmos
 
-<img src="symbols/vmnmos.svg" alt="vmnmos">
+<img src="symbols/vmnmos.svg" alt="vmnmos" width="93">
 
 NMOS transistor, vertical, drain up, gate on the right (mirrored); gate pin is the end of the gate lead
 
@@ -253,7 +253,7 @@ xschem: `sky130_fd_pr/nfet_01v8.sym`
 
 ### vmpmos
 
-<img src="symbols/vmpmos.svg" alt="vmpmos">
+<img src="symbols/vmpmos.svg" alt="vmpmos" width="93">
 
 PMOS transistor, vertical, source up, gate on the right (mirrored); gate pin is the end of the gate lead
 
@@ -279,7 +279,7 @@ xschem: `sky130_fd_pr/pfet_01v8.sym`
 
 ### vnmos
 
-<img src="symbols/vnmos.svg" alt="vnmos">
+<img src="symbols/vnmos.svg" alt="vnmos" width="93">
 
 NMOS transistor, vertical, drain up, gate on the left; gate pin is the end of the gate lead
 
@@ -305,7 +305,7 @@ xschem: `sky130_fd_pr/nfet_01v8.sym`
 
 ### vpmos
 
-<img src="symbols/vpmos.svg" alt="vpmos">
+<img src="symbols/vpmos.svg" alt="vpmos" width="93">
 
 PMOS transistor, vertical, source up, gate on the left; gate pin is the end of the gate lead
 
@@ -334,7 +334,7 @@ xschem: `sky130_fd_pr/pfet_01v8.sym`
 
 ### hcapacitor
 
-<img src="symbols/hcapacitor.svg" alt="hcapacitor">
+<img src="symbols/hcapacitor.svg" alt="hcapacitor" width="110">
 
 Capacitor, horizontal
 
@@ -359,7 +359,7 @@ xschem: `devices/capa.sym`
 
 ### himpedance
 
-<img src="symbols/himpedance.svg" alt="himpedance">
+<img src="symbols/himpedance.svg" alt="himpedance" width="110">
 
 Generic impedance box, horizontal
 
@@ -382,7 +382,7 @@ exported coordinates: `cStart`, `impEnd`
 
 ### hresistor
 
-<img src="symbols/hresistor.svg" alt="hresistor">
+<img src="symbols/hresistor.svg" alt="hresistor" width="110">
 
 Resistor, horizontal (hand-rolled zig-zag)
 
@@ -407,7 +407,7 @@ xschem: `devices/res.sym`
 
 ### vcapacitor
 
-<img src="symbols/vcapacitor.svg" alt="vcapacitor">
+<img src="symbols/vcapacitor.svg" alt="vcapacitor" width="57">
 
 Capacitor, vertical
 
@@ -432,7 +432,7 @@ xschem: `devices/capa.sym`
 
 ### vimpedance
 
-<img src="symbols/vimpedance.svg" alt="vimpedance">
+<img src="symbols/vimpedance.svg" alt="vimpedance" width="35">
 
 Generic impedance box, vertical
 
@@ -455,7 +455,7 @@ exported coordinates: `cStart`, `impEnd`
 
 ### vresistor
 
-<img src="symbols/vresistor.svg" alt="vresistor">
+<img src="symbols/vresistor.svg" alt="vresistor" width="49">
 
 Resistor, vertical (hand-rolled zig-zag, weight-matched to wires)
 
@@ -483,7 +483,7 @@ xschem: `devices/res.sym`
 
 ### vground
 
-<img src="symbols/vground.svg" alt="vground">
+<img src="symbols/vground.svg" alt="vground" width="30">
 
 Ground symbol (three shrinking bars, downward). Path returns to entry.
 
@@ -507,7 +507,7 @@ xschem: `devices/gnd.sym`
 
 ### vsupply
 
-<img src="symbols/vsupply.svg" alt="vsupply">
+<img src="symbols/vsupply.svg" alt="vsupply" width="30">
 
 Supply symbol (upward stub with slash). Path returns to entry.
 
@@ -531,7 +531,7 @@ xschem: `devices/vdd.sym`
 
 ### vvsource
 
-<img src="symbols/vvsource.svg" alt="vvsource">
+<img src="symbols/vvsource.svg" alt="vvsource" width="88">
 
 Voltage source, vertical, drawn DOWNWARD 1.5 grid from entry
 
@@ -557,7 +557,7 @@ xschem: `devices/vsource.sym`
 
 ### curDown
 
-<img src="symbols/curDown.svg" alt="curDown">
+<img src="symbols/curDown.svg" alt="curDown" width="30">
 
 Downward current arrow on a half-grid stub
 
@@ -577,7 +577,7 @@ entry `[0, 0]` — exit `[0, -0.8]`
 
 ### portCurDown
 
-<img src="symbols/portCurDown.svg" alt="portCurDown">
+<img src="symbols/portCurDown.svg" alt="portCurDown" width="36">
 
 Downward current arrow with a label
 
@@ -597,7 +597,7 @@ entry `[0, 0]` — exit `[0, -0.8]`
 
 ### portDiffIn
 
-<img src="symbols/portDiffIn.svg" alt="portDiffIn">
+<img src="symbols/portDiffIn.svg" alt="portDiffIn" width="35">
 
 Differential input port pair (+ over -, 1.6 apart)
 
@@ -620,7 +620,7 @@ exported coordinates: `cStart`
 
 ### portDiffOut
 
-<img src="symbols/portDiffOut.svg" alt="portDiffOut">
+<img src="symbols/portDiffOut.svg" alt="portDiffOut" width="54">
 
 Differential output port pair (+ over -, 1.6 apart)
 
@@ -643,7 +643,7 @@ exported coordinates: `cStart`
 
 ### portIn
 
-<img src="symbols/portIn.svg" alt="portIn">
+<img src="symbols/portIn.svg" alt="portIn" width="41">
 
 Input port: open circle at the current point, label to the left (anchor east)
 
@@ -665,7 +665,7 @@ xschem: `devices/ipin.sym`
 
 ### portOut
 
-<img src="symbols/portOut.svg" alt="portOut">
+<img src="symbols/portOut.svg" alt="portOut" width="77">
 
 Output port: junction dot at entry, 0.5 wire right, open circle, label right
 
@@ -687,7 +687,7 @@ xschem: `devices/opin.sym`
 
 ### portOutDown
 
-<img src="symbols/portOutDown.svg" alt="portOutDown">
+<img src="symbols/portOutDown.svg" alt="portOutDown" width="43">
 
 Output port drawn downward half a grid
 
@@ -709,7 +709,7 @@ exported coordinates: `cStart`
 
 ### portmIn
 
-<img src="symbols/portmIn.svg" alt="portmIn">
+<img src="symbols/portmIn.svg" alt="portmIn" width="41">
 
 Input port, mirrored: label to the right (anchor west), for mirrored devices
 
@@ -734,7 +734,7 @@ xschem: `devices/ipin.sym`
 
 ### cicAdd
 
-<img src="symbols/cicAdd.svg" alt="cicAdd">
+<img src="symbols/cicAdd.svg" alt="cicAdd" width="30">
 
 Summing node: circle with +
 
@@ -755,7 +755,7 @@ entry `[0, 0]` — exit `[0.4, 0]`
 
 ### cicAnd
 
-<img src="symbols/cicAnd.svg" alt="cicAnd">
+<img src="symbols/cicAnd.svg" alt="cicAnd" width="82">
 
 AND gate, hand-rolled house shape
 
@@ -777,7 +777,7 @@ entry `[0, 0]` — exit `[1.18, 0]`
 
 ### cicBuf
 
-<img src="symbols/cicBuf.svg" alt="cicBuf">
+<img src="symbols/cicBuf.svg" alt="cicBuf" width="63">
 
 Buffer (triangle, no bubble), hand-rolled house shape
 
@@ -798,7 +798,7 @@ entry `[0, 0]` — exit `[0.9, 0]`
 
 ### cicDff
 
-<img src="symbols/cicDff.svg" alt="cicDff">
+<img src="symbols/cicDff.svg" alt="cicDff" width="110">
 
 D flip-flop box: D and clock wedge left, Q and QN right; entry/exit lower-left
 
@@ -821,7 +821,7 @@ entry `[0, 0]` — exit `[0, 0]`
 
 ### cicH
 
-<img src="symbols/cicH.svg" alt="cicH">
+<img src="symbols/cicH.svg" alt="cicH" width="67">
 
 Transfer-function box H(s)
 
@@ -842,7 +842,7 @@ entry `[0, 0]` — exit `[0.8, 0]`
 
 ### cicInv
 
-<img src="symbols/cicInv.svg" alt="cicInv">
+<img src="symbols/cicInv.svg" alt="cicInv" width="76">
 
 Inverter, hand-rolled house shape; exports <n>_in/_out
 
@@ -863,7 +863,7 @@ entry `[0, 0]` — exit `[1.1, 0]`
 
 ### cicInvM
 
-<img src="symbols/cicInvM.svg" alt="cicInvM">
+<img src="symbols/cicInvM.svg" alt="cicInvM" width="76">
 
 Inverter pointing left (for feedback paths); in right, out left
 
@@ -884,7 +884,7 @@ entry `[0, 0]` — exit `[-1.1, 0]`
 
 ### cicNand
 
-<img src="symbols/cicNand.svg" alt="cicNand">
+<img src="symbols/cicNand.svg" alt="cicNand" width="95">
 
 NAND gate, hand-rolled house shape; exports <n>_in1/_in2/_out
 
@@ -907,7 +907,7 @@ entry `[0, 0]` — exit `[1.38, 0]`
 
 ### cicNor
 
-<img src="symbols/cicNor.svg" alt="cicNor">
+<img src="symbols/cicNor.svg" alt="cicNor" width="117">
 
 NOR gate, hand-rolled house shape
 
@@ -929,7 +929,7 @@ entry `[0, 0]` — exit `[1.7, 0]`
 
 ### cicOr
 
-<img src="symbols/cicOr.svg" alt="cicOr">
+<img src="symbols/cicOr.svg" alt="cicOr" width="103">
 
 OR gate, hand-rolled house shape
 
@@ -951,7 +951,7 @@ entry `[0, 0]` — exit `[1.5, 0]`
 
 ### cicOta
 
-<img src="symbols/cicOta.svg" alt="cicOta">
+<img src="symbols/cicOta.svg" alt="cicOta" width="178">
 
 Fully differential OTA outline (triangle, +/- in, -/+ out). Exports coordinates cicOta_inp/inn/outp/outn; path returns to inp.
 
@@ -980,7 +980,7 @@ exported coordinates: `cicOta_inp`, `cicOta_inn`, `cicOta_outp`, `cicOta_outn`
 
 ### cicOtaSSWP
 
-<img src="symbols/cicOtaSSWP.svg" alt="cicOtaSSWP">
+<img src="symbols/cicOtaSSWP.svg" alt="cicOtaSSWP" width="178">
 
 Single-ended OTA outline with caller-set input labels
 
@@ -1004,7 +1004,7 @@ exported coordinates: `cicOtaS_inp`, `cicOtaS_inn`, `cicOtaS_out`
 
 ### cicOtaSWP
 
-<img src="symbols/cicOtaSWP.svg" alt="cicOtaSWP">
+<img src="symbols/cicOtaSWP.svg" alt="cicOtaSWP" width="178">
 
 Fully differential OTA outline with caller-set port labels (+in/-in/+out/-out)
 
@@ -1029,7 +1029,7 @@ exported coordinates: `cicOta_inp`, `cicOta_inn`, `cicOta_outp`, `cicOta_outn`
 
 ### cicTgate
 
-<img src="symbols/cicTgate.svg" alt="cicTgate">
+<img src="symbols/cicTgate.svg" alt="cicTgate" width="97">
 
 Transmission gate: facing triangles, enable below, enable-bar bubble above
 
@@ -1055,7 +1055,7 @@ entry `[0, 0]` — exit `[1.4, 0]`
 
 ### cmCascode
 
-<img src="symbols/cmCascode.svg" alt="cmCascode">
+<img src="symbols/cmCascode.svg" alt="cmCascode" width="230">
 
 Cascoded NMOS current mirror (M1-M4, v_b bias port), grounds included. Branches at x=0 and x=2.5, tops at y=3.7. Path returns to entry.
 
@@ -1080,7 +1080,7 @@ exported coordinates: `cStart`
 
 ### cmRCascode
 
-<img src="symbols/cmRCascode.svg" alt="cmRCascode">
+<img src="symbols/cmRCascode.svg" alt="cmRCascode" width="230">
 
 Cascode mirror with resistor-derived cascode bias
 
@@ -1103,7 +1103,7 @@ exported coordinates: `cmRStart`, `cStart`, `resCon`, `resEnd`
 
 ### cmSfCascode
 
-<img src="symbols/cmSfCascode.svg" alt="cmSfCascode">
+<img src="symbols/cmSfCascode.svg" alt="cmSfCascode" width="196">
 
 Cascode current mirror biased as source follower (M3/M4 under M1/M2)
 
@@ -1126,7 +1126,7 @@ exported coordinates: `cStart`
 
 ### cmSourceDeg
 
-<img src="symbols/cmSourceDeg.svg" alt="cmSourceDeg">
+<img src="symbols/cmSourceDeg.svg" alt="cmSourceDeg" width="212">
 
 Source-degenerated current mirror (R_s under M1/M2), grounds included
 
@@ -1149,7 +1149,7 @@ exported coordinates: `cStart`
 
 ### cmStd
 
-<img src="symbols/cmStd.svg" alt="cmStd">
+<img src="symbols/cmStd.svg" alt="cmStd" width="196">
 
 Standard NMOS current mirror (M1 diode-connected, M2 output), grounds included, current arrows i_i/i_o. Path returns to entry.
 
@@ -1177,7 +1177,7 @@ exported coordinates: `cStart`
 
 ### filtActLP
 
-<img src="symbols/filtActLP.svg" alt="filtActLP">
+<img src="symbols/filtActLP.svg" alt="filtActLP" width="287">
 
 Active RC low-pass: R into OTA virtual ground, C in feedback
 
@@ -1200,7 +1200,7 @@ exported coordinates: `cicStart`, `resEnd`, `capEnd`, `cStart`, `cicOta_inp`, `c
 
 ### filtActZ
 
-<img src="symbols/filtActZ.svg" alt="filtActZ">
+<img src="symbols/filtActZ.svg" alt="filtActZ" width="287">
 
 Active filter with generic input/feedback impedances
 
@@ -1223,7 +1223,7 @@ exported coordinates: `cicStart`, `impEnd`, `cStart`, `cicOta_inp`, `cicOta_inn`
 
 ### filtHP
 
-<img src="symbols/filtHP.svg" alt="filtHP">
+<img src="symbols/filtHP.svg" alt="filtHP" width="151">
 
 Passive RC high-pass: series C to shunt R
 
@@ -1246,7 +1246,7 @@ exported coordinates: `cStart`, `capEnd`, `resEnd`
 
 ### filtLP
 
-<img src="symbols/filtLP.svg" alt="filtLP">
+<img src="symbols/filtLP.svg" alt="filtLP" width="152">
 
 Passive RC low-pass: series R to shunt C
 
@@ -1272,7 +1272,7 @@ exported coordinates: `cStart`, `resEnd`, `capEnd`
 
 ### anaQuestion
 
-<img src="symbols/anaQuestion.svg" alt="anaQuestion">
+<img src="symbols/anaQuestion.svg" alt="anaQuestion" width="374">
 
 Current mirror bias question figure (M1-M3 with sources)
 

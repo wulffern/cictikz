@@ -33,43 +33,43 @@ without an image only make sense composed into a larger figure.
 
 `\bootSwH{...}{...}{...}`
 
-<img src="libraries/bootSwH.svg" alt="bootSwH">
+<img src="libraries/bootSwH.svg" alt="bootSwH" width="69">
 
 ### bootSwHd
 
 `\bootSwHd{...}{...}{...}`
 
-<img src="libraries/bootSwHd.svg" alt="bootSwHd">
+<img src="libraries/bootSwHd.svg" alt="bootSwHd" width="69">
 
 ### bootSwD
 
 `\bootSwD{...}{...}{...}`
 
-<img src="libraries/bootSwD.svg" alt="bootSwD">
+<img src="libraries/bootSwD.svg" alt="bootSwD" width="69">
 
 ### bootSwU
 
 `\bootSwU{...}{...}{...}`
 
-<img src="libraries/bootSwU.svg" alt="bootSwU">
+<img src="libraries/bootSwU.svg" alt="bootSwU" width="69">
 
 ### bootGndL
 
 `\bootGndL{...}{...}`
 
-<img src="libraries/bootGndL.svg" alt="bootGndL">
+<img src="libraries/bootGndL.svg" alt="bootGndL" width="30">
 
 ### bootGndR
 
 `\bootGndR{...}{...}`
 
-<img src="libraries/bootGndR.svg" alt="bootGndR">
+<img src="libraries/bootGndR.svg" alt="bootGndR" width="30">
 
 ### bootGndD
 
 `\bootGndD{...}{...}`
 
-<img src="libraries/bootGndD.svg" alt="bootGndD">
+<img src="libraries/bootGndD.svg" alt="bootGndD" width="30">
 
 ### bootPort
 
@@ -79,13 +79,13 @@ without an image only make sense composed into a larger figure.
 
 `\bootBlock{...}`
 
-<img src="libraries/bootBlock.svg" alt="bootBlock">
+<img src="libraries/bootBlock.svg" alt="bootBlock" width="682">
 
 ### bootBlockDn
 
 `\bootBlockDn{...}`
 
-<img src="libraries/bootBlockDn.svg" alt="bootBlockDn">
+<img src="libraries/bootBlockDn.svg" alt="bootBlockDn" width="682">
 
 
 ## constellation — modulation constellations
@@ -105,13 +105,13 @@ without an image only make sense composed into a larger figure.
 
 `\constframe{...}`
 
-<img src="libraries/constframe.svg" alt="constframe">
+<img src="libraries/constframe.svg" alt="constframe" width="137">
 
 ### constsymbol
 
 `\constsymbol{...}{...}`
 
-<img src="libraries/constsymbol.svg" alt="constsymbol">
+<img src="libraries/constsymbol.svg" alt="constsymbol" width="30">
 
 ### constcircle
 
@@ -175,31 +175,31 @@ Constants: `\esdVdd` = 5.8, `\esdPin` = 3.4, `\esdRight` = 9.8, `\esdLow` = 1.7,
 
 `\esdframe`
 
-<img src="libraries/esdframe.svg" alt="esdframe">
+<img src="libraries/esdframe.svg" alt="esdframe" width="743">
 
 ### esdDiode
 
 `\esdDiode{...}{...}{...}{...}{...}`
 
-<img src="libraries/esdDiode.svg" alt="esdDiode">
+<img src="libraries/esdDiode.svg" alt="esdDiode" width="58">
 
 ### esdggn
 
 `\esdggn{...}{...}{...}{...}{...}{...}`
 
-<img src="libraries/esdggn.svg" alt="esdggn">
+<img src="libraries/esdggn.svg" alt="esdggn" width="104">
 
 ### esdZapIn
 
 `\esdZapIn{...}`
 
-<img src="libraries/esdZapIn.svg" alt="esdZapIn">
+<img src="libraries/esdZapIn.svg" alt="esdZapIn" width="185">
 
 ### esdZapOut
 
 `\esdZapOut{...}`
 
-<img src="libraries/esdZapOut.svg" alt="esdZapOut">
+<img src="libraries/esdZapOut.svg" alt="esdZapOut" width="103">
 
 
 ## gmc — gm-C filter blocks
@@ -226,13 +226,13 @@ Constants: `\gmcW` = 1.5, `\gmcHi` = 1.5, `\gmcHo` = 0.8
 
 `\gmcBody{...}{...}{...}`
 
-<img src="libraries/gmcBody.svg" alt="gmcBody">
+<img src="libraries/gmcBody.svg" alt="gmcBody" width="103">
 
 ### gmcBodyL
 
 `\gmcBodyL{...}{...}{...}`
 
-<img src="libraries/gmcBodyL.svg" alt="gmcBodyL">
+<img src="libraries/gmcBodyL.svg" alt="gmcBodyL" width="103">
 
 ### gmcPlus
 
@@ -246,19 +246,19 @@ Constants: `\gmcW` = 1.5, `\gmcHi` = 1.5, `\gmcHo` = 0.8
 
 `\gmcVcap{...}{...}{...}`
 
-<img src="libraries/gmcVcap.svg" alt="gmcVcap">
+<img src="libraries/gmcVcap.svg" alt="gmcVcap" width="30">
 
 ### gmcHcap
 
 `\gmcHcap{...}{...}{...}`
 
-<img src="libraries/gmcHcap.svg" alt="gmcHcap">
+<img src="libraries/gmcHcap.svg" alt="gmcHcap" width="69">
 
 ### gmcDiffFrame
 
 `\gmcDiffFrame`
 
-<img src="libraries/gmcDiffFrame.svg" alt="gmcDiffFrame">
+<img src="libraries/gmcDiffFrame.svg" alt="gmcDiffFrame" width="390">
 
 
 ## mos — MOSFET cross-section cartoons
@@ -278,67 +278,67 @@ Constants: `\gmcW` = 1.5, `\gmcHi` = 1.5, `\gmcHo` = 0.8
 
 `\fetblock{...}{...}`
 
-<img src="libraries/fetblock.svg" alt="fetblock">
+<img src="libraries/fetblock.svg" alt="fetblock" width="30">
 
 ### fetterminal
 
 `\fetterminal{...}{...}{...}`
 
-<img src="libraries/fetterminal.svg" alt="fetterminal">
+<img src="libraries/fetterminal.svg" alt="fetterminal" width="30">
 
 ### fetframe
 
 `\fetframe`
 
-<img src="libraries/fetframe.svg" alt="fetframe">
+<img src="libraries/fetframe.svg" alt="fetframe" width="615">
 
 ### eminus
 
 `\eminus{...}{...}`
 
-<img src="libraries/eminus.svg" alt="eminus">
+<img src="libraries/eminus.svg" alt="eminus" width="30">
 
 ### hplus
 
 `\hplus{...}{...}`
 
-<img src="libraries/hplus.svg" alt="hplus">
+<img src="libraries/hplus.svg" alt="hplus" width="30">
 
 ### efill
 
 `\efill{...}{...}`
 
-<img src="libraries/efill.svg" alt="efill">
+<img src="libraries/efill.svg" alt="efill" width="162">
 
 ### bulkframe
 
 `\bulkframe`
 
-<img src="libraries/bulkframe.svg" alt="bulkframe">
+<img src="libraries/bulkframe.svg" alt="bulkframe" width="739">
 
 ### neckrow
 
 `\neckrow{...}{...}`
 
-<img src="libraries/neckrow.svg" alt="neckrow">
+<img src="libraries/neckrow.svg" alt="neckrow" width="274">
 
 ### sideholes
 
 `\sideholes`
 
-<img src="libraries/sideholes.svg" alt="sideholes">
+<img src="libraries/sideholes.svg" alt="sideholes" width="713">
 
 ### bulkterminalgnd
 
 `\bulkterminalgnd{...}{...}{...}`
 
-<img src="libraries/bulkterminalgnd.svg" alt="bulkterminalgnd">
+<img src="libraries/bulkterminalgnd.svg" alt="bulkterminalgnd" width="82">
 
 ### drainzoomframe
 
 `\drainzoomframe`
 
-<img src="libraries/drainzoomframe.svg" alt="drainzoomframe">
+<img src="libraries/drainzoomframe.svg" alt="drainzoomframe" width="711">
 
 
 ## plane — s/z-plane diagrams
@@ -358,13 +358,13 @@ Constants: `\planeR` = 1.8, `\planeXmax` = 3.1, `\planeYmax` = 2.9, `\planeMark`
 
 `\planeAxes{...}{...}`
 
-<img src="libraries/planeAxes.svg" alt="planeAxes">
+<img src="libraries/planeAxes.svg" alt="planeAxes" width="423">
 
 ### planeCircle
 
 `\planeCircle`
 
-<img src="libraries/planeCircle.svg" alt="planeCircle">
+<img src="libraries/planeCircle.svg" alt="planeCircle" width="248">
 
 ### planePole
 
@@ -424,7 +424,7 @@ Constants: `\scYgnd` = 0, `\scYin` = 1.8, `\scXota` = 4.6, `\scXctwo` = 4.0, `\s
 
 `\scSwOpen{...}{...}`
 
-<img src="libraries/scSwOpen.svg" alt="scSwOpen">
+<img src="libraries/scSwOpen.svg" alt="scSwOpen" width="69">
 
 ### scSwClosed
 
@@ -434,19 +434,19 @@ Constants: `\scYgnd` = 0, `\scYin` = 1.8, `\scXota` = 4.6, `\scXctwo` = 4.0, `\s
 
 `\scIntroFrame`
 
-<img src="libraries/scIntroFrame.svg" alt="scIntroFrame">
+<img src="libraries/scIntroFrame.svg" alt="scIntroFrame" width="519">
 
 ### scSwH
 
 `\scSwH{...}{...}{...}`
 
-<img src="libraries/scSwH.svg" alt="scSwH">
+<img src="libraries/scSwH.svg" alt="scSwH" width="69">
 
 ### scSwV
 
 `\scSwV{...}{...}{...}`
 
-<img src="libraries/scSwV.svg" alt="scSwV">
+<img src="libraries/scSwV.svg" alt="scSwV" width="69">
 
 ### scPort
 
@@ -456,19 +456,19 @@ Constants: `\scYgnd` = 0, `\scYin` = 1.8, `\scXota` = 4.6, `\scXctwo` = 4.0, `\s
 
 `\scAmpFrame`
 
-<img src="libraries/scAmpFrame.svg" alt="scAmpFrame">
+<img src="libraries/scAmpFrame.svg" alt="scAmpFrame" width="787">
 
 ### scWaveEdge
 
 `\scWaveEdge{...}{...}{...}{...}`
 
-<img src="libraries/scWaveEdge.svg" alt="scWaveEdge">
+<img src="libraries/scWaveEdge.svg" alt="scWaveEdge" width="69">
 
 ### scWaveFrame
 
 `\scWaveFrame{...}`
 
-<img src="libraries/scWaveFrame.svg" alt="scWaveFrame">
+<img src="libraries/scWaveFrame.svg" alt="scWaveFrame" width="471">
 
 
 ## sfg — signal-flow and block diagrams
@@ -488,31 +488,31 @@ Constants: `\sfgR` = 0.25, `\sfgBw` = 1.0, `\sfgBh` = 0.65
 
 `\sfgSum{...}{...}`
 
-<img src="libraries/sfgSum.svg" alt="sfgSum">
+<img src="libraries/sfgSum.svg" alt="sfgSum" width="35">
 
 ### sfgBox
 
 `\sfgBox{...}{...}{...}`
 
-<img src="libraries/sfgBox.svg" alt="sfgBox">
+<img src="libraries/sfgBox.svg" alt="sfgBox" width="137">
 
 ### sfgDot
 
 `\sfgDot{...}{...}`
 
-<img src="libraries/sfgDot.svg" alt="sfgDot">
+<img src="libraries/sfgDot.svg" alt="sfgDot" width="30">
 
 ### sfgMix
 
 `\sfgMix{...}{...}`
 
-<img src="libraries/sfgMix.svg" alt="sfgMix">
+<img src="libraries/sfgMix.svg" alt="sfgMix" width="35">
 
 ### sfgAmp
 
 `\sfgAmp{...}{...}{...}`
 
-<img src="libraries/sfgAmp.svg" alt="sfgAmp">
+<img src="libraries/sfgAmp.svg" alt="sfgAmp" width="63">
 
 ### sfgAntenna
 
@@ -522,7 +522,7 @@ Constants: `\sfgR` = 0.25, `\sfgBw` = 1.0, `\sfgBh` = 0.65
 
 `\sfgTall{...}{...}{...}{...}{...}`
 
-<img src="libraries/sfgTall.svg" alt="sfgTall">
+<img src="libraries/sfgTall.svg" alt="sfgTall" width="69">
 
 
 ## spec — spectra sketches
@@ -541,13 +541,13 @@ Constants: `\specHalf` = 1.2, `\specXmax` = 3.5, `\specVh` = 1.9, `\specToneH` =
 
 `\specAxis{...}`
 
-<img src="libraries/specAxis.svg" alt="specAxis">
+<img src="libraries/specAxis.svg" alt="specAxis" width="478">
 
 ### specBump
 
 `\specBump{...}`
 
-<img src="libraries/specBump.svg" alt="specBump">
+<img src="libraries/specBump.svg" alt="specBump" width="145">
 
 ### specTone
 
@@ -557,17 +557,17 @@ Constants: `\specHalf` = 1.2, `\specXmax` = 3.5, `\specVh` = 1.9, `\specToneH` =
 
 `\specBand{...}{...}{...}{...}`
 
-<img src="libraries/specBand.svg" alt="specBand">
+<img src="libraries/specBand.svg" alt="specBand" width="30">
 
 ### specBlock
 
 `\specBlock{...}{...}{...}`
 
-<img src="libraries/specBlock.svg" alt="specBlock">
+<img src="libraries/specBlock.svg" alt="specBlock" width="103">
 
 ### specWire
 
 `\specWire{...}{...}{...}`
 
-<img src="libraries/specWire.svg" alt="specWire">
+<img src="libraries/specWire.svg" alt="specWire" width="30">
 
