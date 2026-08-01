@@ -30,7 +30,7 @@ ARGS = {
     "portOutDown": "{$v_o$}", "curDown": "{$i_o$}", "portCurDown": "{$i_o$}",
     "cicH": "{$H(s)$}",
     "cicNand": "{g}", "cicAnd": "{g}", "cicNor": "{g}", "cicOr": "{g}",
-    "cicInv": "{g}", "cicBuf": "{g}", "cicInvM": "{g}",
+    "cicInv": "{g}", "cicBuf": "{g}", "cicInvM": "{g}", "cicTgate": "{g}", "cicDff": "{g}",
     "cicOtaSWP": "{$+$}{$-$}{$+$}{$-$}", "cicOtaSSWP": "{$+$}{$-$}",
     "filtLP": "{$R$}{$C$}", "filtHP": "{$C$}{$R$}",
     "filtActLP": "{$R$}{$C$}", "filtActZ": "{$Z_1$}{$Z_2$}",

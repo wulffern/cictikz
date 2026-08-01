@@ -399,6 +399,14 @@ MORE = [
     block("cicInvM", 1, "Inverter pointing left (for feedback paths); in right, out left",
           [-1.1, 0], [("in", [0, 0], "in"), ("out", [-1.1, 0], "out")],
           arg_doc=["instance name"]),
+    block("cicTgate", 1, "Transmission gate: facing triangles, enable below, enable-bar bubble above",
+          [1.4, 0], [("in", [0, 0], "in"), ("out", [1.4, 0], "out"),
+                     ("en", [0.7, -0.55], "in"), ("enb", [0.7, 0.64], "in")],
+          arg_doc=["instance name"]),
+    block("cicDff", 1, "D flip-flop box: D and clock wedge left, Q and QN right; entry/exit lower-left",
+          [0, 0], [("d", [0, 1.5], "in"), ("ck", [0, 0.4], "in"),
+                   ("q", [1.6, 0.4], "out"), ("qn", [1.6, 1.5], "out")],
+          arg_doc=["instance name"]),
 ]
 
 for s in MORE:

@@ -1,0 +1,43 @@
+# cictikz symbol metadata. Coordinates are figure units (\grid = 1.6),
+# relative to the macro entry point, y up, taken from the macro body in
+# cictikz_lib.tex. Transistor gate pins are at the END of the gate lead
+# (the circuitikz .gate anchor, measured); in TikZ prefer the node
+# anchor (e.g. M1.gate) over the raw coordinate.
+name: cicDff
+macro: \cicDff
+nargs: 1
+arg_doc:
+- instance name
+description: 'D flip-flop box: D and clock wedge left, Q and QN right; entry/exit
+  lower-left'
+entry:
+- 0
+- 0
+exit:
+- 0
+- 0
+height_grid: 0
+width_grid: 0
+pins:
+- name: d
+  grid_xy:
+  - 0
+  - 1.5
+  direction: in
+- name: ck
+  grid_xy:
+  - 0
+  - 0.4
+  direction: in
+- name: q
+  grid_xy:
+  - 1.6
+  - 0.4
+  direction: out
+- name: qn
+  grid_xy:
+  - 1.6
+  - 1.5
+  direction: out
+exports: {}
+example: \draw (0,0) \cicDff{x};

@@ -15,6 +15,7 @@ so this page doubles as a compile test of the library.
 | [`\cicAdd`](#cicadd) | Summing node: circle with + |
 | [`\cicAnd`](#cicand) | AND gate, hand-rolled house shape |
 | [`\cicBuf`](#cicbuf) | Buffer (triangle, no bubble), hand-rolled house shape |
+| [`\cicDff`](#cicdff) | D flip-flop box: D and clock wedge left, Q and QN right; entry/exit lower-left |
 | [`\cicH`](#cich) | Transfer-function box H(s) |
 | [`\cicInv`](#cicinv) | Inverter, hand-rolled house shape; exports <n>_in/_out |
 | [`\cicInvM`](#cicinvm) | Inverter pointing left (for feedback paths); in right, out left |
@@ -24,6 +25,7 @@ so this page doubles as a compile test of the library.
 | [`\cicOta`](#cicota) | Fully differential OTA outline (triangle, +/- in, -/+ out). Exports coordinates cicOta_inp/inn/outp/outn; path returns to inp. |
 | [`\cicOtaSSWP`](#cicotasswp) | Single-ended OTA outline with caller-set input labels |
 | [`\cicOtaSWP`](#cicotaswp) | Fully differential OTA outline with caller-set port labels (+in/-in/+out/-out) |
+| [`\cicTgate`](#cictgate) | Transmission gate: facing triangles, enable below, enable-bar bubble above |
 | [`\cmCascode`](#cmcascode) | Cascoded NMOS current mirror (M1-M4, v_b bias port), grounds included. Branches at x=0 and x=2.5, tops at y=3.7. Path returns to entry. |
 | [`\cmRCascode`](#cmrcascode) | Cascode mirror with resistor-derived cascode bias |
 | [`\cmSfCascode`](#cmsfcascode) | Cascode current mirror biased as source follower (M3/M4 under M1/M2) |
@@ -794,6 +796,29 @@ entry `[0, 0]` — exit `[0.9, 0]`
 \draw (0,0) \cicBuf{x};
 ```
 
+### cicDff
+
+<img src="symbols/cicDff.svg" alt="cicDff">
+
+D flip-flop box: D and clock wedge left, Q and QN right; entry/exit lower-left
+
+```latex
+\cicDff{instance name}
+```
+
+entry `[0, 0]` — exit `[0, 0]`
+
+| pin | position | direction |
+|---|---|---|
+| d | [0, 1.5] | in |
+| ck | [0, 0.4] | in |
+| q | [1.6, 0.4] | out |
+| qn | [1.6, 1.5] | out |
+
+```latex
+\draw (0,0) \cicDff{x};
+```
+
 ### cicH
 
 <img src="symbols/cicH.svg" alt="cicH">
@@ -1000,6 +1025,29 @@ exported coordinates: `cicOta_inp`, `cicOta_inn`, `cicOta_outp`, `cicOta_outn`
 
 ```latex
 \draw (0,0) \cicOtaSWP{x}{x}{x}{x};
+```
+
+### cicTgate
+
+<img src="symbols/cicTgate.svg" alt="cicTgate">
+
+Transmission gate: facing triangles, enable below, enable-bar bubble above
+
+```latex
+\cicTgate{instance name}
+```
+
+entry `[0, 0]` — exit `[1.4, 0]`
+
+| pin | position | direction |
+|---|---|---|
+| in | [0, 0] | in |
+| out | [1.4, 0] | out |
+| en | [0.7, -0.55] | in |
+| enb | [0.7, 0.64] | in |
+
+```latex
+\draw (0,0) \cicTgate{x};
 ```
 
 
