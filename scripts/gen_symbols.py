@@ -226,19 +226,6 @@ SYMS += [
         "example": "\\draw (M1.drain) \\portOut{$v_o$};",
     },
     {
-        "name": "hinv", "macro": "\\hinv", "nargs": 1,
-        "arg_doc": ["instance name (becomes the not-port node, e.g. X1)"],
-        "description": "Inverter (not port), horizontal, input left output right",
-        "entry": [0, 0], "exit": [1.4, 0],
-        "height_grid": 0.6, "width_grid": 1.4,
-        "pins": [
-            {"name": "in", "grid_xy": [0, 0], "direction": "in"},
-            {"name": "out", "grid_xy": [1.4, 0], "direction": "out"},
-        ],
-        "nodes": ["<inst>.in 1", "<inst>.out"],
-        "example": "\\draw (0,0) \\hinv{X1};",
-    },
-    {
         "name": "cicOta", "macro": "\\cicOta", "nargs": 0, "arg_doc": [],
         "exports": {"cicOta_inp": [0, 0], "cicOta_inn": [0, -1.6],
                     "cicOta_outp": [2.6, -1.6], "cicOta_outn": [2.6, 0]},

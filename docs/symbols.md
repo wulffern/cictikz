@@ -37,7 +37,6 @@ so this page doubles as a compile test of the library.
 | [`\filtLP`](#filtlp) | Passive RC low-pass: series R to shunt C |
 | [`\hcapacitor`](#hcapacitor) | Capacitor, horizontal |
 | [`\himpedance`](#himpedance) | Generic impedance box, horizontal |
-| [`\hinv`](#hinv) | Inverter (not port), horizontal, input left output right |
 | [`\hresistor`](#hresistor) | Resistor, horizontal (hand-rolled zig-zag) |
 | [`\lvmnmos`](#lvmnmos) | NMOS transistor, vertical, drain up, gate on the right (mirrored), with optional gate input port; gate pin is the end of the gate lead |
 | [`\lvmpmos`](#lvmpmos) | PMOS transistor, vertical, source up, gate on the right (mirrored), with optional gate input port; gate pin is the end of the gate lead |
@@ -1001,29 +1000,6 @@ exported coordinates: `cicOta_inp`, `cicOta_inn`, `cicOta_outp`, `cicOta_outn`
 
 ```latex
 \draw (0,0) \cicOtaSWP{x}{x}{x}{x};
-```
-
-### hinv
-
-<img src="symbols/hinv.svg" alt="hinv">
-
-Inverter (not port), horizontal, input left output right
-
-```latex
-\hinv{instance name (becomes the not-port node, e.g. X1)}
-```
-
-entry `[0, 0]` — exit `[1.4, 0]`
-
-| pin | position | direction |
-|---|---|---|
-| in | [0, 0] | in |
-| out | [1.4, 0] | out |
-
-anchors: `<inst>.in 1`, `<inst>.out`
-
-```latex
-\draw (0,0) \hinv{X1};
 ```
 
 
