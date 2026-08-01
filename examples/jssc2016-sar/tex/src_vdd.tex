@@ -1,0 +1,69 @@
+
+\begin{axis}[%
+width=3.5in,
+height=1.5in,
+at={(0in,0in)},
+scale only axis,
+xmin=0.4,
+xmax=1.1,
+xlabel style={font=\color{white!15!black}, align=center},
+xlabel={VDD [V]},
+ymin=6.5,
+ymax=8.5,
+ylabel style={font=\color{white!15!black}},
+ylabel={Peak ENOB @ fs/2 [bit]},
+axis background/.style={fill=white},
+%xmajorgrids,
+%ymajorgrids,
+legend style={at={(0.97,0.03)}, anchor=south east, legend cell align=left, align=left, draw=white!15!black}
+]
+\addplot [color=active, line width=1.5pt, mark=*]
+  table[row sep=crcr]{%
+0.4	6.747\\
+0.456	7.312\\
+0.53	7.52\\
+0.6	7.564\\
+0.7	7.802\\
+0.8	7.951\\
+0.9	7.916\\
+1	8.031\\
+1.1	8.032\\
+};
+\addlegendentry{80 kS/s}
+
+\addplot [color=mOne, line width=1.5pt, mark=triangle]
+  table[row sep=crcr]{%
+0.4451	7.35\\
+0.4665	7.469\\
+0.4692	7.464\\
+0.5019	7.549\\
+0.5457	7.607\\
+0.6	7.707\\
+0.7	7.828\\
+0.8	8\\
+0.889	8.057\\
+1	8.116\\
+1.1	8.131\\
+};
+\addlegendentry{2 MS/s}
+
+\addplot [color=poly,solid, line width=1.5pt, mark=square]
+  table[row sep=crcr]{%
+0.71	7.8\\
+0.85	7.989\\
+0.9	8.006\\
+0.95	7.996\\
+1.05	8.142\\
+1.1	8.157\\
+};
+\addlegendentry{20 MS/s}
+
+\addplot [color=mFour, line width=1.5pt, draw=none, mark=diamond]
+  table[row sep=crcr]{%
+1.08	8.007\\
+};
+\addlegendentry{80 MS/s}
+
+\end{axis}
+
+

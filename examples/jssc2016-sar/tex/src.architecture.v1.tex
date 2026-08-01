@@ -1,0 +1,90 @@
+\subsection{SAR logic reset}
+During sampling of the ADC input the SAR logic stage is reset ($CK=1$). In the
+enable logic of the first  stage $EI=\overline{CK}=0$, and node $A=1$,
+while $EO=0$. Thus $EI=EO=0$ of all subsequent stages. The CDAC
+state control has $D_{P0}=D_{N1}=0$ while $D_{N0}=D_{P1}=1$. In the clock generation
+loop of the first stage $CI=0$, and since node $B=0$, then
+$CO=0$. Accordingly $CI=CO=0$ for all subsequent stages.
+
+\subsection{Comparator decision}
+The first comparator decision is initiated by $CK=0$ (steps 1 and 2 in Fig. \ref{fig_timing}), at that point the
+first latch ($M_{N0}-M_{N2}, M_{P0}$) in the enable logic is armed, and as soon as $(P||N)=1$,
+then $A=0$. This arms the second latch ($M_{N3},M_{P1}-M_{P3}$) in the enable
+logic. Still $EO=0$. 
+The CDAC state control is also triggered by $(P||N)=1$ (step 3 in Fig. \ref{fig_timing}), if $P=1$ then $D_{P0}=1$
+and $D_{N0}=0$. If $N=1$ then $D_{N1}=1$ and $D_{P1}=0$. This
+either adds, or subtracts charge from the top plate of the
+CDAC. 
+
+
+For the most significant bit the transition of $D_{P1},D_{P0},D_{N0},D_{N1}$ can be slow due to the
+high capacitance, especially if the SAR runs at
+a low voltage since the inverters will have lower driver strength. 
+The advantage of this work is that the transition of $D_{P1}$ and $D_{N0}$ is included in the bit-cycling
+clock generation loop. Since either $D_{P1}$ or $D_{N0}$ is guaranteed to transition
+from high to low, these signals can be used to trigger comparator
+reset.  When either $D_{P1}$ or $D_{N0} = 0$ then $M_{P6}$ or $M_{P7}$ turns on, and sets
+node $B=1$, and consequently $CO = 1$ (step 4 in Fig. \ref{fig_timing}). The delay from $P||N=1$ to
+$CO=1$ will depend on the process corner, CDAC capacitor variation, temperature,  and supply voltage. As a result the CDAC will be given sufficient
+time to settle completely, independent of process, voltage, and
+temperature (PVT). 
+
+
+%-----------------------------------------------------------------
+% Extend with simulation of the different times from cadence
+%-----------------------------------------------------------------
+Simulation of the voltage tolerance can be seen in Fig
+\ref{fig_sim}. Fig \ref{fig_sim}(a) shows the core SAR ADC at a
+$VDD=0.49V$. 
+%At that voltage and room temperature the maximum measured sample rate
+%is 2MS/s.
+The first comparator decision is started by the sampling clock ($CK$),
+seen at $1ns$ for low to high transition of $CK\_CMP$. At this low voltage
+there is a long delay through the comparator to $P$ and $N$, and
+further through the CDAC state control before $D_{N0}$ transitions to
+zero. At that point $CO$ transitions high, and resets the
+comparator. The fall-time from $90\%$ to $10\%$ of $D_{N0}$ is
+$1.11ns$. In terms of time constants the fall-time is approximately
+$ 2.2 \uptau$ for a single pole system. Thus the time constant for
+node $D_{N0}$ is approximately $0.5ns$. The required settling
+time for an accuracy within 1 LSB with 9-bit resolution is $-ln\frac{1}{512} \times tau <
+6.23 \times 0.5ns < 3.12ns $. The simulated delay from $D_{N0}$ to $CK\_CMP$ is $7.11ns$, thus the CDAC has
+sufficient settling time for 9-bit accuracy.
+
+%-----------------------------------------------------------------
+% High simulation
+%-----------------------------------------------------------------
+Fig \ref{fig_sim}b) shows the core SAR ADC at $VDD=0.71V$, in this
+case the fall time of $D_{N0} = 0.315ns$, thus the required delay for
+9-bit settling is
+less than $6.23 \times \frac{0.315ns}{2.2} < 0.89ns$.  The
+simulated delay from $D_{N0}$ to $CK\_CMP$ is
+$1.68ns$ for Fig \ref{fig_sim}b) as a result there is sufficient
+settling time for 9-bit accuracy.
+
+\begin{figure}[tb]
+\centerline{\includegraphics[width=\myfigwidth]{../graphics/fig_simulation.pdf}}
+\caption{Simulation result of core SAR ADC at (a) 2MS/s and 0.49V and
+  b) 20MS/s and 0.71V. }
+\label{fig_sim}
+\end{figure}
+
+
+The maximum sample rate will depend on
+PVT, thus in an industrial design one must ensure sufficient margin for
+sample rate over PVT. The SAR architecture in this work is well suited to a
+calibration loop where the supply voltage is adjusted until $EO$ of
+the last logic stage is detected. In a Bluetooth\textsuperscript{\textregistered} low energy system this can be implemented at
+radio power up. In this work, however, the voltage is fed from an external source, and the supply voltage calibration is a manual process. Another advantage of the clock generation loop in this work is that $CK\_CMP$ will
+speed up for LSBs, since $D_{P1}$ and $D_{N0}$ will transition faster for
+LSB stages, and the ripple path from $CI$ to $CO$ to
+comparator is shorter.
+
+\subsection{Comparator reset}
+The comparator in Fig. \ref{fig_sar} is reset when $CK\_CMP=0$, which
+occurs when $CO=1$, since $CK=0$, and
+for the last stage $EO=0$ (steps 5 and 6 in Fig. \ref{fig_timing}). The comparator will set signals $P=N=0$, which turns on transistors $M_{P2}$ and $M_{P1}$, and sets $EO=1$ (step 7). This enables the next stage. It also locks the state of the
+CDAC state control,
+since $M_{N5}$ and $M_{N8}$ turn off. Also, $CO=0$ and in the end $CK\_CMP=1$ (step 8 and 9 in Fig. \ref{fig_timing}),
+which clocks the comparator once more, and the next bit is decided.
+The bit-cycling ends when $EO=1$ for the last stage.

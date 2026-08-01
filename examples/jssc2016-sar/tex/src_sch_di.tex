@@ -1,0 +1,37 @@
+
+\newcommand{\ckcmp}{C}
+
+\draw
+
+
+ (0,0) to [resistor={R1}] ++(2,0)  
+ to [capacitor={C1}] ++(0,-2)
+ node [ground,rotate=-90,anchor=west] {} 
+ 
+ (4,0) node [not gate,scale=1.5,thick] (i1) {} 
+ (6,0) node [not gate,scale=1.5,thick] (i2) {} 
+ (8,0) node [not gate,scale=1.5,thick] (i3) {} 
+
+(2,0) -- (i1.input)
+(i1.output) -- (i2.input)
+(i2.output) -- (i3.input)
+(i1.center) ++(-0.2,-0.2) -- ++(0.2,0) -- ++(0,0.4) -- ++(0.1,0)
+(i1.center) ++(-0.2,-0.2) -- ++(0.1,0) -- ++(0,0.4) -- ++(0.1,0)
+(i1.north)   node [rground, yscale=-1] {}
+  ++(0,0.3) node [anchor=south] {$V_{\mathit{DDIO}}$}
+
+(i2.north)   node [rground, yscale=-1] {}
+  ++(0,0.3) node [anchor=south] {$V_{\mathit{DD}}$}
+
+(i3.north)   node [rground, yscale=-1] {}
+  ++(0,0.3) node [anchor=south] {$V_{\mathit{DD}}$}
+ 
+(i1.south) ++(0,-0.3) node [anchor=north] {$IO_1$}
+(i2.south) ++(0,-0.3) node [anchor=north] {$IO_2$}
+(i3.south) ++(0,-0.3) node [anchor=north] {$CORE_1$}
+(i3.output) to [short,-o] ++(0.5,0) node [anchor=west] {$CLK$}
+(0,0) to [short,-o] ++(-0,0) node [anchor=east] {$CLK_{PAD}$}
+
+
+;
+

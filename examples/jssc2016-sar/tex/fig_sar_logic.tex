@@ -1,0 +1,51 @@
+\input{../tex/fig_header}
+
+
+\begin{circuitikz}[circuit logic US, thick,
+  transform shape,circuit ee IEC,set make contact graphic= var make contact IEC graphic] 
+
+%  \draw[white,help lines,step=1, line width=1pt] (-2,-2) grid (20,20);
+
+%\draw[gray] (6,4.2) rectangle (17,12.5);
+\draw[lightgray] (16.7,4.5) -- ++(0,9.5);    
+\draw[font=\Large] (11,14) node [anchor=south] { (a)}    ; 
+\draw[lightgray] (-2.6,14) -- (24,14);    
+\draw[lightgray] (5.9,4.5) -- ++(0,9.5);    
+
+\begin{scope}[shift={(-1,17)},scale=0.64]
+\input{../tex/src_architecture}
+\end{scope}
+
+
+\begin{scope}[shift={(-7,6)},scale=1]
+\draw[font=\Large] (8,-1) node [anchor=north] { (b)}    ;     
+\input{../tex/src_enable_logic}
+\end{scope}
+
+\begin{scope}[shift={(8,6)},scale=1]
+\draw[font=\Large] (3,-1) node [anchor=north] { (c)}    ;     
+\input{../tex/src_cdac_state_control}
+\end{scope}
+
+
+
+\begin{scope}[shift={(18.5,6)},scale=1]
+\draw[font=\Large] (2,-1) node [anchor=north] { (d)}    ;     
+%\draw[red, opacity=0.2] (-2,-1) rectangle (7,4.1);
+%\draw[red,font=\large] (4,3) node [anchor=west] { This work}    ;     
+\input{../tex/src_clock_loop}
+\end{scope}
+
+\draw (eoOutput) |- (eoInput1);
+\draw (eoOutput) to [short,*-] ++(0,-2.4) coordinate (eoCon) to [short,-*] ++( 5,0) |-
+(eoInput2);
+\draw (eoCon) -- ++(14,0) |- (eoInput3);
+\draw (cp1Output) -| (cp1Input);
+
+\draw (cn0Output) -- ++(0,2.5) -- ++(8,0) |- (cn0Input);
+
+
+\end{circuitikz}
+
+
+\end{document}

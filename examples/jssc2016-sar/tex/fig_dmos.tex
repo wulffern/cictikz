@@ -1,0 +1,49 @@
+\input{../tex/fig_header}
+\input{../tex/SAR_ESSCIRC16_28N}
+\input{../tex/legend}
+\libSARESSCIRConesixtwoeightNtex
+
+
+\begin{circuitikz}[very thin,stdsize/.style={font=\footnotesize},scale=1,
+    transform shape]
+
+    
+
+\setboolean{cicaddtext}{false}
+  \figDMOS
+\setboolean{cicaddtext}{true}
+
+\begin{scope}[shift={(1.5,+0.45)}]
+\ifthenelse{\boolean{cicaddtext}}{\draw (5.94,0.9) node [anchor=north
+  west,cicfill] {\textbf{$G$}};}{}
+
+\ifthenelse{\boolean{cicaddtext}}{\draw (2.16,0.36) node [anchor=north
+  west,cicfill] {\textbf{$S$}};}{}
+
+\ifthenelse{\boolean{cicaddtext}}{\draw (9.72,0.81) node [anchor=north
+  west,cicfill] {\textbf{$B$}};}{}
+
+\ifthenelse{\boolean{cicaddtext}}{\draw (2.16,1.44) node [anchor=north
+  west,cicfill] {\textbf{$D$}};}{}
+\end{scope}
+
+
+  \begin{scope}[shift={(0,-0.27)}]
+    \draw[gray,help lines,step=.54] (0,0) grid (11.88,2.70);
+  \end{scope}
+
+
+  \draw (8.64,2.43) ++(-0.54,-0.54) coordinate (h)  ;
+  \draw (h)  node [anchor=south west,stuff_fill] () {Vertical Grid};
+  \draw[|<->|] (h) -- ++(0,0.54);
+
+  \draw (8.64,2.43) ++(0,-0.54) ++(0,-0.27) coordinate (h)   ;
+  \draw (h)  node [anchor=north west,stuff_fill] () {Horizontal Grid};
+  \draw[|<->|] (h) -- ++(0.54,0);
+
+  \begin{scope}[shift={(0,-1)},scale=0.7]
+  \figLEGENDMone
+  \end{scope}
+\end{circuitikz}
+
+\end{document}

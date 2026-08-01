@@ -1,0 +1,48 @@
+
+
+\input{../tex/fig_header}
+
+\begin{circuitikz}[very thin,stdsize/.style={font=\footnotesize},scale=1,
+  transform shape]
+
+  \begin{scope}[shift={(0cm,0cm)},scale=1]
+
+    \draw[black] (1.75in,-1cm ) node[rotate=0,anchor=north]
+    () {{ (a)   }};
+
+    \draw[black] (4.3in + 1.75in,-1cm ) node[rotate=0,anchor=north]
+    () {{ (b)  }};
+
+    \begin{scope}[shift={(0cm,0cm)},scale=1]
+      \input{../tex/src_core20msps}
+    \end{scope}
+
+
+    \begin{scope}[shift={(4.3in,0cm)},scale=1]
+      % \pgftext[at=\pgfpoint{0}{0},left,base]
+      % {\pgfimage[interpolate=true,width=3.5in,height=1.68in]{../graphics/fig_core2msps.pdf}}
+      \input{../tex/src_core2msps}
+    \end{scope}
+  \end{scope}
+
+  \begin{scope}[shift={(0cm,-2.2in)},scale=1]
+
+    \draw[black] (1.75in,-1cm ) node[rotate=0,anchor=north]
+    () {{ (c)  }};
+
+    \draw[black] (4.3in + 1.75in,-1cm ) node[rotate=0,anchor=north]
+    () {{ (d) }};
+
+    \begin{scope}[shift={(0cm,0cm)},scale=1]
+      \input{../tex/src_vdd}
+    \end{scope}
+
+
+    \begin{scope}[shift={(4.3in,0cm)},scale=1]
+      \input{../tex/src_input}
+    \end{scope}
+  \end{scope}
+
+\end{circuitikz}
+
+\end{document}

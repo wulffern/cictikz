@@ -1,0 +1,25 @@
+
+\begin{scope}
+\draw
+ (0,0) node [ground,rotate=-90,anchor=west] {}
+    to [Tnmos, n=mn4, l=$M_{N10}$] ++(0,1.6) 
+    to [short,*-*] ++(2.5,0) ++(-2.5,0)
+    ++(1,0) node [anchor=south] {$B$} ++(-1,-0.1) to [short,-] ++(0,2.5)
+    to [Tpmos, n=mp4, l=$M_{P6}$] ++(0,1.6)
+    node [rground, yscale=-1] {}
+    ++(0,0.3) node [anchor=south] {$V_{\mathit{DD}}$}
+ (2.5,1.5) to [short,-] ++(0,2.5) to [Tpmos, n=mp5, l=$M_{P7}$] ++(0,1.6)
+    node [rground, yscale=-1] {}
+    ++(0,0.3) node [anchor=south] {$V_{\mathit{DD}}$}
+(mp4.gate) to [short,-] ++(0,0) coordinate(cp1Input) %node [anchor=east] {$CP1$}
+(mp5.gate) to [short,-] ++(0,0) coordinate(cn0Input) %node [anchor=east] {$CN0$}
+(mn4.gate) to [short,o-] ++(0,0) node [anchor=east] {$CK$};
+    \draw (3,1) node [and gate] (and1) {}
+    (and1.output) ++(1,-0.5) node [or gate] (or1) {}
+    (and1.input 2) coordinate (eoInput3) ;%to [short,-o] ++(-0.6,0) node [anchor=east] {$\overline{EO}$};
+
+    \draw (and1.output) -- ++(0.3,0)  |- (or1.input 1);
+    \draw (2.5,1.6) |- (and1.input 1)
+    (or1.input 2) to [short,-o] ++(-0.6,0) node [anchor=east] {$CI$}
+    (or1.output) to [short,-o] ++(0.6,0) node [anchor=west] {$CO$};
+\end{scope}

@@ -1,0 +1,49 @@
+\documentclass[crop]{standalone}
+\usepackage{times}
+\input{../lib/commands.tex}
+
+
+\pagestyle{empty}
+\begin{document}
+
+\begin{lstlisting}[style=json]
+// Unit transistor definition
+{ "name" : "DMOS" ,
+  "class" : "Gds::GdsPatternTransistor",
+  "fillCoordinatesFromStrings" : [
+      [   "OD",
+          "------------------xxxx",
+          "----xxK-----------xCxC",
+          "----xxx-----------xxxx",
+          "----xxK-----------xCxC",
+          "------------------xxxx"
+      ],
+      [   "PO",
+          "-mmmmmmmmmmmmm--------",
+          "----------------------",
+          "-mmmmmmmmmmcxc--------",
+          "----------------------",
+          "-mmmmmmmmmmmmm--------"
+      ],
+      [   "M1",
+          "------------------xxxx",
+          "----wDww----------xxxx",
+          "-----------wGww---xBxx",
+          "----wSww----------xxxx",
+          "------------------xxxx"
+      ]
+  ]
+},
+// PMOS definition
+{ "name" : "PCHDL", 
+  "inherit" : "DMOS",
+  "beforePlace" :{
+    "addEnclosures" : [
+    ["OD",1,["PP","LVT"]],
+    ["OD",0,["PP"]]
+    ]
+  }
+}
+\end{lstlisting}
+
+\end{document}

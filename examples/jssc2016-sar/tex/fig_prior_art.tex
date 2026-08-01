@@ -1,0 +1,138 @@
+\documentclass[crop]{standalone}
+\usepackage{times}
+
+%\input{../lib/commands.tex}
+
+%\usepackage[paperwidth=\maxdimen,paperheight=\maxdimen]{geometry}
+
+
+\usepackage{tikz,pgfplots}
+%\usepackage{ifthen}
+%\usepackage{calc}
+%\usetikzlibrary{patterns}
+%\usepackage[tightpage,active]{preview}
+%\usetikzlibrary{circuits.logic.US}
+%\usetikzlibrary{circuits.ee.IEC}
+%\usepgflibrary{shapes.arrows}
+%\usepgflibrary{arrows}
+\usepackage{circuitikz}
+\ctikzset{tripoles/mos style/arrows}
+\ctikzset{tripoles/pmos style/emptycircle}
+%\PreviewEnvironment{circuitikz}
+\pagestyle{empty}
+\begin{document}
+
+\tikzstyle{cicfill}=[minimum size=1.4em]
+\tikzstyle{stuff_fill}=[rectangle,fill=white,minimum size=1.4em,opacity=0.7]
+
+\definecolor{grey}{rgb}{1,1,1}
+\definecolor{active}{rgb}{0.4,1,0.6}
+\definecolor{poly}{rgb}{1.0,0.5,0.5}
+\definecolor{cut}{rgb}{0.91,0.91,0}
+\definecolor{mOne}{rgb}{0.36,0.36,1}
+\definecolor{mTwo}{rgb}{0.655,0.655,0}
+\definecolor{mThree}{rgb}{0.3,1,1}
+\definecolor{mFour}{rgb}{0,0.2097,0}
+
+
+
+
+  \newcommand*{\cicCapacitor}{
+    ++(0,0) to [short,-] ++(0,-0.65)
+    ++(-0.3,0) to [short,-] ++(0.6,0)
+    ++(-0.6,-0.2) to [short,-] ++(0.6,0)
+    ++(-0.3,0) to [short,-] ++(0,-0.65)
+  }
+
+  \newcommand*{\cicOTA}{
+    %Start left top input
+    rectangle ++(1,2)
+    ++(-0.5,-1)         
+    node [anchor=center,align=center] () {SAR \\ Logic}
+    ++(0,-1)
+    coordinate (sarin)
+    ++(0,2)     to [short,-o] ++(0,0.3) node [anchor=south] () {$CK$}
+    (sarin)
+
+    ++(0,1)
+    ++(0.5,0) coordinate (sarout)
+    ++(0.2,-0.1) -- ++(0.1,0.2)
+    (sarout)
+    to [capacitor] ++(2,0)
+    ++(-0.7,-0.4) 
+    node [anchor=north,align=center] {\mbox{${C [ X : 0 ] }$}}
+    ++(0.7,0.4) coordinate(switch)
+
+    to [short,*-] ++(0,0.5)
+    to [short,o-] ++(0.2,0.4)
+    ++(-0.1,-0.2) to [short,-*] ++(1.4,0) ++(-1.4,0)
+    ++(-0.1,0.2) to [short,-o] ++(0,0.4) node [anchor=east] () {$V_{INPUT}$}
+%    ++(0,-0.8)
+
+(switch)
+    to [short,-] ++(0.5,0)
+
+    node [anchor=west] {$+$}
+    to [short,-] ++(0,0.5)
+
+    %Draw diagonal line from top left
+    to [short,-] ++(1,-0.5)
+%    to [short,-] ++(1.6,0)
+%    ++(-1.6,0)
+    coordinate (otatop) {}
+    to [short,-o] ++(0,1) node [anchor=south] () {$CK$} ++(0,-1)
+    to [short,-] ++(1,-0.5)
+   to [short,-] ++(0.5,0)
+    coordinate (otaout)
+    ++(-0.5,-0)
+    %Draw diagonal line from center right
+    to [short,-] ++(-1,-0.5)
+     coordinate (otabot) {}
+    to [short,-] ++(-1,-0.5)
+
+    %Draw straight line frop bottom
+    to [short,-] ++(0,0.5)
+    node [anchor=west] {$-$}
+
+    %Draw comparator symbol
+    ++(0.5,0.1) to [short,-] ++(0.3,0)
+    to [short,-] ++(0,0.7)
+    to [short,-] ++(0.3,0)
+    ++(-1.1,-0.8)
+
+    %Draw input 2 and straight line to input 1
+    to [short,-] ++(-0.5,0)
+    node [ground,rotate=0] () {}
+    ++(0.5,0)
+    to [short,-] ++(0,1);
+    \draw[-latex] (otaout)  -- ++(1,0)--++(0,-2.3) -| (sarin);
+  }
+
+  \newcommand{\ccount}{9}
+  \begin{circuitikz}[ thick] 
+
+    \draw[font=\large] (4,2.8) node [anchor=west] {\textbf{Prior works}};
+
+    \draw (0,0) \cicOTA;
+    \draw[] (sarin) ++(-0.5,-2.5) node [anchor=west] {(a) Clock
+      generation separate from CDAC};       
+% Draw delay for first ota
+    \draw[poly,-latex] (otaout) ++(1,0)  ++(0,-1.7) -- ++(-0.5,0) coordinate (rectpos);
+    \draw[poly] (rectpos)  ++(0,0.5)  rectangle ++(-1,-1)  ++(0,0.5) coordinate(delaytext);
+    \draw[poly,-latex] (delaytext) -| (otabot)  ;
+    \draw (otabot) ++(0,-0.1) node [anchor=west] () {$CK\_CMP$} ;
+    \draw (delaytext) ++(0.5,0) node [anchor=center,align=center] () {Delay} ;
+
+    \draw[font=\large] (4,-3.2) node [anchor=west] { \textbf{This work}}    ;     
+    \draw (0,-6) \cicOTA
+    \draw[] (sarin) ++(-0.5,-2.5) node [anchor=west] {(b) Clock generation including CDAC};        
+    % Draw delay for first second
+    \draw[poly,-latex] (sarout) ++(0.5,0) -- ++(0,-2.2) -- ++(1.5,0) coordinate (rectpos);
+    \draw[poly] (rectpos)  ++(0,-0.5)  rectangle ++(1,1)  ++(-0.5,-0.5) coordinate(delaytext);
+    \draw[poly,-latex] (delaytext) ++(0.5,0) -| (otabot)  ;
+    \draw (otabot) ++(0,-0.1) node [anchor=west] () {$CK\_CMP$} ;
+    \draw (delaytext)  node [anchor=center,align=center] () {Delay} ;
+
+\end{circuitikz}
+
+\end{document}

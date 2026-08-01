@@ -1,0 +1,211 @@
+
+
+\input{../tex/fig_header}
+
+%\documentclass[crop,varwidth]{standalone}
+%\usepackage{times}
+%\usepackage{enumitem}
+
+%\usepackage{tikz,pgfplots}
+%\usetikzlibrary{shapes.geometric, arrows}
+%\pgfplotsset{
+%        table/search path={../graphics},
+%    }
+%\usepackage{ifthen}
+%\usepackage{calc}
+%\usetikzlibrary{patterns}
+
+%\pagestyle{empty}
+%\begin{document}
+
+
+%\tikzstyle{action} = [rectangle, rounded corners, minimum width=3cm,
+%minimum height=0.5cm,text centered, draw=black]
+\tikzstyle{action} = [rectangle, minimum width=3cm, minimum height=0.5cm,text centered, draw=black]
+\tikzstyle{bigprocess} = [rectangle, very thick, rounded corners,minimum width=3cm, minimum height=0.5cm,  draw=black]
+\tikzstyle{bigrectprocess} = [rectangle, very thick,minimum width=3cm, minimum height=0.5cm,  draw=black]
+
+\tikzstyle{process} = [rectangle, minimum width=3cm, minimum height=0.5cm, text centered, draw=black]
+\tikzstyle{arrow} = [thick,->,>=stealth]
+
+\tikzstyle{aedge} = [thick,->,>=stealth]
+
+
+%\tikzstyle{decision} = [diamond, minimum width=3cm, minimum height=1cm, text centered, draw=black]
+
+%\tikzstyle{io} = [trapezium, trapezium left angle=70, trapezium right angle=110, minimum width=3cm, minimum height=1cm, text centered, draw=black, fill=blue!30]
+
+\begin{tikzpicture}[scale=1,
+    transform shape,node distance=2cm]
+
+
+%\draw (create.north west) ++(-1,0) node [process,anchor=north
+%east,minimum width=4cm]
+%(spice) {SPICE Netlist};
+%\draw (create.west) ++(-1,0) node [process,anchor=east,minimum width=4cm] (objdef)
+%{Object Definition File};
+
+%\draw (create.south west) ++(-1,0) node [process,anchor=south east,minimum width=4cm] (tech)
+%{Technology File};
+
+%\draw (spice.west) ++(-1,0) node [action,anchor=east, text width=3cm] (adopt)
+%{Adopt schematic netlist to compiler};
+
+%--------------------------------------------------------------------------------
+% Architecture
+%--------------------------------------------------------------------------------
+\begin{scope}[shift={(0cm,0cm)},scale=1]
+\node (rect) at (0,0) [bigprocess,minimum width=6cm,minimum
+height=5cm, anchor=north west,dashed] (rarch) {};
+\draw (rarch.north) node [font=\Large,anchor=north] (a1) {Architecture};
+
+\draw (rarch.north) ++(-0.8,-1) node [action,anchor=north] (hand)
+{Hand Analysis};
+
+\draw (hand.south)  ++(0,-0.5) node [action,anchor=north] (sch)
+{Schematic};
+
+\draw (sch.south east) ++(0.5,-0.5) node [action,anchor=north] (tb)
+{Testbench};
+
+\draw (tb.south west) ++(-0.5,-0.5) node [action,anchor=north] (arch)
+{Simulation};
+
+\draw [arrow] (hand) -- (sch);
+\draw [arrow] (sch.east) to [out=0,in=90] (tb.north);
+\draw [arrow] (tb.south) to [out=-90,in=0] (arch.east);
+\draw [arrow] (arch.west) to [out=135,in=225] (sch.west);
+
+\end{scope}
+
+
+%--------------------------------------------------------------------------------
+% Implementation
+%--------------------------------------------------------------------------------
+\begin{scope}[shift={(8cm,0cm)},scale=1]
+\node (rect) at (0,0) [bigprocess,minimum width=4cm,minimum
+height=5cm, anchor=north west] (rimp) {};
+\draw (rimp.north) node [font=\Large,anchor=north] (a1)
+{Implementation};
+\draw (rimp.north) ++(-0,-1) node [process,anchor=north] (spice)
+{SPICE netlist};
+\draw (spice.south)  ++(0,-0.5) node [process,anchor=north] (objdef)
+{Object definition file};
+\draw (objdef.south)  ++(0,-0.5) node [process,anchor=north] (tech)
+{Technology file};
+\end{scope}
+
+%--------------------------------------------------------------------------------
+% Compilation
+%--------------------------------------------------------------------------------
+\begin{scope}[shift={(13cm,0cm)},scale=1]
+\node (rect) at (0,0) [bigprocess,minimum width=4cm,minimum
+height=5cm, anchor=north west] (rcomp) {};
+\draw (rcomp.north) node [font=\Large,anchor=north] (a1)
+{Compilation};
+\draw (rcomp.north) ++(-0,-1) node [process,anchor=north,minimum height=2.5cm] (comp)
+{Compiler};
+\draw (comp.south)  ++(-1.1,-0.5) node [process,anchor=north,minimum width=1cm] (gds)
+{GDSII};
+\draw (comp.south)  ++(+1.1,-0.5) node [process,anchor=north,minimum width=1cm] (skill)
+{SKILL};
+
+\draw (skill.south)  ++(0,-1.2) node [process,anchor=north,minimum
+width=1cm,text width=2cm] (cadence)
+{Loading SKILL into Cadence Virtuoso (minutes)};
+
+\draw (gds.south) ++(0,-1.2)  node [process,anchor=north
+,minimum width=1cm,text width=1.5cm] (vis) {Initial visual inspection (seconds)};
+
+%\draw (cadence.north) ++(0.1,-0.5) node [anchor=south,minimum
+%width=1cm,rotate=-90,text width=1.5cm,blue] ()
+%{Slow (Minutes)};
+
+\draw (comp) edge[aedge] (gds);
+\draw (comp) edge[aedge] (skill);
+\draw (skill) edge[aedge] (cadence);
+
+\end{scope}
+
+%--------------------------------------------------------------------------------
+% Physical verification
+%--------------------------------------------------------------------------------
+\begin{scope}[shift={(1.5cm,-5.5cm)},scale=1]
+\node (rect) at (0,0) [bigprocess,minimum width=11cm,minimum
+height=3cm, anchor=north west] (rphys) {};
+\draw (rphys.north west) node [font=\Large,anchor=north west,text width=2.5cm] (a1)
+{Physical verification};
+
+\draw (rphys.north west) ++(3.0cm,-0.2) node [process,anchor=north
+west,text width=2cm] (lpesim)
+{Simulation};
+\draw (lpesim.south) ++(-0,-0.5)  node [process,anchor=north,text width=2cm] (lpetb)
+{Testbench};
+\draw (lpetb.south) ++(0,-0.5)  node [process,anchor=north] (lpenet)
+{Parasitic netlist};
+\draw [arrow] (lpenet) -- (lpetb);
+\draw [arrow] (lpetb) -- (lpesim);
+
+\draw (lpetb.east) ++(0.3,0)  node [process,anchor=west,minimum width=1cm] (lvs) {LVS};
+
+\draw (lvs.east) ++(0.3,0)  node [process,anchor=west
+,minimum width=1cm] (drc) {DRC};
+
+
+\draw (drc.east) ++(0.3,0)  node [process,anchor=west
+,minimum width=1cm,text width=1.5cm] (visfinal) {Visual inspection};
+
+
+
+\end{scope}
+
+%--------------------------------------------------------------------------------
+% DB
+%--------------------------------------------------------------------------------
+\begin{scope}[shift={(0cm,-9cm)},scale=1]
+\node (rect) at (0,0) [bigrectprocess,minimum width=17cm,minimum
+height=0.7cm, anchor=north west] (rdb) {};
+\draw (rdb.north) node [font=\Large,anchor=north,text centered] (a1)
+{Compiled schematics and layout (OpenAccess database)};
+
+\end{scope}
+
+%--------------------------------------------------------------------------------
+% Edges
+%--------------------------------------------------------------------------------
+\draw (rarch) edge[aedge,dashed] node [above] () {Initial netlist}
+(rimp);
+
+\draw (lpenet|-rdb.north) edge[aedge] (lpenet);
+\draw (drc|-rdb.north) edge[aedge] (drc);
+\draw (lvs|-rdb.north) edge[aedge] (lvs);
+\draw (visfinal|-rdb.north) edge[aedge] (visfinal);
+
+\draw (lvs.north) edge[aedge] (rimp.south-|lvs.north);
+\draw (drc.north) edge[aedge] (rimp.south-|drc.north);
+\draw (visfinal.north) edge[aedge] (rimp.south-|visfinal.north);
+\draw (vis.north west) edge[aedge] (rimp);
+%\draw (visfinal.north) edge[aedge] (rimp);
+\draw (lpesim.north) edge[aedge] (rimp);
+
+
+\draw (rarch.south west) ++(1,0) coordinate (rarchsouth);
+\draw (rdb.north west) ++(1,0) edge[aedge,dashed] node
+[left,rotate=90, anchor=south] ()
+{Compiled cells} (rarchsouth);
+
+
+\draw (spice) edge[aedge] (comp.west|-spice.west);
+\draw (objdef) edge[aedge] (comp.west|-objdef.west);
+\draw (tech) edge[aedge] (comp.west|-tech.west);
+
+\draw (cadence) edge[aedge] (skill.south|-rdb.north);
+\draw (gds) edge[aedge] (gds.north|-vis.north);
+
+
+
+
+
+\end{tikzpicture}
+
+\end{document}

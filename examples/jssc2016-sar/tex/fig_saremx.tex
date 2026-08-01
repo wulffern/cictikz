@@ -1,0 +1,126 @@
+\input{../tex/fig_header}
+
+\input{../tex/SAR_ESSCIRC16_28N}
+\input{../tex/legend}
+
+\libSARESSCIRConesixtwoeightNtex
+
+\tikzstyle{circle_fill}=[black,draw,shape=circle,fill=white,minimum
+size=1.4em]
+\tikzstyle{circle2_fill}=[black,draw,font=\tiny,shape=circle,fill=white,]
+
+\begin{circuitikz}[very thin,stdsize/.style={font=\footnotesize},scale=0.5,
+    transform shape]\
+
+\begin{pgfonlayer}{OD}
+  \begin{scope}[shift={(-1,10cm)},scale=0.9]
+  \pgftext[at=\pgfpoint{0}{0},left,base]
+          {\pgfimage[interpolate=true,height=12.42cm,width=14.19cm]{../graphics/3dsaremx}}
+  \end{scope}
+\end{pgfonlayer}
+
+\draw[black] (10cm,-2cm ) node[rotate=0,anchor=center]
+() {{\Large (d)  }};
+
+ \setboolean{cicaddref}{true}  
+  \figSAREMXoneCV
+
+ \setboolean{cicaddref}{false}  
+
+\draw[black] (13.5cm,4.5cm ) node[circle_fill,rotate=0,anchor=center] ()
+{1};
+\draw[black] (9.6cm,4cm ) node[circle_fill,rotate=0,anchor=center] ()
+{2};
+\draw[black] (12cm,2.8cm ) node[circle_fill,rotate=0,anchor=center]
+() {3};
+\draw[black] (13.5cm,6.6cm ) node[circle_fill,rotate=0,anchor=center] ()
+{1};
+
+
+\draw[black] (10.7cm,3.2cm ) node[circle_fill,rotate=0,anchor=center]
+() {4};
+
+\draw[black] (10.7cm,5.4cm ) node[circle_fill,rotate=0,anchor=center]
+() {5};
+
+\draw[black] (10.7cm,7.6cm ) node[circle_fill,rotate=0,anchor=center]
+() {6};
+
+\draw[black] (10.7cm,0.55cm ) node[circle_fill,rotate=0,anchor=center]
+() {7};
+
+\draw[black] (15.8cm,6.6cm ) node[circle_fill,rotate=0,anchor=center]
+() {8};
+
+
+\draw[black] (5cm,9.5cm ) node[rotate=0,anchor=center]
+() {{\Large (a)   }};
+
+\draw[black] (15.8cm,9.5cm ) node[rotate=0,anchor=center]
+() {{\Large (c)  }};
+
+
+%\foreach \x in {0,...,2}{
+%\draw[black] (20.605cm,14.455cm -0.4cm*\x ) node[circle2_fill,rotate=0,anchor=center]
+%() { };
+%}
+
+%\foreach \x in {0,...,4}{
+%\draw[black] (20.61cm,12.46cm -0.4cm*\x ) node[circle2_fill,rotate=0,anchor=center]
+%() { };
+%}
+
+
+
+
+  \begin{scope}[shift={(12cm,12.5cm)},scale=1.6]
+\pgftext[at=\pgfpoint{0cm}{0cm},left,base]{
+\begin{lstlisting}[style=json]
+{ "name": "SAREMX1_CV",
+  "class" : "Layout::LayoutDigitalCell",
+  "addConnectivityRoutes": [
+      ["M1","N1|N2","||",""],      1
+      ["M1","N3","-|",""],         2
+      ["M1","EO","--|-","onTopR"]  3
+	],
+    "addDirectedRoutes" : [ 
+      ["PO","P","MN1:G-MP1:G"],    4
+      ["PO","N","MN2:G-MP2:G"],    5
+      ["PO","A","MN3:G-MP3:G"],    6
+      ["M1","A","MN0:S-MP0:S"],    7
+      ["M1","A","MP0:S-|--MP3:G"]  8 
+      ]
+    }
+}
+\end{lstlisting}
+}
+\end{scope}
+
+\draw[black] (15.8cm,16.5cm ) node[rotate=0,anchor=center]
+() {{\Large (b)   }};
+
+
+  \begin{scope}[shift={(12cm,18.5cm)},scale=1.6]
+\pgftext[at=\pgfpoint{0cm}{0cm},left,base]{
+\begin{lstlisting}[style=json]
+.SUBCKT SAREMX1_CV P  N EI EO CK_N AVDD AVSS
+  MN0 N3   EI   A    AVSS  NCHDL
+  MN1 N3   P    AVSS AVSS  NCHDL
+  MN2 AVSS N    N3   AVSS  NCHDL
+  MN3 EO   A    AVSS AVSS  NCHDL
+  MP0 AVDD CK_N A    AVSS  PCHDL
+  MP1 N2   P    EO   AVSS  PCHDL
+  MP2 N1   N    N2   AVSS  PCHDL
+  MP3 AVDD A    N1   AVSS  PCHDL
+.ENDS
+\end{lstlisting}
+}
+\end{scope}
+
+
+  \begin{scope}[shift={(0,-1.2)},scale=1]
+  \figLEGENDMfour
+  \end{scope}
+
+\end{circuitikz}
+\end{document}

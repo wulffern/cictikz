@@ -1,0 +1,72 @@
+\input{../tex/fig_header}
+
+\newcommand{\wh}{0.8}
+\newcommand{\tf}{0.1}
+\newcommand{\rise}{-- ++(\tf,\wh) -- }
+\newcommand{\fall}{-- ++(\tf,-\wh) --}
+\newcommand{\tend}{8}
+\tikzstyle{circle_fill}=[gray,draw,shape=circle,fill=white,font=\small]
+
+  \begin{circuitikz}[very thick,circuit logic US,circuit ee IEC,set make contact graphic= var make contact IEC graphic]] 
+
+
+%- CK
+
+\draw[black] (0,10) node [anchor=north east] () {$CK$} -- ++(1,0) coordinate(ckDown) \fall (\tend,10-\wh);
+
+%- P
+\draw[poly] (0,9)  node [anchor=north east] () {$P$} ++(0,-\wh)  --
+++(2,0) coordinate(pUp) \rise ++(2.5,0) coordinate(poF) \fall (\tend,9-\wh);
+
+%- EO
+\draw[black] (0,8)  node [anchor=north east] () {$EO$} ++(0,-\wh)  --
+++(5.5,0) coordinate(eoUp) \rise (\tend,8);
+
+%- CK_CMP
+\draw[black] (0,7)  node [anchor=north east] () {$CK\_CMP$} ++(0,-\wh)
+-- ++(1.5,0) coordinate(ckCmpUp) \rise ++(2.5,0) coordinate(ckCmpDown) \fall ++(2,0) --
+++(1,0) coordinate (ckCmpUp2) \rise (\tend,7);
+
+%- CNO
+\draw[mOne] (0,6)  node [anchor=north east] () {$D_{N0}$}  --
+++(2.3,0) coordinate(cnoUp)  sin ++(1,-\wh) coordinate (cnoDown)-- (\tend,6-\wh);
+
+%- CO
+\draw[black] (0,5) node [anchor=north east] () {$CO$} ++(0,-\wh) --
+++(3.5,0) coordinate (coUp) \rise ++(2.4,0) coordinate (coDown) \fall (\tend,5-\wh);
+%arc[ start angle=180, end angle=90, radius=\wh];
+
+\draw[gray]  (ckDown) ++(\tf/2,-\wh/2)  edge[bend right,-latex]
+node[anchor=center,circle_fill] () {1} (ckCmpUp);
+
+\draw[gray]  (ckCmpUp) ++(\tf/2,+\wh/2)  edge[bend left,-latex]
+node[anchor=center,circle_fill] () {2} (pUp);
+
+\draw[gray]  (pUp) ++(\tf/2,+\wh/2)  edge[bend left,-latex]
+node[anchor=center,circle_fill] () {3} (cnoUp);
+
+\draw[gray]  (cnoDown)  edge[bend right,-latex]
+node[anchor=center,circle_fill] () {4} (coUp);
+
+\draw[gray]  (coUp) ++(\tf/2,+\wh/2)  edge[bend left,-latex]
+node[anchor=center,circle_fill] () {5} (ckCmpDown);
+
+\draw[gray]  (ckCmpDown) ++(\tf/2,-\wh/2)  edge[bend left,-latex]
+node[anchor=center,circle_fill] () {6} (poF);
+
+\draw[gray]  (poF) ++(\tf/2,-\wh/2)  edge[bend right,-latex]
+node[anchor=center,circle_fill] () {7} (eoUp);
+
+\draw[gray]  (eoUp) ++(\tf/2,+\wh/2)  edge[bend left,-latex]
+node[anchor=center,circle_fill] () {8} (coDown);
+
+\draw[gray]  (coDown) ++(\tf/2,-\wh/2)  edge[bend right,-latex]
+node[anchor=center,circle_fill] () {9} (ckCmpUp2);
+
+
+  \end{circuitikz}
+
+\end{document}
+
+
+

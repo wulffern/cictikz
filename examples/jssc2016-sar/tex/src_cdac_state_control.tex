@@ -1,0 +1,59 @@
+\begin{scope}
+\draw
+ (0,0) node [ground,rotate=-90,anchor=west] {}
+    to [Tnmos, n=mn4, l=$M_{N4}$] ++(0,1.6) 
+    to [Tnmos, n=mn5, l=$M_{N5}$] ++(0,1.6)
+    to [Tnmos, n=mn6, l=$M_{N6}$] ++(0,1.6)
+    to [Tpmos, n=mp4, l=$M_{P4}$] ++(0,1.6)
+    node [rground, yscale=-1] {}
+    ++(0,0.3) node [anchor=south] {$V_{\mathit{DD}}$}
+(mn4.gate) to [short,o-] ++(0,0) node [anchor=east] {$P$}
+(mn5.gate) coordinate(eoInput1) 
+%(mn5.gate) to [short,o-] ++(0,0) node [anchor=east] {$\overline{EO}$}
+(mn6.gate) to [short,o-] ++(0,0) node [anchor=east] {$EI$}
+    (mp4.gate) to [short,o-] ++(0,0) node [anchor=east] {$\overline{CK}$};
+
+    \draw (0.6,4.8) node [not gate] (inv1) {}
+    ++(0.8,-0.1) node [anchor=north] {$D_{P0}$};
+
+    \draw (inv1.output) ++(1,0) node [not gate] (inv2) {}
+    ++(0.8,-0.1) node [anchor=north] {$D_{N0}$} ;
+
+    \draw (inv1.north) -- ++(0,0.5) -- ++(0.8,0) node [rground, yscale=-1] {}
+    ++(0,0.3) node [anchor=south] {$V_{\mathit{REF}}$}  ++(0,-0.3) -| (inv2.north);
+    
+    \draw  (0,4.8) to [short, *-] (inv1.input);
+    \draw  (inv1.output) to [short, -] (inv2.input);
+    \draw (inv2.output) to [short, -] ++(0.5,0) coordinate (cn0Output);
+\end{scope}
+
+\begin{scope}[xshift=5.3cm]
+\draw
+ (0,0) node [ground,rotate=-90,anchor=west] {}
+    to [Tnmos, n=mn4, l=$M_{N7}$] ++(0,1.6) 
+    to [Tnmos, n=mn5, l=$M_{N8}$] ++(0,1.6)
+    to [Tnmos, n=mn6, l=$M_{N9}$] ++(0,1.6)
+    to [Tpmos, n=mp4, l=$M_{P5}$] ++(0,1.6)
+    node [rground, yscale=-1] {}
+    ++(0,0.3) node [anchor=south] {$V_{\mathit{DD}}$}
+(mn4.gate) to [short,o-] ++(0,0) node [anchor=east] {$N$}
+%(mn5.gate) to [short,o-] ++(0,0) node [anchor=east] {$\overline{EO}$}
+(mn5.gate) coordinate(eoInput2) 
+(mn6.gate) to [short,o-] ++(0,0) node [anchor=east] {$EI$}
+    (mp4.gate) to [short,o-] ++(0,0) node [anchor=east] {$\overline{CK}$};
+
+    \draw (0.6,4.8) node [not gate] (inv1) {}
+    ++(0.8,-0.1) node [anchor=north] {$D_{N1}$};
+
+    \draw (inv1.output) ++(1,0) node [not gate] (inv2) {}
+    ++(0.8,-0.1) node [anchor=north] {$D_{P1}$};
+    
+
+    \draw (inv1.north) -- ++(0,0.5) -- ++(0.8,0) node [rground, yscale=-1] {}
+    ++(0,0.3) node [anchor=south] {$V_{\mathit{REF}}$}  ++(0,-0.3) -| (inv2.north);
+    
+    \draw  (0,4.8) to [short, *-] (inv1.input);
+    \draw  (inv1.output) to [short, -] (inv2.input);
+    \draw (inv2.output) to [short, -] ++(0.5,0) coordinate (cp1Output);
+\end{scope}
+

@@ -1,0 +1,57 @@
+%\documentclass[final,11pt]{IEEEtran}
+\documentclass[crop,border=0pt]{standalone}
+\usepackage{times}
+
+\input{../lib/commands.tex}
+
+%\usepackage[paperwidth=\maxdimen,paperheight=\maxdimen]{geometry}
+
+
+\usepackage{tikz,pgfplots}
+\usepackage{ifthen}
+\usepackage{calc}
+\usetikzlibrary{patterns}
+%\usepackage[tightpage,active]{preview}
+\usetikzlibrary{circuits.logic.US}
+\usetikzlibrary{circuits.ee.IEC}
+\usepgflibrary{shapes.arrows}
+\usepgflibrary{arrows}
+\usepackage{circuitikz}
+
+
+\ctikzset{tripoles/mos style/arrows}
+\ctikzset{tripoles/pmos style/emptycircle}
+%\PreviewEnvironment{circuitikz}
+\pagestyle{empty}
+\begin{document}
+
+\tikzstyle{cicfill}=[minimum size=1.4em]
+\tikzstyle{stuff_fill}=[rectangle,fill=white,minimum size=1.4em]
+
+\newcommand{\grayOne}{0.3 }
+\newcommand{\grayTwo}{0.15 }
+\newcommand{\grayThree}{0.26 }
+\newcommand{\grayFour}{0.41 }
+\newcommand{\grayFive}{0.61 }
+\newcommand{\graySix}{0.85 }
+
+%- Gray tone
+%\definecolor{active}{rgb}{\graySix,\graySix,\graySix}
+%\definecolor{poly}{rgb}{\grayFive,\grayFive,\grayFive}
+%\definecolor{contact}{rgb}{\graySix,\graySix,\graySix}
+%\definecolor{mOne}{rgb}{\grayFour,\grayFour,\grayFour}
+%\definecolor{mTwo}{rgb}{\graySix,\graySix,\graySix}
+%\definecolor{mThree}{rgb}{\grayThree,\grayThree,\grayThree}
+%\definecolor{mFour}{rgb}{\grayTwo,\grayTwo,\grayTwo}
+
+\definecolor{grey}{rgb}{1,1,1}
+\definecolor{lightgrey}{rgb}{\grayFour,\grayFour,\grayFour}
+\definecolor{active}{rgb}{0.4,1,0.6}
+\definecolor{poly}{rgb}{1.0,0.5,0.5}
+\definecolor{cut}{rgb}{0.91,0.91,0}
+\definecolor{mOne}{rgb}{0.36,0.36,1}
+\definecolor{mTwo}{rgb}{0.655,0.655,0}
+\definecolor{mThree}{rgb}{0.3,1,1}
+\definecolor{mFour}{rgb}{0,0.2097,0}
+
+

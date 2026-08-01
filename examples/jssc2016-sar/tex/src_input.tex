@@ -1,0 +1,35 @@
+
+\begin{axis}[%
+width=3.5in,
+height=1.5in,
+at={(0in,0in)},
+scale only axis,
+xmin=0,
+xmax=10,
+xlabel style={font=\color{white!15!black}, align=center},
+xlabel={Input frequency [MHz]},
+ymin=40,
+ymax=70,
+%ylabel style={font=\color{white!15!black}},
+ylabel={Magnitude [dB]},
+axis background/.style={fill=white},
+%xmajorgrids,
+%ymajorgrids,
+legend style={at={(0.97,0.4)}, anchor=south east,legend cell align=left, align=center, draw=white!15!black}
+]
+\addplot [color=mOne, line width=1.5pt, mark=diamond]
+  table[row sep=crcr]{%
+0.991089954839497	49.133\\
+4.99694861467106	49.353\\
+9.78640302697425	48.714\\
+};
+\addlegendentry{SNDR [dB]}
+
+\addplot [color=poly,  line width=1.5pt, mark=o]
+  table[row sep=crcr]{%
+0.991089954839497	67.66\\
+4.99694861467106	65.503\\
+9.78640302697425	64.956\\
+};
+\addlegendentry{SFDR [dBc]}
+\end{axis}

@@ -1,0 +1,165 @@
+
+\newcommand*{\cicCapacitor}{
+  ++(0,0) to [short,-] ++(0,-0.65)
+  ++(-0.3,0) to [short,-] ++(0.6,0)
+  ++(-0.6,-0.2) to [short,-] ++(0.6,0)
+  ++(-0.3,0) to [short,-] ++(0,-0.65)
+}
+
+\newcommand*{\cicOTA}{
+  % Start left top input
+  to [short,-] ++(0.5,0)
+  node [anchor=west] {$+$}
+  to [short,-] ++(0,0.5)
+
+  % Draw diagonal line from top left
+  to [short,-] ++(1,-0.5)
+  to [short,-] ++(1.6,0)
+  node [anchor=north east] () {$P$}
+  ++(-1.6,0)
+  to [short,-] ++(1,-0.5)
+
+  % Draw diagonal line from center right
+  to [short,-] ++(-1,-0.5)
+  to [short,-] ++(1.6,0)
+  node [anchor=center,inner sep=0] (otaout) {}
+  node [anchor=north east] () {$N$}
+  ++(-1.6,-0)
+  to [short,-] ++(-1,-0.5)
+
+  % Draw straight line frop bottom
+  to [short,-] ++(0,0.5)
+  node [anchor=west] {$-$}
+
+  % Draw comparator symbol
+  ++(0.5,0.1) to [short,-] ++(0.3,0)
+  to [short,-] ++(0,0.7)
+  to [short,-] ++(0.3,0)
+  ++(-1.1,-0.8)
+
+  % Draw input 2 and straight line to input 1
+  to [short,-] ++(-0.5,0)
+  ++(0.5,0)
+  to [short,-] ++(0,1)
+}
+
+\newcommand{\xsizeSarLogic}{4.2}
+\newcommand{\figSarlogic}{
+  \draw [black] (0,0) rectangle (3.2,3)
+
+  % Draw enable
+  (0,1) node [anchor=west] {$EI$}
+  to [short,-] ++(-0.5,0)
+  (3.2,1) node [anchor=east] {$EO$}
+  to [short,-] ++(+0.5,0)
+
+  % Draw clocks
+  (0,2) node [anchor=west] {$CI$}
+  to [short,-] ++(-0.5,0)
+  (3.2,2) node [anchor=east] {$CO$}
+  to [short,-] ++(0.5,0);
+
+  % Draw CP0 capacitor, skip for x < 3
+  \ifthenelse{\x > 3}{\draw
+    (0.4,0) node [anchor=south] {$D_{P0}$}
+    to [short,-] ++(0,-0.2)
+    \cicCapacitor
+    to [short,-*] ++(0,-0.1)
+    ;}{}
+
+  % Draw CP1 capacitor
+  \draw
+  (1.2,0) node [anchor=south] {$D_{P1}$}
+  to [short,-] ++(0,-0.2)
+  \cicCapacitor
+  to [short,-*] ++(0,-0.1)
+  (0,-1.8) to [short,-] ++(\xsizeSarLogic,0)
+
+  % Draw CN0 capacitor
+  (2.0,0) node [anchor=south] {$D_{N0}$}
+  to [short,-] ++(0,-0.2)
+  \cicCapacitor
+  to [short,-] ++(0.1,0)
+  to [short,-] ++(0,-0.2)
+  to [short,-] ++(-0.1,0)
+  to [short,-*] ++(0,-0.9)
+  (0,-2.8) to [short,-] ++(\xsizeSarLogic,0);
+
+  % Draw CN1 capacitor, skip for x < 3
+  \ifthenelse{\x > 3}{\draw
+    (2.8,0) node [anchor=south] {$D_{N1}$}
+    to [short,-] ++(0,-0.2)
+    \cicCapacitor
+    to [short,-] ++(0.1,0)
+    to [short,-] ++(0,-0.2)
+    to [short,-] ++(-0.1,0)
+    to [short,-*] ++(0,-0.9);
+  }{}
+
+  % Draw CK input
+  \draw (0.4,3) to [short,-o] ++(0,+0.2)
+  node [anchor=south] {$CK$} (1.2,3)
+  to [short,-o] ++(0,+0.2)
+  % Draw D output
+  node [anchor=south] {$D\x$}
+  ++(0,-0.2) node [anchor=north] {$D_{P1}$}
+
+  % Draw N and P
+  (2.0,3) node [anchor=north] {$P$}
+  to [short,-] ++(0,1)
+  (2.8,3) node [anchor=north] {$N$}
+  to [short,-] ++(0,1);
+
+  % Draw labels
+  \draw (\xsizeSarLogic/2 - 1/2,1.5) node [anchor=center,font=\large]
+  {\textbf{$LOGIC[\x]$}};
+\begin{scope}[font=\Large]
+  \draw (\xsizeSarLogic/2 - 1/2,-2.8) node [anchor=north] {$ {2^\x}
+    \cdot C_{UNIT} $};
+\end{scope}
+}
+
+
+\newcommand{\ccount}{9}
+
+%- Start drawing
+
+\foreach \x in {8,...,0}{
+  \begin{scope}[shift={(\ccount*\xsizeSarLogic-\xsizeSarLogic  - \x*\xsizeSarLogic,0)}]
+    \figSarlogic
+  \end{scope}
+}
+
+
+% Draw OTA and connection to P and N
+\draw (-0.5 + \xsizeSarLogic*\ccount , -1.8) \cicOTA {};
+\draw[line width=2pt] (2,4) -- (\xsizeSarLogic*\ccount -1,4) -| (otaout);
+
+% Draw EI and CI input
+\draw (-2.0,1) node [anchor=east,font=\Large] {$\overline{CK}$} to [short,o-] ++(2,0);
+\draw  (-0.6,2) node [ground,rotate=180] {};
+
+% Draw switches
+\draw (-2,-1.8) node [anchor=east,font=\Large] {$V_{P}$} to [short,o-]
+++(0.5,0) 
+to [make contact,name=sw1] ++(1.5,0) ;
+\draw (-2,-2.8) node [anchor=east,font=\Large] {$V_{N}$} to [short,o-]
+++(0.5,0) coordinate (sw1) to [make contact,name=sw2]  ++(1.5,0) ++(0.5,-0.1) node
+[anchor=north east, align=center] () {Bootstrapped \\ NMOS switches};
+\draw (sw1) ++(0.75,0.1) to [short,-o] ++(0,1.5) node [anchor=south,font=\Large] {$CK$};
+
+%\draw (sw1.north) to [short, -o] ++(0,0.5)
+
+% Draw gates from CK output
+\draw (\xsizeSarLogic*\ccount,1) ++(0,-0.2) node [nor gate, point down, anchor=input 2] (nor1) {} (nor1.input 2) |- (-1 + \xsizeSarLogic*\ccount,1);
+\draw (nor1.input 1) to [short,-o] ++(0,+0.5)  node [anchor=south]
+{$CK$} ;
+
+\draw (nor1.output) ++(0.3,-0.2) node [and gate,point down,anchor=input 2] (and1) {} (nor1.output) -- ++(0,-0.1) -| (and1.input 2);
+\draw (and1.input 1) ++(0.3,0.3) node [not gate, point down, anchor=output] (inv2) {};
+\draw (inv2.output) -- ++(0,-0.2) -| (and1.input 1);
+\draw (inv2.input) -- ++(0,0.5) |- (\xsizeSarLogic*\ccount - 1,2);
+\draw (and1.output) -- ++(0,-0.4) ++(0,0.2) node [anchor= west] ()
+{$CK\_CMP$};
+\draw (inv2.east)  ++(0.1,0) node [anchor=south west] {$X1$} ;
+\draw (and1.east) ++(0.2,0.2)  node [anchor=south west] {$X2$} ;

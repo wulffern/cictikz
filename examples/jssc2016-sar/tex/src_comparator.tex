@@ -1,0 +1,128 @@
+
+\newcommand{\ckcmp}{C}
+
+\draw
+
+(2.5,8.5) node [anchor=center] {$ \ckcmp = CK\_CMP$}
+
+% Dummy left
+ (0.5,-3) node [ground,rotate=-90,anchor=west] {}
+  to [Tnmos, n=m21, l=$$] ++(0,1.6) 
+  coordinate (dml1)
+  to [short,*-] ++(0.5,0)
+  to [Tnmos, n=m22, l=$$,mirror] ++(0,1.6) 
+  to [short,-*] ++(-0.5,0)
+  node [rground, yscale=-1] {}
+  ++(0,0.3) node [anchor=south] {$V_{\mathit{DD}}$}
+  (dml1) to [Tpmos, n=m23, l=$$] ++(0,1.6)
+  (dml1) to [short] ++(-1.5,0) ++(-1.6,0) to [Tnmos, n=m24,l=$5$]
+  ++(1.6,0) to [short,*-] ++(0,-0.3) to [short] ++(-1.6,0) to [short] ++(0,0.3)
+  (m21.gate) to [short,o-] ++(0,0) node [anchor=east] {$\overline{\ckcmp}$}
+  (m22.gate) to [short,o-] ++(0,0) node [anchor=west] {$\ckcmp$}
+  (m23.gate) to [short,o-] ++(0,0) node [anchor=east]
+  {$\overline{\ckcmp}$}
+
+% Dummy right
+ (4.5,-3) node [ground,rotate=-90,anchor=west] {}
+  to [Tnmos, n=m31, l=$$,mirror] ++(0,1.6) 
+  coordinate (dml2)
+  to [short,*-] ++(-0.5,0)
+  to [Tnmos, n=m32, l=$$] ++(0,1.6) 
+  to [short,-*] ++(0.5,0)
+  node [rground, yscale=-1] {}
+  ++(0,0.3) node [anchor=south] {$V_{\mathit{DD}}$}
+  (dml2)  to [Tpmos, n=m33, l=$$,mirror] ++(0,1.6)
+  (dml2) to [short] ++(1.5,0) to [Tnmos, n=m34,l=$5$]
+  ++(1.6,0) to [short] ++(0,-0.3) to [short] ++(-1.6,0) to [short,-*] ++(0,0.3)
+  (m31.gate) to [short,o-] ++(0,0) node [anchor=west] {$\overline{\ckcmp}$}
+  (m32.gate) to [short,o-] ++(0,0) node [anchor=east] {$\ckcmp$}
+  (m33.gate) to [short,o-] ++(0,0) node [anchor=west] {$\overline{\ckcmp}$}
+ 
+% Center tap
+ (2.5,0) node [ground,rotate=-90,anchor=west] {}
+  to [Tnmos, n=m0, l=$2$] ++(0,1.6) 
+  coordinate (csrc)
+  to [Tpmos, n=m1, l=$2$] ++(0,1.6)  
+  node [rground, yscale=-1] {}
+  ++(0,0.3) node [anchor=south] {$V_{\mathit{DD}}$}
+
+% Left branch
+ (0,1.6)  coordinate (lsrc)   to [Tnmos, n=m2, l=$5$] ++(0,1.6)    
+  to [short] ++(0,1)             
+  to [Tnmos, n=m4, l=$$,mirror] ++(0,1.6) 
+  to [short] ++(0,0.5)
+  coordinate (inv_left)
+  to [short] ++(0,0.5)
+  coordinate (drain_left)             
+  to [Tpmos, n=m6, l=$3$,mirror] ++(0,1.6)               
+  node [rground, yscale=-1] {}
+  ++(0,0.3) node [anchor=south] {$V_{\mathit{DD}}$}
+
+% Left inverter
+  (inv_left) to [short,*-] ++(0,0) to [not gate] ++(-2,0) to [short,-o] ++(0,0)
+  node [anchor=east] {$P$}
+  
+ (inv_left) ++(-1,0) node [anchor=center] {4}
+
+% Switch to VDD left
+ (0,3.2) to [short,*-] ++(-1,0) to [Tpmos, n=m8, l=$$] ++(0,1.6)     
+  node [rground, yscale=-1] {}
+  ++(0,0.3) node [anchor=south] {$V_{\mathit{DD}}$}
+  (m8.gate) to [short,o-] ++(0,0) node [anchor=east] {$\ckcmp$}
+ (0,6.8) to [short,*-] ++(-1,0) to [Tpmos, n=m10, l=$$] ++(0,1.6)     
+  node [rground, yscale=-1] {}  
+  ++(0,0.3) node [anchor=south] {$V_{\mathit{DD}}$}
+  (m10.gate) to [short,o-] ++(0,0) node [anchor=east] {$\ckcmp$}
+
+% Switch to VDD right
+ (5,3.2) to [short,*-] ++(1,0) to [Tpmos, n=m9, l=$$,mirror] ++(0,1.6)     
+  node [rground, yscale=-1] {}
+  ++(0,0.3) node [anchor=south] {$V_{\mathit{DD}}$}
+  (m9.gate) to [short,o-] ++(0,0) node [anchor=west] {$\ckcmp$}
+ (5,6.8) to [short,*-] ++(1,0) to [Tpmos, n=m11, l=$$,mirror] ++(0,1.6)     
+  node [rground, yscale=-1] {}  
+  ++(0,0.3) node [anchor=south] {$V_{\mathit{DD}}$}
+  (m11.gate) to [short,o-] ++(0,0) node [anchor=west] {$\ckcmp$}
+
+
+%Right branch
+ (5,1.6)  coordinate (rsrc)  to [Tnmos, n=m3, l=$5$,mirror] ++(0,1.6)    
+  to [short] ++(0,1)             
+  to [Tnmos, n=m5, l=$$] ++(0,1.6)        
+  coordinate (drain_right)             
+  to [short] ++(0,0.5)
+  coordinate (inv_right)
+  to [short] ++(0,0.5)
+  to [Tpmos, n=m7, l=$3$] ++(0,1.6)        
+  node [rground, yscale=-1] {}
+  ++(0,0.3) node [anchor=south] {$V_{\mathit{DD}}$}
+
+% Left inverter
+  (inv_right) to [short,*-] ++(0,0) to [not gate] ++(2,0) to [short,-o] ++(0,0)
+  node [anchor=west] {$N$}
+
+ (inv_right) ++(1,0) node [anchor=center] {4}
+
+% connect sources
+(lsrc) to [short] (csrc) to [short,*-] (rsrc)
+
+% Connect inverter
+(m4.gate) to [short,-] (m6.gate)
+(m5.gate) to [short,-] (m7.gate)
+(m7.gate) ++(0,-0.8) to [short,*-*] (drain_left)
+(m6.gate) ++(0,-1.8) to [short,*-*] (drain_right)
+(m0.gate) to [short,o-] ++(0,0) node [anchor=east] {$\ckcmp$}
+(m1.gate) to [short,o-] ++(0,0) node [anchor=east] {$\ckcmp$}
+(m2.gate) to [short,-*] ++(-0.8,0) coordinate (b_left) to [short,-o]
+++(-0.5,0) node [anchor=east] {$+$}
+(b_left) to [short]  (m24.gate)
+
+(m3.gate) to [short,-*] ++(+0.8,0) coordinate (b_right) to [short,-o]
+++(0.5,0) node [anchor=west] {$-$}
+(b_right) to [short]  (m34.gate)
+
+
+
+
+;
+

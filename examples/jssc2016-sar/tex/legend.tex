@@ -1,0 +1,193 @@
+\newcommand{\liblegendtex}{
+ \newboolean{cicaddtext} 
+ \setboolean{cicaddtext}{true}  
+ \newboolean{cicaddref} 
+ \setboolean{cicaddref}{false}  
+\pgfdeclarelayer{OD}
+\pgfdeclarelayer{PO}
+\pgfdeclarelayer{M1}
+\pgfdeclarelayer{CO}
+\pgfdeclarelayer{VIA1}
+\pgfdeclarelayer{M2}
+\pgfdeclarelayer{VIA2}
+\pgfdeclarelayer{M3}
+\pgfdeclarelayer{M4}
+\pgfdeclarelayer{VIA3}
+\pgfdeclarelayer{VIA4}
+\pgfdeclarelayer{M5}
+\pgfdeclarelayer{VIA5}
+\pgfdeclarelayer{M6}
+\pgfdeclarelayer{VIA6}
+\pgfsetlayers{OD,PO,M1,CO,VIA1,M2,VIA2,M3,M4,VIA3,VIA4,M5,VIA5,M6,VIA6,main}
+}
+
+
+\newcommand{\figBOD}{
+\ifthenelse{\boolean{cicaddtext}}{\draw (0,0) node [anchor=north west,cicfill] {\textbf{$A$}};}{}
+\begin{pgfonlayer}{OD}
+ \filldraw [active]  (0,0) rectangle (0.54,0.54);
+\end{pgfonlayer}
+}
+
+
+\newcommand{\figBCO}{
+\ifthenelse{\boolean{cicaddtext}}{\draw (0,0) node [anchor=north west,cicfill] {\textbf{$A$}};}{}
+\begin{pgfonlayer}{CO}
+ \filldraw [cut]  (0,0) rectangle (0.54,0.54);
+\end{pgfonlayer}
+}
+
+
+\newcommand{\figBPO}{
+\ifthenelse{\boolean{cicaddtext}}{\draw (0,0) node [anchor=north west,cicfill] {\textbf{$A$}};}{}
+ \filldraw [poly]  (0,0) rectangle (0.54,0.54);
+}
+
+
+\newcommand{\figBMone}{
+\ifthenelse{\boolean{cicaddtext}}{\draw (0,0) node [anchor=north west,cicfill] {\textbf{$A$}};}{}
+\begin{pgfonlayer}{M1}
+ \filldraw [mOne]  (0,0) rectangle (0.54,0.54);
+\end{pgfonlayer}
+}
+
+
+\newcommand{\figBMtwo}{
+\ifthenelse{\boolean{cicaddtext}}{\draw (0,0) node [anchor=north west,cicfill] {\textbf{$A$}};}{}
+\begin{pgfonlayer}{M2}
+ \filldraw [mTwo]  (0,0) rectangle (0.54,0.54);
+\end{pgfonlayer}
+}
+
+
+\newcommand{\figBMthree}{
+\ifthenelse{\boolean{cicaddtext}}{\draw (0,0) node [anchor=north west,cicfill] {\textbf{$A$}};}{}
+\begin{pgfonlayer}{M3}
+ \filldraw [mThree]  (0,0) rectangle (0.54,0.54);
+\end{pgfonlayer}
+}
+
+
+\newcommand{\figBMfour}{
+\ifthenelse{\boolean{cicaddtext}}{\draw (0,0) node [anchor=north west,cicfill] {\textbf{$A$}};}{}
+\begin{pgfonlayer}{M4}
+ \filldraw [mFour]  (0,0) rectangle (0.54,0.54);
+\end{pgfonlayer}
+}
+
+
+\newcommand{\figLEGENDMfour}{
+\begin{scope}[shift={(0,0)} ]
+\setboolean{cicaddtext}{false}
+\figBOD
+\setboolean{cicaddtext}{true}
+\end{scope}
+\ifthenelse{\boolean{cicaddref}}{\draw (0.81,0) node [anchor=center,cicfill] {\textbf{$XA2$}};}{}
+\begin{scope}[shift={(1.62,0)} ]
+\setboolean{cicaddtext}{false}
+\figBCO
+\setboolean{cicaddtext}{true}
+\end{scope}
+\ifthenelse{\boolean{cicaddref}}{\draw (2.43,0) node [anchor=center,cicfill] {\textbf{$XB2$}};}{}
+\begin{scope}[shift={(3.24,0)} ]
+\setboolean{cicaddtext}{false}
+\figBPO
+\setboolean{cicaddtext}{true}
+\end{scope}
+\ifthenelse{\boolean{cicaddref}}{\draw (4.05,0) node [anchor=center,cicfill] {\textbf{$XC2$}};}{}
+\begin{scope}[shift={(4.86,0)} ]
+\setboolean{cicaddtext}{false}
+\figBMone
+\setboolean{cicaddtext}{true}
+\end{scope}
+\ifthenelse{\boolean{cicaddref}}{\draw (5.67,0) node [anchor=center,cicfill] {\textbf{$XD2$}};}{}
+\begin{scope}[shift={(6.48,0)} ]
+\setboolean{cicaddtext}{false}
+\figBMtwo
+\setboolean{cicaddtext}{true}
+\end{scope}
+\ifthenelse{\boolean{cicaddref}}{\draw (7.29,0) node [anchor=center,cicfill] {\textbf{$XE2$}};}{}
+\begin{scope}[shift={(8.1,0)} ]
+\setboolean{cicaddtext}{false}
+\figBMthree
+\setboolean{cicaddtext}{true}
+\end{scope}
+\ifthenelse{\boolean{cicaddref}}{\draw (8.91,0) node [anchor=center,cicfill] {\textbf{$XF2$}};}{}
+\begin{scope}[shift={(9.72,0)} ]
+\setboolean{cicaddtext}{false}
+\figBMfour
+\setboolean{cicaddtext}{true}
+\end{scope}
+\ifthenelse{\boolean{cicaddref}}{\draw (10.53,0) node [anchor=center,cicfill] {\textbf{$XG2$}};}{}
+\ifthenelse{\boolean{cicaddtext}}{\draw (1.62,0) node [anchor=north west,cicfill] {\textbf{$CO$}};}{}
+\ifthenelse{\boolean{cicaddtext}}{\draw (0,0) node [anchor=north west,cicfill] {\textbf{$OD$}};}{}
+\ifthenelse{\boolean{cicaddtext}}{\draw (3.24,0) node [anchor=north west,cicfill] {\textbf{$PO$}};}{}
+\ifthenelse{\boolean{cicaddtext}}{\draw (4.86,0) node [anchor=north west,cicfill] {\textbf{$M1$}};}{}
+\ifthenelse{\boolean{cicaddtext}}{\draw (6.48,0) node [anchor=north west,cicfill] {\textbf{$M2$}};}{}
+\ifthenelse{\boolean{cicaddtext}}{\draw (8.1,0) node [anchor=north west,cicfill] {\textbf{$M3$}};}{}
+\ifthenelse{\boolean{cicaddtext}}{\draw (9.72,0) node [anchor=north west,cicfill] {\textbf{$M4$}};}{}
+}
+
+
+\newcommand{\figLEGENDMoneMfour}{
+\begin{scope}[shift={(0,0)} ]
+\setboolean{cicaddtext}{false}
+\figBMone
+\setboolean{cicaddtext}{true}
+\end{scope}
+\ifthenelse{\boolean{cicaddref}}{\draw (0.81,0) node [anchor=center,cicfill] {\textbf{$XD2$}};}{}
+\begin{scope}[shift={(1.62,0)} ]
+\setboolean{cicaddtext}{false}
+\figBMtwo
+\setboolean{cicaddtext}{true}
+\end{scope}
+\ifthenelse{\boolean{cicaddref}}{\draw (2.43,0) node [anchor=center,cicfill] {\textbf{$XE2$}};}{}
+\begin{scope}[shift={(3.24,0)} ]
+\setboolean{cicaddtext}{false}
+\figBMthree
+\setboolean{cicaddtext}{true}
+\end{scope}
+\ifthenelse{\boolean{cicaddref}}{\draw (4.05,0) node [anchor=center,cicfill] {\textbf{$XF2$}};}{}
+\begin{scope}[shift={(4.86,0)} ]
+\setboolean{cicaddtext}{false}
+\figBMfour
+\setboolean{cicaddtext}{true}
+\end{scope}
+\ifthenelse{\boolean{cicaddref}}{\draw (5.67,0) node [anchor=center,cicfill] {\textbf{$XG2$}};}{}
+\ifthenelse{\boolean{cicaddtext}}{\draw (0,0) node [anchor=north west,cicfill] {\textbf{$M1$}};}{}
+\ifthenelse{\boolean{cicaddtext}}{\draw (1.62,0) node [anchor=north west,cicfill] {\textbf{$M2$}};}{}
+\ifthenelse{\boolean{cicaddtext}}{\draw (3.24,0) node [anchor=north west,cicfill] {\textbf{$M3$}};}{}
+\ifthenelse{\boolean{cicaddtext}}{\draw (4.86,0) node [anchor=north west,cicfill] {\textbf{$M4$}};}{}
+}
+
+
+\newcommand{\figLEGENDMone}{
+\begin{scope}[shift={(0,0)} ]
+\setboolean{cicaddtext}{false}
+\figBOD
+\setboolean{cicaddtext}{true}
+\end{scope}
+\ifthenelse{\boolean{cicaddref}}{\draw (0.81,0) node [anchor=center,cicfill] {\textbf{$XA2$}};}{}
+\begin{scope}[shift={(1.62,0)} ]
+\setboolean{cicaddtext}{false}
+\figBCO
+\setboolean{cicaddtext}{true}
+\end{scope}
+\ifthenelse{\boolean{cicaddref}}{\draw (2.43,0) node [anchor=center,cicfill] {\textbf{$XB2$}};}{}
+\begin{scope}[shift={(3.24,0)} ]
+\setboolean{cicaddtext}{false}
+\figBPO
+\setboolean{cicaddtext}{true}
+\end{scope}
+\ifthenelse{\boolean{cicaddref}}{\draw (4.05,0) node [anchor=center,cicfill] {\textbf{$XC2$}};}{}
+\begin{scope}[shift={(4.86,0)} ]
+\setboolean{cicaddtext}{false}
+\figBMone
+\setboolean{cicaddtext}{true}
+\end{scope}
+\ifthenelse{\boolean{cicaddref}}{\draw (5.67,0) node [anchor=center,cicfill] {\textbf{$XD2$}};}{}
+\ifthenelse{\boolean{cicaddtext}}{\draw (1.62,0) node [anchor=north west,cicfill] {\textbf{$CO$}};}{}
+\ifthenelse{\boolean{cicaddtext}}{\draw (0,0) node [anchor=north west,cicfill] {\textbf{$OD$}};}{}
+\ifthenelse{\boolean{cicaddtext}}{\draw (3.24,0) node [anchor=north west,cicfill] {\textbf{$PO$}};}{}
+\ifthenelse{\boolean{cicaddtext}}{\draw (4.86,0) node [anchor=north west,cicfill] {\textbf{$M1$}};}{}
+}

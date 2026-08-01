@@ -1,0 +1,39 @@
+b
+\draw
+
+ (6,0) node [ground,rotate=-90,anchor=west] {}
+    to [Tnmos, n=mn1, l=$M_{N1}$] ++(0,1.6) 
+ (8,0) node [ground,rotate=-90,anchor=west] {}
+    to [Tnmos, n=mn2, l=$M_{N2}$] ++(0,1.6)
+    to [short,*-] ++(-2,0) node [] {}
+    ++(+2,0) to [Tnmos, n=mn0, l=$M_{N0}$] ++(0,1.6)
+    to [short] ++(0,1.6)
+    to [Tpmos, n=mp0, l=$M_{P0}$] ++(0,1.6)
+    node [rground, yscale=-1] {}
+    ++(0,0.3) node [anchor=south] {$V_{\mathit{DD}}$}
+(11,0) node [ground,rotate=-90,anchor=west] {}
+    to [Tnmos, n=mn3, l=$M_{N3}$] ++(0,1.6) coordinate(en1)
+    to [short, *-] ++(0.5,0) node [anchor=south] {$EO$} to [short,-]
+    ++(0.4,0) ++(0.25,0)  node [not
+    gate] (inv1) {} (inv1.output) to [short,-] ++(0.3,0) coordinate
+    (eoOutput)
+    (en1)
+    to [Tpmos, n=mp1, l=$M_{P1}$] ++(0,1.6)
+    to [Tpmos, n=mp2, l=$M_{P2}$] ++(0,1.6)
+    to [Tpmos, n=mp3, l=$M_{P3}$] ++(0,1.6)
+    node [rground, yscale=-1] {}
+    ++(0,0.3) node [anchor=south] {$V_{\mathit{DD}}$}
+
+(mn3.gate) to [short] ++(-1,0) to [short] ++(0,2.4) to [short,*-*]
+++(-1,0)  node[short,*-] {} ++(+1,0) to [short] ++(0,2.4) to
+[short] (mp3.gate)
+
+(mn0.drain)  ++(0.1,0.3) node [anchor=west] {$A$}
+(mn1.gate) to [short,o-] ++(0,0) node [anchor=east] {$P$}
+(mn2.gate) to [short,o-] ++(0,0) node [anchor=east] {$N$}
+(mn0.gate) to [short,o-] ++(0,0) node [anchor=east] {$EI$}
+(mp1.gate) to [short,o-] ++(0,0) node [anchor=east] {$P$}
+(mp2.gate) to [short,o-] ++(0,0) node [anchor=east] {$N$}
+(mp0.gate) to [short,o-] ++(0,0) node [anchor=east] {$\overline{CK}$}
+;
+
