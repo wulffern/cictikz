@@ -2,9 +2,12 @@
 
 AI-driven TikZ circuit schematics.
 
-A standalone Python package that ships the `ckt_lib` circuitikz macro
-vocabulary (grid = 1.6, one transistor tall) as package data, renders
-figures reproducibly with `pdflatex`, and exposes the whole loop —
+A standalone Python package that ships the full aic2026 TikZ macro
+vocabulary as package data — `cictikz_lib` (the `ckt_lib` schematic
+dialect, grid = 1.6, one transistor tall) plus the domain libraries
+(`boot`, `constellation`, `dacsm`, `esd`, `gmc`, `mos`, `plane`,
+`rdac`, `sc`, `sfg`, `spec`) — renders figures reproducibly with
+`pdflatex`, and exposes the whole loop —
 discover symbols, render, look at the result — to an AI assistant over
 MCP. Later phases add a schematic IR with writers/readers for the
 constrained TikZ dialect and xschem `.sch` files.

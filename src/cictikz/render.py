@@ -48,16 +48,30 @@ def _data_tex(name: str) -> str:
     return (resources.files("cictikz") / "data" / "tex" / name).read_text()
 
 
+def lib_names() -> list[str]:
+    """All packaged macro libraries, cictikz_lib (which defines \\grid) first."""
+    root = resources.files("cictikz") / "data" / "tex"
+    names = sorted(
+        e.name
+        for e in root.iterdir()
+        if e.name.endswith(".tex") and e.name != "cictikz_preamble.tex"
+    )
+    names.remove("cictikz_lib.tex")
+    return ["cictikz_lib.tex", *names]
+
+
 def wrap_body(body: str) -> str:
     """Wrap a bare macro body in the packaged preamble + circuitikz environment.
 
-    The library is inlined (not ``\\input``) so the wrapped source is a
-    single self-contained file that compiles from any directory.
+    Every packaged library is inlined (not ``\\input``) so the wrapped
+    source is a single self-contained file that compiles from any
+    directory; macro names are unique across the libraries.
     """
+    libs = "\n".join(_data_tex(n) for n in lib_names())
     return (
         _data_tex("cictikz_preamble.tex")
         + "\n\\begin{circuitikz}[american, thick, transform shape, circuit ee IEC]\n"
-        + _data_tex("cictikz_lib.tex")
+        + libs
         + "\n"
         + body
         + "\n\\end{circuitikz}\n\\end{document}\n"

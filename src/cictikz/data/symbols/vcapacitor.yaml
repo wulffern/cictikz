@@ -1,7 +1,8 @@
 # cictikz symbol metadata. Coordinates are figure units (\grid = 1.6),
 # relative to the macro entry point, y up, taken from the macro body in
-# cictikz_lib.tex. Gate positions of circuitikz transistors are
-# approximate - address them via the node anchor (e.g. M1.gate) in TikZ.
+# cictikz_lib.tex. Transistor gate pins are at the END of the gate lead
+# (the circuitikz .gate anchor, measured); in TikZ prefer the node
+# anchor (e.g. M1.gate) over the raw coordinate.
 name: vcapacitor
 macro: \vcapacitor
 nargs: 1
