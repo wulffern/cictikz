@@ -11,9 +11,9 @@
 % as the originals draw it. It is drawn by hand rather than as a rotated
 % circuitikz `ground` node because the node keeps its bars horizontal.
 \newcommand{\rdacVgnd}[1]{%
-  \draw[thick] ($#1+(0,0.28)$) -- ($#1+(0,-0.28)$);
-  \draw[thick] ($#1+(0.14,0.17)$) -- ($#1+(0.14,-0.17)$);
-  \draw[thick] ($#1+(0.28,0.08)$) -- ($#1+(0.28,-0.08)$);
+  \draw[thick] ($#1+(0,0.20)$) -- ($#1+(0,-0.20)$);
+  \draw[thick] ($#1+(0.10,0.10)$) -- ($#1+(0.10,-0.10)$);
+  \draw[thick] ($#1+(0.20,0.05)$) -- ($#1+(0.20,-0.05)$);
 }
 
 % The single-pole double-throw the ladder figures steer their legs with: the
@@ -49,7 +49,7 @@
 
 % A terminal circle with a label: coordinate, anchor, text.
 \newcommand{\rdacPort}[3]{%
-  \draw[thick] #1 circle (0.09);
+  \draw[thick] #1 circle (0.06);
   \node[anchor=#2] at #1 {#3};
 }
 

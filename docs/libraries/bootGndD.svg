@@ -5,14 +5,14 @@
 <path clip-rule="nonzero" d="M 0 0 L 12.136719 0 L 12.136719 1 L 0 1 Z M 0 0 "/>
 </clipPath>
 <clipPath id="clip-1">
-<path clip-rule="nonzero" d="M 3 5 L 9 5 L 9 6.464844 L 3 6.464844 Z M 3 5 "/>
+<path clip-rule="nonzero" d="M 4 5 L 8 5 L 8 6.464844 L 4 6.464844 Z M 4 5 "/>
 </clipPath>
 </defs>
 <g clip-path="url(#clip-0)">
 <path fill="none" stroke-width="0.79701" stroke-linecap="butt" stroke-linejoin="miter" stroke="rgb(0%, 0%, 0%)" stroke-opacity="1" stroke-miterlimit="10" d="M -5.669562 -0.0004375 L 5.670281 -0.0004375 " transform="matrix(1, 0, 0, -1, 6.068, 0.398)"/>
 </g>
-<path fill="none" stroke-width="0.79701" stroke-linecap="butt" stroke-linejoin="miter" stroke="rgb(0%, 0%, 0%)" stroke-opacity="1" stroke-miterlimit="10" d="M -3.685187 -2.836375 L 3.685906 -2.836375 " transform="matrix(1, 0, 0, -1, 6.068, 0.398)"/>
+<path fill="none" stroke-width="0.79701" stroke-linecap="butt" stroke-linejoin="miter" stroke="rgb(0%, 0%, 0%)" stroke-opacity="1" stroke-miterlimit="10" d="M -2.833625 -2.836375 L 2.834344 -2.836375 " transform="matrix(1, 0, 0, -1, 6.068, 0.398)"/>
 <g clip-path="url(#clip-1)">
-<path fill="none" stroke-width="0.79701" stroke-linecap="butt" stroke-linejoin="miter" stroke="rgb(0%, 0%, 0%)" stroke-opacity="1" stroke-miterlimit="10" d="M -1.700812 -5.668406 L 1.701531 -5.668406 " transform="matrix(1, 0, 0, -1, 6.068, 0.398)"/>
+<path fill="none" stroke-width="0.79701" stroke-linecap="butt" stroke-linejoin="miter" stroke="rgb(0%, 0%, 0%)" stroke-opacity="1" stroke-miterlimit="10" d="M -1.415656 -5.668406 L 1.416375 -5.668406 " transform="matrix(1, 0, 0, -1, 6.068, 0.398)"/>
 </g>
 </svg>
