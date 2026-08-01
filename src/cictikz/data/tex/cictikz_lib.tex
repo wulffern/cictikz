@@ -164,6 +164,19 @@
 }
 
 
+\newcommand{\vdiode}[1]{
+  ++(0,0) coordinate (cStart)
+  to [short,-] ++(0,0.55)
+  ++(-0.2,0) -- ++(0.4,0) -- ++(-0.2,0.5) -- ++(-0.2,-0.5)
+  ++(0.2,0.5) ++(-0.2,0) to [short,-] ++(0.4,0)
+  ++(-0.2,0)
+  to [short,-] ++(0,0.55)
+  coordinate (diodeEnd)
+  ++(0.1,-0.8)
+  node [anchor=west] {#1}
+  (diodeEnd)
+}
+
 \newcommand{\portDiffIn}[1]{
  ++(0,0) coordinate (cStart)
  to [short,o-] ++(0,0)
@@ -319,6 +332,12 @@
   ++(0,-0.55) -- ++(0,1.1) -- ++(0.9,-0.55) -- ++(-0.9,-0.55)
   ++(1.0,0.55) circle (0.1)
   ++(0.1,0) coordinate (#1_out)
+}
+
+\newcommand{\cicBufM}[1]{
+  ++(0,0) coordinate (#1_in)
+  ++(0,-0.55) -- ++(0,1.1) -- ++(-0.9,-0.55) -- ++(0.9,-0.55)
+  ++(-0.9,0.55) coordinate (#1_out)
 }
 
 \newcommand{\cicTgate}[1]{

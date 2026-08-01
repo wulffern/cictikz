@@ -1,0 +1,32 @@
+# cictikz symbol metadata. Coordinates are figure units (\grid = 1.6),
+# relative to the macro entry point, y up, taken from the macro body in
+# cictikz_lib.tex. Transistor gate pins are at the END of the gate lead
+# (the circuitikz .gate anchor, measured); in TikZ prefer the node
+# anchor (e.g. M1.gate) over the raw coordinate.
+name: cicBufM
+macro: \cicBufM
+nargs: 1
+arg_doc:
+- instance name
+description: Buffer pointing left (for feedback paths); in right, out left
+entry:
+- 0
+- 0
+exit:
+- -0.9
+- 0
+height_grid: 0
+width_grid: 0
+pins:
+- name: in
+  grid_xy:
+  - 0
+  - 0
+  direction: in
+- name: out
+  grid_xy:
+  - -0.9
+  - 0
+  direction: out
+exports: {}
+example: \draw (0,0) \cicBufM{x};

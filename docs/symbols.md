@@ -15,6 +15,7 @@ so this page doubles as a compile test of the library.
 | [`\cicAdd`](#cicadd) | Summing node: circle with + |
 | [`\cicAnd`](#cicand) | AND gate, hand-rolled house shape |
 | [`\cicBuf`](#cicbuf) | Buffer (triangle, no bubble), hand-rolled house shape |
+| [`\cicBufM`](#cicbufm) | Buffer pointing left (for feedback paths); in right, out left |
 | [`\cicDff`](#cicdff) | D flip-flop box: D and clock wedge left, Q and QN right; entry/exit lower-left |
 | [`\cicH`](#cich) | Transfer-function box H(s) |
 | [`\cicInv`](#cicinv) | Inverter, hand-rolled house shape; exports <n>_in/_out |
@@ -53,6 +54,7 @@ so this page doubles as a compile test of the library.
 | [`\portmIn`](#portmin) | Input port, mirrored: label to the right (anchor west), for mirrored devices |
 | [`\trNmos`](#trnmos) | NMOS with labelled Gate/Drain/Source terminals (teaching figure) |
 | [`\vcapacitor`](#vcapacitor) | Capacitor, vertical |
+| [`\vdiode`](#vdiode) | Diode, vertical, anode down cathode up (compact house size) |
 | [`\vground`](#vground) | Ground symbol (three shrinking bars, downward). Path returns to entry. |
 | [`\vimpedance`](#vimpedance) | Generic impedance box, vertical |
 | [`\vmnmos`](#vmnmos) | NMOS transistor, vertical, drain up, gate on the right (mirrored); gate pin is the end of the gate lead |
@@ -796,6 +798,27 @@ entry `[0, 0]` — exit `[0.9, 0]`
 \draw (0,0) \cicBuf{x};
 ```
 
+### cicBufM
+
+<img src="symbols/cicBufM.svg" alt="cicBufM" width="63">
+
+Buffer pointing left (for feedback paths); in right, out left
+
+```latex
+\cicBufM{instance name}
+```
+
+entry `[0, 0]` — exit `[-0.9, 0]`
+
+| pin | position | direction |
+|---|---|---|
+| in | [0, 0] | in |
+| out | [-0.9, 0] | out |
+
+```latex
+\draw (0,0) \cicBufM{x};
+```
+
 ### cicDff
 
 <img src="symbols/cicDff.svg" alt="cicDff" width="110">
@@ -1286,5 +1309,28 @@ exported coordinates: `cStart`
 
 ```latex
 \draw (0,0) \anaQuestion;
+```
+
+### vdiode
+
+<img src="symbols/vdiode.svg" alt="vdiode" width="58">
+
+Diode, vertical, anode down cathode up (compact house size)
+
+```latex
+\vdiode{label, e.g. $D_1$}
+```
+
+entry `[0, 0]` — exit `[0, 1.6]`
+
+| pin | position | direction |
+|---|---|---|
+| anode | [0, 0] | inout |
+| cathode | [0, 1.6] | inout |
+
+exported coordinates: `cStart`, `diodeEnd`
+
+```latex
+\draw (0,0) \vground \vdiode{$D_1$};
 ```
 

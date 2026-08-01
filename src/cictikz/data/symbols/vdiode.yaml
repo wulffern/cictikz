@@ -1,0 +1,38 @@
+# cictikz symbol metadata. Coordinates are figure units (\grid = 1.6),
+# relative to the macro entry point, y up, taken from the macro body in
+# cictikz_lib.tex. Transistor gate pins are at the END of the gate lead
+# (the circuitikz .gate anchor, measured); in TikZ prefer the node
+# anchor (e.g. M1.gate) over the raw coordinate.
+name: vdiode
+macro: \vdiode
+nargs: 1
+arg_doc:
+- label, e.g. $D_1$
+exports:
+  cStart:
+  - 0
+  - 0
+  diodeEnd:
+  - 0
+  - 1.6
+description: Diode, vertical, anode down cathode up (compact house size)
+entry:
+- 0
+- 0
+exit:
+- 0
+- 1.6
+height_grid: 1.6
+width_grid: 0.4
+pins:
+- name: anode
+  grid_xy:
+  - 0
+  - 0
+  direction: inout
+- name: cathode
+  grid_xy:
+  - 0
+  - 1.6
+  direction: inout
+example: \draw (0,0) \vground \vdiode{$D_1$};

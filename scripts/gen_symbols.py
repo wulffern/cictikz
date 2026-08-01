@@ -154,6 +154,19 @@ SYMS += [
     twoterm("vcapacitor", "v", "Capacitor, vertical"),
     twoterm("hcapacitor", "h", "Capacitor, horizontal"),
     twoterm("vimpedance", "v", "Generic impedance box, vertical"),
+    {
+        "name": "vdiode", "macro": "\\vdiode", "nargs": 1,
+        "arg_doc": ["label, e.g. $D_1$"],
+        "exports": {"cStart": [0, 0], "diodeEnd": [0, 1.6]},
+        "description": "Diode, vertical, anode down cathode up (compact house size)",
+        "entry": [0, 0], "exit": [0, 1.6],
+        "height_grid": 1.6, "width_grid": 0.4,
+        "pins": [
+            {"name": "anode", "grid_xy": [0, 0], "direction": "inout"},
+            {"name": "cathode", "grid_xy": [0, 1.6], "direction": "inout"},
+        ],
+        "example": "\\draw (0,0) \\vground \\vdiode{$D_1$};",
+    },
     twoterm("himpedance", "h", "Generic impedance box, horizontal"),
 ]
 
@@ -395,6 +408,9 @@ MORE = [
           arg_doc=["instance name"]),
     block("cicBuf", 1, "Buffer (triangle, no bubble), hand-rolled house shape",
           [0.9, 0], [("in", [0, 0], "in"), ("out", [0.9, 0], "out")],
+          arg_doc=["instance name"]),
+    block("cicBufM", 1, "Buffer pointing left (for feedback paths); in right, out left",
+          [-0.9, 0], [("in", [0, 0], "in"), ("out", [-0.9, 0], "out")],
           arg_doc=["instance name"]),
     block("cicInvM", 1, "Inverter pointing left (for feedback paths); in right, out left",
           [-1.1, 0], [("in", [0, 0], "in"), ("out", [-1.1, 0], "out")],

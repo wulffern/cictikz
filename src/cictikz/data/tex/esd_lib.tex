@@ -66,9 +66,13 @@
 % next column along; above and centred it lands on the diode's own
 % wire.
 \newcommand{\esdDiode}[5]{%
-  \draw (#1,#2) -- (#1,{#4-0.45});
-  \draw (#1,{#4-0.45}) to [D] (#1,{#4+0.45});
-  \draw (#1,{#4+0.45}) -- (#1,#3);
+  %- hand-drawn compact diode, house weight: the circuitikz [D] bipole
+  %- is close to a transistor in size and overwhelms the network
+  \draw (#1,#2) -- (#1,{#4-0.3});
+  \draw ({#1-0.2},{#4-0.3}) -- ({#1+0.2},{#4-0.3})
+        -- (#1,{#4+0.2}) -- ({#1-0.2},{#4-0.3});
+  \draw ({#1-0.2},{#4+0.2}) -- ({#1+0.2},{#4+0.2});
+  \draw (#1,{#4+0.2}) -- (#1,#3);
   \fill (#1,#2) circle (0.075);
   \fill (#1,#3) circle (0.075);
   \node[red, anchor=south east, scale=0.8, align=right]
