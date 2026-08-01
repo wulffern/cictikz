@@ -1,0 +1,30 @@
+# cictikz symbol metadata. Coordinates are figure units (\grid = 1.6),
+# relative to the macro entry point, y up, taken from the macro body in
+# cictikz_lib.tex. Gate positions of circuitikz transistors are
+# approximate - address them via the node anchor (e.g. M1.gate) in TikZ.
+name: vvsource
+macro: \vvsource
+nargs: 1
+arg_doc:
+- source label, e.g. $V_{DD}$
+description: Voltage source, vertical, drawn DOWNWARD 1.5 grid from entry
+entry:
+- 0
+- 0
+exit:
+- 0
+- -2.4
+height_grid: 2.4
+width_grid: 0.6
+pins:
+- name: plus
+  grid_xy:
+  - 0
+  - 0
+  direction: inout
+- name: minus
+  grid_xy:
+  - 0
+  - -2.4
+  direction: inout
+example: \draw (0,0) \vvsource{$V_{DD}$} \vground;

@@ -1,0 +1,31 @@
+# cictikz symbol metadata. Coordinates are figure units (\grid = 1.6),
+# relative to the macro entry point, y up, taken from the macro body in
+# cictikz_lib.tex. Gate positions of circuitikz transistors are
+# approximate - address them via the node anchor (e.g. M1.gate) in TikZ.
+name: portOut
+macro: \portOut
+nargs: 1
+arg_doc:
+- port label, e.g. $v_o$
+description: 'Output port: junction dot at entry, 0.5 wire right, open circle, label
+  right'
+entry:
+- 0
+- 0
+exit:
+- 0.5
+- 0
+height_grid: 0
+width_grid: 0.8
+pins:
+- name: term
+  grid_xy:
+  - 0
+  - 0
+  direction: out
+xschem:
+  sym: devices/opin.sym
+  pin_map:
+    term: p
+  scale: 40
+example: \draw (M1.drain) \portOut{$v_o$};

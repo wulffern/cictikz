@@ -1,0 +1,49 @@
+# cictikz symbol metadata. Coordinates are figure units (\grid = 1.6),
+# relative to the macro entry point, y up, taken from the macro body in
+# cictikz_lib.tex. Gate positions of circuitikz transistors are
+# approximate - address them via the node anchor (e.g. M1.gate) in TikZ.
+name: lvmnmos
+macro: \lvmnmos
+nargs: 2
+arg_doc:
+- instance name (becomes circuitikz node, e.g. M1)
+- gate port label, e.g. $v_i$ (empty {} suppresses the port)
+description: NMOS transistor, vertical, drain up, gate on the right (mirrored),
+  with optional gate input port
+entry:
+- 0
+- 0
+exit:
+- 0
+- 1.6
+height_grid: 1.6
+width_grid: 1.1
+pins:
+- name: drain
+  grid_xy:
+  - 0
+  - 1.6
+  direction: inout
+- name: gate
+  grid_xy:
+  - 0.55
+  - 0.8
+  direction: in
+- name: source
+  grid_xy:
+  - 0
+  - 0
+  direction: inout
+nodes:
+- <inst>.drain
+- <inst>.gate
+- <inst>.source
+- <inst>.bulk
+xschem:
+  sym: sky130_fd_pr/nfet_01v8.sym
+  pin_map:
+    drain: D
+    gate: G
+    source: S
+  scale: 40
+example: \draw (0,0) \vground \lvmnmos{M1}{$v_i$};

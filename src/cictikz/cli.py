@@ -1,0 +1,84 @@
+"""cictikz command line interface."""
+
+from __future__ import annotations
+
+import sys
+from pathlib import Path
+
+import click
+
+
+@click.group()
+@click.version_option(package_name="cictikz")
+def main():
+    """AI-driven TikZ circuit schematics."""
+
+
+@main.command()
+@click.argument("texfile", type=click.Path(exists=True, path_type=Path))
+@click.option("--wrap", is_flag=True, help="Treat the file as a bare macro body and wrap it in the packaged preamble + library.")
+@click.option("--svg", "want_svg", is_flag=True, help="Also produce SVG.")
+@click.option("--png", "want_png", is_flag=True, help="Also produce PNG.")
+@click.option("--dpi", default=150, show_default=True, help="PNG resolution.")
+@click.option("-o", "--outdir", type=click.Path(path_type=Path), default=None, help="Output directory (default: next to the source).")
+def render(texfile, wrap, want_svg, want_png, dpi, outdir):
+    """Compile a figure to PDF (and optionally SVG/PNG)."""
+    from . import render as r
+
+    outdir = outdir or texfile.parent
+    outdir.mkdir(parents=True, exist_ok=True)
+    if wrap:
+        result = r.render_tex(r.wrap_body(texfile.read_text()), jobname=texfile.stem)
+    else:
+        result = r.render_file(texfile)
+    if not result.ok:
+        click.echo("\n".join(result.errors) or "compile failed", err=True)
+        sys.exit(1)
+    pdf = outdir / f"{texfile.stem}.pdf"
+    pdf.write_bytes(result.pdf_path.read_bytes())
+    click.echo(f"wrote {pdf}")
+    if want_svg:
+        click.echo(f"wrote {r.pdf_to_svg(result.pdf_path, pdf.with_suffix('.svg'))}")
+    if want_png:
+        png = pdf.with_suffix(".png")
+        png.write_bytes(r.pdf_to_png(result.pdf_path, dpi=dpi))
+        click.echo(f"wrote {png}")
+
+
+@main.command()
+@click.argument("query", default="")
+def symbols(query):
+    """List the symbol library (optionally filtered by QUERY)."""
+    from .symbols import SymbolRegistry
+
+    for s in SymbolRegistry.load().search(query):
+        click.echo(f"{s.name:14s} {s.description}")
+
+
+@main.command()
+@click.argument("name")
+def info(name):
+    """Show macro signature, pins and example for one symbol."""
+    from .symbols import SymbolRegistry
+
+    s = SymbolRegistry.load().get(name)
+    click.echo(f"{s.signature()}\n  {s.description}")
+    click.echo(f"  entry {list(s.entry)}  exit {list(s.exit)}  (figure units, grid=1.6)")
+    for p in s.pins:
+        click.echo(f"  pin {p.name:8s} at {list(p.grid_xy)}  [{p.direction}]")
+    if s.nodes:
+        click.echo(f"  anchors: {', '.join(s.nodes)}")
+    if s.example:
+        click.echo("  example:\n    " + s.example.replace("\n", "\n    "))
+
+
+@main.command("style-guide")
+def style_guide():
+    """Print the figure style guide."""
+    from importlib import resources
+
+    click.echo((resources.files("cictikz") / "data" / "STYLE.md").read_text())
+
+
+if __name__ == "__main__":
+    main()

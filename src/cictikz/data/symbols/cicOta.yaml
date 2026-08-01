@@ -1,0 +1,49 @@
+# cictikz symbol metadata. Coordinates are figure units (\grid = 1.6),
+# relative to the macro entry point, y up, taken from the macro body in
+# cictikz_lib.tex. Gate positions of circuitikz transistors are
+# approximate - address them via the node anchor (e.g. M1.gate) in TikZ.
+name: cicOta
+macro: \cicOta
+nargs: 0
+arg_doc: []
+description: Fully differential OTA outline (triangle, +/- in, -/+ out). Exports
+  coordinates cicOta_inp/inn/outp/outn; path returns to inp.
+entry:
+- 0
+- 0
+exit:
+- 0
+- 0
+height_grid: 2.4
+width_grid: 2.6
+pins:
+- name: inp
+  grid_xy:
+  - 0
+  - 0
+  direction: in
+- name: inn
+  grid_xy:
+  - 0
+  - -1.6
+  direction: in
+- name: outp
+  grid_xy:
+  - 2.6
+  - -1.6
+  direction: out
+- name: outn
+  grid_xy:
+  - 2.6
+  - 0
+  direction: out
+nodes:
+- cicOta_inp
+- cicOta_inn
+- cicOta_outp
+- cicOta_outn
+example: '\draw (0,0) \cicOta;
+
+  \draw (cicOta_inp) \portIn{$v_{ip}$};
+
+  \draw (cicOta_outn) \portOut{$v_{on}$};'

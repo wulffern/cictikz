@@ -1,0 +1,24 @@
+# cictikz symbol metadata. Coordinates are figure units (\grid = 1.6),
+# relative to the macro entry point, y up, taken from the macro body in
+# cictikz_lib.tex. Gate positions of circuitikz transistors are
+# approximate - address them via the node anchor (e.g. M1.gate) in TikZ.
+name: vground
+macro: \vground
+nargs: 0
+arg_doc: []
+description: Ground symbol (three shrinking bars, downward). Path returns to entry.
+entry:
+- 0
+- 0
+exit:
+- 0
+- 0
+height_grid: 0.2
+width_grid: 0.4
+pins:
+- name: term
+  grid_xy:
+  - 0
+  - 0
+  direction: supply
+example: \draw (0,0) \vground \vresistor{$R$};

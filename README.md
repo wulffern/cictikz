@@ -1,0 +1,56 @@
+# cictikz
+
+AI-driven TikZ circuit schematics.
+
+A standalone Python package that ships the `ckt_lib` circuitikz macro
+vocabulary (grid = 1.6, one transistor tall) as package data, renders
+figures reproducibly with `pdflatex`, and exposes the whole loop —
+discover symbols, render, look at the result — to an AI assistant over
+MCP. Later phases add a schematic IR with writers/readers for the
+constrained TikZ dialect and xschem `.sch` files.
+
+## Install
+
+```sh
+make dev-install        # pip install -e ".[mcp]"
+```
+
+Rendering needs `pdflatex` (with `standalone` + `circuitikz`) on PATH,
+and `pdftoppm` (poppler) for PNG / `pdf2svg` for SVG. Without them the
+package still imports; render calls fail with a clear message and the
+render tests skip.
+
+## CLI
+
+```sh
+cictikz render fig.tex --png        # compile a full standalone figure
+cictikz render body.tex --wrap      # wrap a bare macro body in the packaged preamble
+cictikz symbols [QUERY]             # list the symbol library
+cictikz info vnmos                  # pins, entry/exit, example for one symbol
+```
+
+## MCP
+
+```sh
+claude mcp add cictikz -- cictikz-mcp
+```
+
+Tools: `render_tikz` (source → PNG, or the parsed TeX errors),
+`render_file`, `list_symbols`, `symbol_info`, `style_guide`,
+`list_examples` / `get_example` (searches a figure corpus; set
+`CICTIKZ_EXAMPLES` to a directory of `.tex` figures).
+
+## Figure dialect
+
+Figures are written against `cictikz_lib.tex` (macro names identical to
+the aic2026 course repo's `ckt_lib.tex`): path-fragment macros that
+compose in one `\draw`, e.g.
+
+```latex
+\draw (0,0) \vground \vresistor{$R_s$} \lvnmos{M1}{$v_i$};
+\draw (M1.drain) to[short] ++(0,\grid);
+```
+
+See `cictikz style-guide` (or the MCP `style_guide` tool) for the house
+rules: one line width, one arrow tip, colour only when it means
+something.
