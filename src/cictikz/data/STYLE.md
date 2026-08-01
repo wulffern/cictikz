@@ -62,7 +62,10 @@ in a single `\draw`:
 ```
 
 Transistor instance names become circuitikz node names, so `(M1.gate)`,
-`(M1.drain)`, `(M1.source)` are addressable after the macro.
+`(M1.drain)`, `(M1.source)` are addressable after the macro. A wire
+into a gate ends at that anchor, never at a guessed coordinate: the
+gate lead ends 0.98 from the device centreline and a hard-coded
+endpoint lands the wire below the oxide.
 
 ## Wiring
 
