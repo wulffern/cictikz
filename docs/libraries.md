@@ -131,9 +131,13 @@ without an image only make sense composed into a larger figure.
 
 `\dacState{...}{...}{...}`
 
+<img src="libraries/dacState.svg" alt="dacState" width="103">
+
 ### dacStateWide
 
 `\dacStateWide{...}{...}{...}`
+
+<img src="libraries/dacStateWide.svg" alt="dacStateWide" width="131">
 
 ### dacEdge
 
@@ -397,13 +401,19 @@ Constants: `\planeR` = 1.8, `\planeXmax` = 3.1, `\planeYmax` = 2.9, `\planeMark`
 
 `\rdacAmp{...}{...}`
 
+<img src="libraries/rdacAmp.svg" alt="rdacAmp" width="165">
+
 ### rdacPort
 
 `\rdacPort{...}{...}{...}`
 
+<img src="libraries/rdacPort.svg" alt="rdacPort" width="35">
+
 ### rdacSw
 
 `\rdacSw{...}{...}{...}{...}`
+
+<img src="libraries/rdacSw.svg" alt="rdacSw" width="108">
 
 
 ## sc — switched-capacitor circuits

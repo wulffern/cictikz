@@ -76,8 +76,17 @@ def _arg_candidates(n: int) -> list[str]:
     numeric = ["0", "0", "1", "1", "1", "1", "1"][:n]
     labelled = ["0", "0", "1", "$x$", "$y$", "$z$", "$w$"][:n]
     named = ["a"] + numeric[:-1] if n else []
+    # node-style macros: {name}{(coordinate)}{label...}
+    name_coord = (["a", "(0,0)"] + ["$x$"] * (n - 2))[:n] if n >= 2 else []
+    name_coord_num = (["a", "(0,0)"] + ["1"] * (n - 2))[:n] if n >= 2 else []
+    # port-style macros: {(coordinate)}{anchor}{label...}
+    coord_anchor = (["(0,0)", "east"] + ["$x$"] * (n - 2))[:n] if n >= 2 else []
+    if n == 0:
+        return [""]  # zero-argument macros still get their one bare attempt
     out = []
-    for vals in (labelled, numeric, named):
+    for vals in (labelled, numeric, named, name_coord, name_coord_num, coord_anchor):
+        if not vals:
+            continue
         args = "".join("{%s}" % v for v in vals)
         if args not in out:
             out.append(args)

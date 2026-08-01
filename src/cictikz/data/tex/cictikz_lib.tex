@@ -243,12 +243,11 @@
 }
 
 \newcommand{\curDown}[1]{
-  ++(0,0) [short,i>=#1] ++(0,-\grid/2)
+  to [short,i>=#1] ++(0,-\grid/2)
 }
 
 \newcommand{\portCurDown}[1]{
-  ++(0,0) [short,i>=#1] ++(0,-\grid/2)
-  node [anchor=west] {#1}
+  to [short,i>=#1,-o] ++(0,-\grid/2)
 }
 
 \newcommand{\cicAdd}{

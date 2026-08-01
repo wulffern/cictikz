@@ -557,7 +557,7 @@ xschem: `devices/vsource.sym`
 
 ### curDown
 
-<img src="symbols/curDown.svg" alt="curDown" width="30">
+<img src="symbols/curDown.svg" alt="curDown" width="41">
 
 Downward current arrow on a half-grid stub
 
@@ -577,7 +577,7 @@ entry `[0, 0]` — exit `[0, -0.8]`
 
 ### portCurDown
 
-<img src="symbols/portCurDown.svg" alt="portCurDown" width="36">
+<img src="symbols/portCurDown.svg" alt="portCurDown" width="41">
 
 Downward current arrow with a label
 
