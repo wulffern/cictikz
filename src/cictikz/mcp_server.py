@@ -124,6 +124,38 @@ def symbol_info(name: str) -> str:
 
 
 @mcp.tool()
+def draw_schematic(spec_json: str, fmt: str = "tikz"):
+    """Build a circuit structurally from a JSON spec and return TikZ or xschem source.
+
+    The spec is the cictikz schematic IR (coordinates in figure units,
+    grid=1.6, y up):
+      {"name": "amp",
+       "instances": [{"name": "M1", "symbol": "lvnmos", "pos": [0, 0],
+                      "args": ["M1", "$v_i$"],
+                      "conns": {"drain": "vo", "source": "vss", "gate": "vi"}}],
+       "wires":  [{"points": [[0, 1.6], [0, 2.4]], "net": "vo"}],
+       "ports":  [{"net": "vo", "pos": [0, 2.4], "direction": "out"}],
+       "labels": [{"text": "$v_o$", "pos": [0.5, 2], "anchor": "west"}]}
+    Symbol names/pins come from list_symbols/symbol_info. With fmt="tikz"
+    the result is a figure body you can pass to render_tikz to see it.
+
+    Args:
+        spec_json: the schematic IR as a JSON string.
+        fmt: "tikz" (dialect figure body) or "xschem" (.sch file content).
+    """
+    import json
+
+    from .schematic import Schematic
+    from .writers.tikz import write_tikz
+    from .writers.xschem import write_sch
+
+    if fmt not in ("tikz", "xschem"):
+        raise ValueError("fmt must be 'tikz' or 'xschem'")
+    sch = Schematic.from_dict(json.loads(spec_json))
+    return write_tikz(sch) if fmt == "tikz" else write_sch(sch)
+
+
+@mcp.tool()
 def style_guide() -> str:
     """The cictikz figure style guide (line widths, arrows, colour policy, wiring)."""
     from importlib import resources

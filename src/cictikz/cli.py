@@ -72,6 +72,37 @@ def info(name):
         click.echo("  example:\n    " + s.example.replace("\n", "\n    "))
 
 
+@main.command()
+@click.argument("specfile", type=click.Path(exists=True, path_type=Path))
+@click.option("--fmt", type=click.Choice(["tikz", "xschem"]), default="tikz", show_default=True)
+@click.option("-o", "--output", type=click.Path(path_type=Path), default=None, help="Output file (default: stdout).")
+def draw(specfile, fmt, output):
+    """Write a schematic JSON spec out as dialect TikZ or xschem .sch."""
+    import json
+
+    from .schematic import Schematic
+    from .writers.tikz import write_tikz
+    from .writers.xschem import write_sch
+
+    sch = Schematic.from_dict(json.loads(specfile.read_text()))
+    text = write_tikz(sch) if fmt == "tikz" else write_sch(sch)
+    if output:
+        output.write_text(text)
+        click.echo(f"wrote {output}")
+    else:
+        click.echo(text, nl=False)
+
+
+@main.command("export-symlib")
+@click.argument("outdir", type=click.Path(path_type=Path))
+def export_symlib(outdir):
+    """Generate xschem .sym files for cictikz-only symbols into OUTDIR/cictikz/."""
+    from .writers.xschem_sym import export_symlib as export
+
+    for path in export(outdir):
+        click.echo(f"wrote {path}")
+
+
 @main.command("style-guide")
 def style_guide():
     """Print the figure style guide."""

@@ -15,6 +15,7 @@ class TestMcpSmoke(unittest.TestCase):
             "list_symbols",
             "symbol_info",
             "style_guide",
+            "draw_schematic",
             "list_examples",
             "get_example",
         ]:
