@@ -16,6 +16,8 @@ class TestMcpSmoke(unittest.TestCase):
             "symbol_info",
             "style_guide",
             "draw_schematic",
+            "tikz_to_xschem",
+            "xschem_to_tikz",
             "list_examples",
             "get_example",
         ]:

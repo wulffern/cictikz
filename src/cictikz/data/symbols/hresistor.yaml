@@ -3,6 +3,13 @@
 # cictikz_lib.tex. Transistor gate pins are at the END of the gate lead
 # (the circuitikz .gate anchor, measured); in TikZ prefer the node
 # anchor (e.g. M1.gate) over the raw coordinate.
+exports:
+  cStart:
+  - 0
+  - 0
+  resEnd: &id001
+  - 1.6
+  - 0
 name: hresistor
 macro: \hresistor
 nargs: 1
@@ -12,9 +19,7 @@ description: Resistor, horizontal (hand-rolled zig-zag)
 entry:
 - 0
 - 0
-exit: &id001
-- 1.6
-- 0
+exit: *id001
 height_grid: 0
 width_grid: 1.6
 pins:

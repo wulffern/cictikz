@@ -7,6 +7,10 @@ name: vground
 macro: \vground
 nargs: 0
 arg_doc: []
+exports:
+  cStart:
+  - 0
+  - 0
 description: Ground symbol (three shrinking bars, downward). Path returns to entry.
 entry:
 - 0

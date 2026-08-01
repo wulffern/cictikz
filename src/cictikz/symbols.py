@@ -36,6 +36,7 @@ class SymbolDef:
     example: str
     nodes: list[str] = field(default_factory=list)  # circuitikz anchors, e.g. M1.gate
     xschem: dict | None = None  # {sym, pin_map, scale}
+    exports: dict | None = None  # coordinates the macro leaves behind, e.g. {resEnd: [0, 1.6]}
 
     def signature(self) -> str:
         args = "".join("{%s}" % d for d in self.arg_doc) if self.nargs else ""
@@ -62,6 +63,7 @@ def _load_one(text: str) -> SymbolDef:
         example=d.get("example", ""),
         nodes=d.get("nodes", []),
         xschem=d.get("xschem"),
+        exports={k: tuple(v) for k, v in (d.get("exports") or {}).items()} or None,
     )
 
 

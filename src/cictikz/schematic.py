@@ -61,6 +61,8 @@ class Schematic:
         """(instance, pin) -> absolute position, from the symbol metadata."""
         points = {}
         for inst in self.instances:
+            if inst.symbol.startswith("unknown:"):
+                continue  # opaque foreign symbol: no pin metadata
             sym = registry.get(inst.symbol)
             for p in sym.pins:
                 points[(inst.name, p.name)] = (
@@ -87,6 +89,71 @@ class Schematic:
                         if entry not in result.setdefault(wire.net, []):
                             result[wire.net].append(entry)
         return result
+
+    def infer_nets(self, registry) -> None:
+        """Derive connectivity from geometry: pins, wire endpoints and
+        ports that coincide (within SNAP) are one electrical node. Named
+        groups take their name from a port, then an explicit conn, then
+        the wire's net; anonymous groups get net1, net2, ... Fills in
+        inst.conns and wire.net in place."""
+
+        def key(p):
+            return (round(p[0] / SNAP), round(p[1] / SNAP))
+
+        parent: dict = {}
+
+        def find(a):
+            parent.setdefault(a, a)
+            while parent[a] != a:
+                parent[a] = parent[parent[a]]
+                a = parent[a]
+            return a
+
+        def union(a, b):
+            parent[find(a)] = find(b)
+
+        pin_pts = self.pin_points(registry)
+        for (iname, pname), p in pin_pts.items():
+            find(("pin", iname, pname))
+            union(("pin", iname, pname), ("pt", key(p)))
+        for wi, wire in enumerate(self.wires):
+            find(("wire", wi))
+            for p in wire.points:
+                union(("wire", wi), ("pt", key(p)))
+        for port in self.ports:
+            union(("port", port.net), ("pt", key(port.pos)))
+
+        names: dict = {}
+        for port in self.ports:
+            names[find(("port", port.net))] = port.net
+        for inst in self.instances:
+            for pname, net in inst.conns.items():
+                names.setdefault(find(("pin", inst.name, pname)), net)
+        for wi, wire in enumerate(self.wires):
+            if wire.net:
+                names.setdefault(find(("wire", wi)), wire.net)
+
+        counter = 0
+        def name_of(root):
+            nonlocal counter
+            if root not in names:
+                counter += 1
+                names[root] = f"net{counter}"
+            return names[root]
+
+        for inst in self.instances:
+            for (iname, pname), p in pin_pts.items():
+                if iname != inst.name or pname in inst.conns:
+                    continue
+                root = find(("pin", iname, pname))
+                # only name pins that actually touch something else
+                if root in names or any(
+                    find(("wire", wi)) == root for wi in range(len(self.wires))
+                ):
+                    inst.conns[pname] = name_of(root)
+        for wi, wire in enumerate(self.wires):
+            if wire.net is None:
+                wire.net = name_of(find(("wire", wi)))
 
     # -- JSON ----------------------------------------------------------
     def to_dict(self) -> dict:

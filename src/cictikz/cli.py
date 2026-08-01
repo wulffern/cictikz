@@ -93,6 +93,41 @@ def draw(specfile, fmt, output):
         click.echo(text, nl=False)
 
 
+@main.command("tikz2sch")
+@click.argument("texfile", type=click.Path(exists=True, path_type=Path))
+@click.option("-o", "--output", type=click.Path(path_type=Path), default=None)
+def tikz2sch(texfile, output):
+    """Convert a dialect TikZ figure body to an xschem .sch."""
+    from .readers.tikz import read_tikz
+    from .symbols import SymbolRegistry
+    from .writers.xschem import write_sch
+
+    registry = SymbolRegistry.load()
+    sch = read_tikz(texfile.read_text(), registry)
+    sch.name = texfile.stem
+    sch.infer_nets(registry)
+    text = write_sch(sch, registry)
+    output = output or texfile.with_suffix(".sch")
+    output.write_text(text)
+    click.echo(f"wrote {output}")
+
+
+@main.command("sch2tikz")
+@click.argument("schfile", type=click.Path(exists=True, path_type=Path))
+@click.option("-o", "--output", type=click.Path(path_type=Path), default=None)
+def sch2tikz(schfile, output):
+    """Convert an xschem .sch to a dialect TikZ figure body."""
+    from .readers.xschem import read_sch
+    from .symbols import SymbolRegistry
+    from .writers.tikz import write_tikz
+
+    registry = SymbolRegistry.load()
+    text = write_tikz(read_sch(schfile, registry), registry)
+    output = output or schfile.with_suffix(".tex")
+    output.write_text(text)
+    click.echo(f"wrote {output}")
+
+
 @main.command("export-symlib")
 @click.argument("outdir", type=click.Path(path_type=Path))
 def export_symlib(outdir):

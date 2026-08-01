@@ -7,6 +7,10 @@ name: vsupply
 macro: \vsupply
 nargs: 0
 arg_doc: []
+exports:
+  vSupplyStart:
+  - 0
+  - 0
 description: Supply symbol (upward stub with slash). Path returns to entry.
 entry:
 - 0

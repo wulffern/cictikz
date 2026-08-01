@@ -3,32 +3,35 @@
 # cictikz_lib.tex. Transistor gate pins are at the END of the gate lead
 # (the circuitikz .gate anchor, measured); in TikZ prefer the node
 # anchor (e.g. M1.gate) over the raw coordinate.
+name: cmRCascode
+macro: \cmRCascode
+nargs: 0
+arg_doc: []
+description: Cascode mirror with resistor-derived cascode bias
+entry:
+- 0
+- 0
+exit:
+- 0
+- 0
+height_grid: 0
+width_grid: 0
+pins:
+- name: in
+  grid_xy:
+  - 0
+  - 4.7
+  direction: in
+- name: out
+  grid_xy:
+  - 2.5
+  - 3.7
+  direction: out
 exports:
   cStart:
   - 0
   - 0
-  impEnd: &id001
+  resCon:
   - 0
-  - 1.6
-name: vimpedance
-macro: \vimpedance
-nargs: 1
-arg_doc:
-- value label, e.g. $R_s$
-description: Generic impedance box, vertical
-entry:
-- 0
-- 0
-exit: *id001
-height_grid: 1.6
-width_grid: 0
-pins:
-- name: minus
-  grid_xy:
-  - 0
-  - 0
-  direction: inout
-- name: plus
-  grid_xy: *id001
-  direction: inout
-example: \draw (0,0) \vimpedance{$Z$};
+  - 4.2
+example: \draw (0,0) \cmRCascode;

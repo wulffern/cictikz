@@ -7,6 +7,10 @@ name: cmStd
 macro: \cmStd
 nargs: 0
 arg_doc: []
+exports:
+  cStart:
+  - 0
+  - 0
 description: Standard NMOS current mirror (M1 diode-connected, M2 output), grounds
   included, current arrows i_i/i_o. Path returns to entry.
 entry:

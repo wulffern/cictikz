@@ -3,32 +3,40 @@
 # cictikz_lib.tex. Transistor gate pins are at the END of the gate lead
 # (the circuitikz .gate anchor, measured); in TikZ prefer the node
 # anchor (e.g. M1.gate) over the raw coordinate.
-exports:
-  cStart:
-  - 0
-  - 0
-  impEnd: &id001
-  - 0
-  - 1.6
-name: vimpedance
-macro: \vimpedance
-nargs: 1
+name: filtLP
+macro: \filtLP
+nargs: 2
 arg_doc:
-- value label, e.g. $R_s$
-description: Generic impedance box, vertical
+- R label
+- C label
+description: 'Passive RC low-pass: series R to shunt C'
 entry:
 - 0
 - 0
-exit: *id001
-height_grid: 1.6
+exit:
+- 1.6
+- 0
+height_grid: 0
 width_grid: 0
 pins:
-- name: minus
+- name: in
   grid_xy:
   - 0
   - 0
-  direction: inout
-- name: plus
-  grid_xy: *id001
-  direction: inout
-example: \draw (0,0) \vimpedance{$Z$};
+  direction: in
+- name: out
+  grid_xy:
+  - 1.6
+  - 0
+  direction: out
+exports:
+  cStart:
+  - 1.6
+  - -1.6
+  resEnd:
+  - 1.6
+  - 0
+  capEnd:
+  - 1.6
+  - 0
+example: \draw (0,0) \filtLP{x}{x};

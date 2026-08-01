@@ -50,10 +50,15 @@ def write_sch(sch: Schematic, registry: SymbolRegistry | None = None) -> str:
     nlab = 0
 
     for inst in sch.instances:
-        sym = registry.get(inst.symbol)
         x, y = _xy(inst.pos)
         rot = inst.rot % 4
         flip = 1 if inst.flip else 0
+        if inst.symbol.startswith("unknown:"):
+            # Opaque foreign symbol read from xschem: goes back verbatim.
+            path = inst.symbol.removeprefix("unknown:")
+            out.append(f"C {{{path}}} {x} {y} {rot} {flip} {{name={inst.name}}}")
+            continue
+        sym = registry.get(inst.symbol)
         out.append(f"C {{{sym_path(sym)}}} {x} {y} {rot} {flip} {{name={inst.name}}}")
         pins = {p.name: p for p in sym.pins}
         for pin, net in inst.conns.items():

@@ -3,39 +3,45 @@
 # cictikz_lib.tex. Transistor gate pins are at the END of the gate lead
 # (the circuitikz .gate anchor, measured); in TikZ prefer the node
 # anchor (e.g. M1.gate) over the raw coordinate.
-name: cmCascode
-macro: \cmCascode
-nargs: 0
-arg_doc: []
-exports:
-  cStart:
-  - 0
-  - 0
-description: Cascoded NMOS current mirror (M1-M4, v_b bias port), grounds included.
-  Branches at x=0 and x=2.5, tops at y=3.7. Path returns to entry.
+name: cicOtaSSWP
+macro: \cicOtaSSWP
+nargs: 2
+arg_doc:
+- +in label
+- -in label
+description: Single-ended OTA outline with caller-set input labels
 entry:
 - 0
 - 0
 exit:
 - 0
 - 0
-height_grid: 3.7
-width_grid: 2.5
+height_grid: 0
+width_grid: 0
 pins:
-- name: in
+- name: inp
   grid_xy:
   - 0
-  - 3.7
+  - 0
+  direction: in
+- name: inn
+  grid_xy:
+  - 0
+  - -0.8
   direction: in
 - name: out
   grid_xy:
-  - 2.5
-  - 3.7
+  - 2.6
+  - -0.4
   direction: out
-nodes:
-- mn1.gate
-- mn2.gate
-- mn3.gate
-- mn4.gate
-- mn3.drain
-example: \draw (0,0) \cmCascode;
+exports:
+  cicOtaS_inp:
+  - 0
+  - 0
+  cicOtaS_inn:
+  - 0
+  - -0.8
+  cicOtaS_out:
+  - 2.6
+  - -0.4
+example: \draw (0,0) \cicOtaSSWP{x}{x};

@@ -1,0 +1,54 @@
+# cictikz symbol metadata. Coordinates are figure units (\grid = 1.6),
+# relative to the macro entry point, y up, taken from the macro body in
+# cictikz_lib.tex. Transistor gate pins are at the END of the gate lead
+# (the circuitikz .gate anchor, measured); in TikZ prefer the node
+# anchor (e.g. M1.gate) over the raw coordinate.
+name: filtActZ
+macro: \filtActZ
+nargs: 2
+arg_doc:
+- input Z label
+- feedback Z label
+description: Active filter with generic input/feedback impedances
+entry:
+- 0
+- 0
+exit:
+- 4.2
+- 0
+height_grid: 0
+width_grid: 0
+pins:
+- name: in
+  grid_xy:
+  - 0
+  - 0
+  direction: in
+- name: out
+  grid_xy:
+  - 4.2
+  - 0
+  direction: out
+exports:
+  cicStart:
+  - 0
+  - 0
+  impEnd:
+  - 3.7
+  - 0.8
+  cStart:
+  - 1.6
+  - -1.7
+  cicOta_inp:
+  - 1.6
+  - 0
+  cicOta_inn:
+  - 1.6
+  - -1.6
+  cicOta_outp:
+  - 4.2
+  - -1.6
+  cicOta_outn:
+  - 4.2
+  - 0
+example: \draw (0,0) \filtActZ{x}{x};

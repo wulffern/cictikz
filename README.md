@@ -30,7 +30,16 @@ cictikz render fig.tex --png        # compile a full standalone figure
 cictikz render body.tex --wrap      # wrap a bare macro body in the packaged preamble
 cictikz symbols [QUERY]             # list the symbol library
 cictikz info vnmos                  # pins, entry/exit, example for one symbol
+cictikz draw spec.json --fmt tikz   # schematic IR (JSON) -> TikZ or xschem
+cictikz tikz2sch fig.tex            # dialect TikZ -> xschem .sch
+cictikz sch2tikz circuit.sch        # any xschem .sch -> dialect TikZ
+cictikz export-symlib DIR           # generate cictikz/*.sym for xschem
 ```
+
+The TikZ-to-xschem direction accepts only the cictikz dialect (registry
+macros, moves, named coordinates, `--`/`|-`/`-|`/`to[short]` wires) and
+fails loudly with a line number on anything else; xschem-to-TikZ works
+on any `.sch`, drawing unrecognised symbols as labelled boxes.
 
 ## MCP
 

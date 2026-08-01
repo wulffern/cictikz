@@ -156,6 +156,50 @@ def draw_schematic(spec_json: str, fmt: str = "tikz"):
 
 
 @mcp.tool()
+def tikz_to_xschem(source: str) -> str:
+    """Convert a dialect TikZ figure body to xschem .sch content.
+
+    Only the constrained cictikz dialect is accepted (registry macros,
+    moves, named coordinates, --/|-/-|/to[short] wires, node labels,
+    junction dots); anything else raises with a line number rather than
+    guessing. Connectivity is inferred from geometry: coincident pins,
+    wire endpoints and ports become one net.
+
+    Args:
+        source: TikZ figure body (not a full document).
+    """
+    from .readers.tikz import read_tikz
+    from .symbols import SymbolRegistry
+    from .writers.xschem import write_sch
+
+    registry = SymbolRegistry.load()
+    sch = read_tikz(source, registry)
+    sch.infer_nets(registry)
+    return write_sch(sch, registry)
+
+
+@mcp.tool()
+def xschem_to_tikz(path: str) -> str:
+    """Convert an xschem .sch file to a dialect TikZ figure body.
+
+    Works on any xschem schematic: recognised symbols map to cictikz
+    macros, foreign symbols are drawn as labelled boxes, lab_pin/ipin/
+    opin markers become connectivity. Render the result with render_tikz
+    and expect to hand-tune positions - generated layout is correct, not
+    pretty.
+
+    Args:
+        path: path to the .sch file.
+    """
+    from .readers.xschem import read_sch
+    from .symbols import SymbolRegistry
+    from .writers.tikz import write_tikz
+
+    registry = SymbolRegistry.load()
+    return write_tikz(read_sch(Path(path).expanduser(), registry), registry)
+
+
+@mcp.tool()
 def style_guide() -> str:
     """The cictikz figure style guide (line widths, arrows, colour policy, wiring)."""
     from importlib import resources

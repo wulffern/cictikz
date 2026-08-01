@@ -40,6 +40,10 @@ nodes:
 - <inst>.gate
 - <inst>.source
 - <inst>.bulk
+exports:
+  cicmos:
+  - 0
+  - 1.6
 xschem:
   sym: sky130_fd_pr/pfet_01v8.sym
   pin_map:

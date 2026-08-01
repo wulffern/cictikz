@@ -39,6 +39,7 @@ nodes:
 - <inst>.gate
 - <inst>.source
 - <inst>.bulk
+exports: {}
 xschem:
   sym: sky130_fd_pr/nfet_01v8.sym
   pin_map:

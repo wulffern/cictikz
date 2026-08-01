@@ -32,6 +32,18 @@ def write_tikz(sch: Schematic, registry: SymbolRegistry | None = None) -> str:
     out = [BANNER]
 
     for inst in sch.instances:
+        if inst.symbol.startswith("unknown:"):
+            # Foreign xschem symbol with no TikZ mapping: a labelled box
+            # keeps the schematic readable and the instance visible.
+            x, y = inst.pos
+            out.append(
+                f"\\draw {_pt((x - 0.6, y - 0.4))} rectangle {_pt((x + 0.6, y + 0.4))};"
+            )
+            short = inst.symbol.removeprefix("unknown:").rsplit("/", 1)[-1].removesuffix(".sym")
+            out.append(
+                f"\\node[anchor=center] at {_pt(inst.pos)} {{{inst.name}: {short}}};"
+            )
+            continue
         sym = registry.get(inst.symbol)
         if inst.rot or inst.flip:
             raise ValueError(
