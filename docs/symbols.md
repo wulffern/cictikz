@@ -13,7 +13,13 @@ so this page doubles as a compile test of the library.
 |---|---|
 | [`\anaQuestion`](#anaquestion) | Current mirror bias question figure (M1-M3 with sources) |
 | [`\cicAdd`](#cicadd) | Summing node: circle with + |
+| [`\cicAnd`](#cicand) | AND gate, hand-rolled house shape |
+| [`\cicBuf`](#cicbuf) | Buffer (triangle, no bubble), hand-rolled house shape |
 | [`\cicH`](#cich) | Transfer-function box H(s) |
+| [`\cicInv`](#cicinv) | Inverter, hand-rolled house shape; exports <n>_in/_out |
+| [`\cicNand`](#cicnand) | NAND gate, hand-rolled house shape; exports <n>_in1/_in2/_out |
+| [`\cicNor`](#cicnor) | NOR gate, hand-rolled house shape |
+| [`\cicOr`](#cicor) | OR gate, hand-rolled house shape |
 | [`\cicOta`](#cicota) | Fully differential OTA outline (triangle, +/- in, -/+ out). Exports coordinates cicOta_inp/inn/outp/outn; path returns to inp. |
 | [`\cicOtaSSWP`](#cicotasswp) | Single-ended OTA outline with caller-set input labels |
 | [`\cicOtaSWP`](#cicotaswp) | Fully differential OTA outline with caller-set port labels (+in/-in/+out/-out) |
@@ -745,6 +751,49 @@ entry `[0, 0]` — exit `[0.4, 0]`
 \draw (0,0) \cicAdd;
 ```
 
+### cicAnd
+
+<img src="symbols/cicAnd.svg" alt="cicAnd">
+
+AND gate, hand-rolled house shape
+
+```latex
+\cicAnd{instance name}
+```
+
+entry `[0, 0]` — exit `[1.18, 0]`
+
+| pin | position | direction |
+|---|---|---|
+| in1 | [0, 0.32] | in |
+| in2 | [0, -0.32] | in |
+| out | [1.18, 0] | out |
+
+```latex
+\draw (0,0) \cicAnd{x};
+```
+
+### cicBuf
+
+<img src="symbols/cicBuf.svg" alt="cicBuf">
+
+Buffer (triangle, no bubble), hand-rolled house shape
+
+```latex
+\cicBuf{instance name}
+```
+
+entry `[0, 0]` — exit `[0.9, 0]`
+
+| pin | position | direction |
+|---|---|---|
+| in | [0, 0] | in |
+| out | [0.9, 0] | out |
+
+```latex
+\draw (0,0) \cicBuf{x};
+```
+
 ### cicH
 
 <img src="symbols/cicH.svg" alt="cicH">
@@ -764,6 +813,94 @@ entry `[0, 0]` — exit `[0.8, 0]`
 
 ```latex
 \draw (0,0) \cicH{x};
+```
+
+### cicInv
+
+<img src="symbols/cicInv.svg" alt="cicInv">
+
+Inverter, hand-rolled house shape; exports <n>_in/_out
+
+```latex
+\cicInv{instance name}
+```
+
+entry `[0, 0]` — exit `[1.1, 0]`
+
+| pin | position | direction |
+|---|---|---|
+| in | [0, 0] | in |
+| out | [1.1, 0] | out |
+
+```latex
+\draw (0,0) \cicInv{x};
+```
+
+### cicNand
+
+<img src="symbols/cicNand.svg" alt="cicNand">
+
+NAND gate, hand-rolled house shape; exports <n>_in1/_in2/_out
+
+```latex
+\cicNand{instance name, e.g. g1}
+```
+
+entry `[0, 0]` — exit `[1.38, 0]`
+
+| pin | position | direction |
+|---|---|---|
+| in1 | [0, 0.32] | in |
+| in2 | [0, -0.32] | in |
+| out | [1.38, 0] | out |
+
+```latex
+\draw (0,0) \cicNand{g1};
+\draw (-0.5,0.32) -- (g1_in1);
+```
+
+### cicNor
+
+<img src="symbols/cicNor.svg" alt="cicNor">
+
+NOR gate, hand-rolled house shape
+
+```latex
+\cicNor{instance name}
+```
+
+entry `[0, 0]` — exit `[1.7, 0]`
+
+| pin | position | direction |
+|---|---|---|
+| in1 | [0, 0.32] | in |
+| in2 | [0, -0.32] | in |
+| out | [1.7, 0] | out |
+
+```latex
+\draw (0,0) \cicNor{x};
+```
+
+### cicOr
+
+<img src="symbols/cicOr.svg" alt="cicOr">
+
+OR gate, hand-rolled house shape
+
+```latex
+\cicOr{instance name}
+```
+
+entry `[0, 0]` — exit `[1.5, 0]`
+
+| pin | position | direction |
+|---|---|---|
+| in1 | [0, 0.32] | in |
+| in2 | [0, -0.32] | in |
+| out | [1.5, 0] | out |
+
+```latex
+\draw (0,0) \cicOr{x};
 ```
 
 ### cicOta
