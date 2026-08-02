@@ -61,3 +61,13 @@ scripts/
 
 Both `data/symbols/` and `docs/symbols*` are generated — edit the
 scripts, not the outputs.
+
+## Data plots: tikzplot
+
+`cictikz.tikzplot` is the pgfplots generator behind the course's data
+figures: a small `Figure`/`Axes` API (no dependencies) that renders
+plots with the same preamble as the schematics, so both match on a
+page. Scripts call `Figure(...)`, `ax.plot(...)`, `fig.save(name)`;
+the output lands in `<root>/tikz/<name>.tex`, where root is the repo
+the symlinked module lives in, or `TIKZPLOT_ROOT`. The aic2026 course
+repo symlinks `py/tikzplot.py` here, like the `tikz/*.tex` libraries.
