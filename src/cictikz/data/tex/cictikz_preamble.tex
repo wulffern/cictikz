@@ -60,6 +60,24 @@
 %\newcommand{\req}[1]{(\ref{\myeqname#1})}
 
 \definecolor{armygreen}{rgb}{0, 0.5, 0}
+
+% ---------------------------------------------------------------
+% The book colour theme. Derived from the JSSC 2016 paper's palette
+% and tuned so every semantic colour lands on a distinct gray when
+% printed black and white - a luminance ladder:
+%   black 0.00 < red 0.26 < armygreen 0.41 < blue 0.56
+%   < orange 0.64 < oxteal 0.70
+% Redefining the stock names means every figure inherits the theme
+% without edits.
+\definecolor{red}{RGB}{160,25,35}
+\definecolor{blue}{RGB}{85,155,235}
+\definecolor{armygreen}{RGB}{70,130,60}
+\definecolor{orange}{RGB}{240,150,40}
+\definecolor{echarge}{RGB}{85,155,235}
+\definecolor{hcharge}{RGB}{160,25,35}
+\definecolor{oxteal}{RGB}{140,195,195}
+% ---------------------------------------------------------------
+
 \newcommand{\missing}[1]{{ #1}}
 \newcommand{\edit}[1]{{ #1}}
 \newcommand{\secedit}[1]{{ #1}}
