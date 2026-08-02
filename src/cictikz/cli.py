@@ -46,6 +46,40 @@ def render(texfile, wrap, want_svg, want_png, dpi, outdir):
 
 
 @main.command()
+@click.argument("texfiles", nargs=-1, required=True,
+                type=click.Path(exists=True, path_type=Path))
+@click.option("--rule", multiple=True, help="Only report these rules.")
+@click.option("--quiet", is_flag=True, help="Only print files that have findings.")
+def lint(texfiles, rule, quiet):
+    """Check figures for wiring and style mistakes.
+
+    Reports wires drawn on top of each other, wires that stop in mid
+    air, junction dots where nothing junctions, junctions with no dot,
+    labels sitting on wires, and a few things that are wrong before any
+    geometry is considered.
+    """
+    from .lint import extent, lint_file
+
+    total = 0
+    for path in texfiles:
+        findings, fig = lint_file(path)
+        if rule:
+            findings = [f for f in findings if f.rule in rule]
+        if not findings and quiet:
+            continue
+        w, h = extent(fig)
+        click.echo(f"{path}  ({w:.1f} x {h:.1f} units, {len(fig.segments)} segments)")
+        for f in findings:
+            click.echo(f"  {f}")
+        if not findings:
+            click.echo("  no findings")
+        total += len(findings)
+    if total:
+        click.echo(f"\n{total} finding{'s' if total != 1 else ''}")
+        sys.exit(1)
+
+
+@main.command()
 @click.argument("query", default="")
 def symbols(query):
     """List the symbol library (optionally filtered by QUERY)."""

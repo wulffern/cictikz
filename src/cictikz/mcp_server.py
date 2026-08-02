@@ -255,3 +255,26 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+@mcp.tool()
+def lint_figure(path: str) -> str:
+    """Check a figure for wiring and style mistakes.
+
+    Reports wires drawn on top of each other, wires that stop in mid
+    air, junction dots where nothing joins, T junctions with no dot,
+    labels drawn across wires or devices, and a few things that are
+    wrong before any geometry is considered - an invisible node[ground],
+    calc arithmetic, a colour outside the book palette.
+
+    The wire checks only run on circuitikz figures; on a drawing they
+    would report every stroke that legitimately ends where it ends.
+    """
+    from .lint import extent, lint_file
+
+    findings, fig = lint_file(path)
+    w, h = extent(fig)
+    head = f"{path}: {w:.1f} x {h:.1f} units, {len(fig.segments)} segments"
+    if not findings:
+        return head + "\nno findings"
+    return head + "\n" + "\n".join(str(f) for f in findings)
