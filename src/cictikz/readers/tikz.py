@@ -58,8 +58,9 @@ _TOKEN = re.compile(
 # anything else (component shapes like [pnp], calc, plots) is rejected.
 _COSMETIC = re.compile(
     r"""^(
-      |black|red|blue|armygreen|white|poly|active|cut|mOne|mTwo|mThree|mFour
-      |echarge|hcharge|gray(!\d+)?
+      |(black|red|blue|armygreen|white|poly|active|cut|mOne|mTwo|mThree
+        |mFour|echarge|hcharge|gray|orange)(!\d+)?(!\w+)?
+      |label(=[^,]*)?
       |(densely\ |loosely\ )?(dashed|dotted)
       |thin|thick|very\ thick|ultra\ thick
       |rounded\ corners(=[^,]*)?
@@ -82,10 +83,20 @@ def _num(expr: str) -> float:
     return float(eval(expr, {"__builtins__": {}}, {}))  # arithmetic only, vetted by regex
 
 
+#- Colour names the current figure defines with \definecolor; they are
+#  as cosmetic as the built-in palette. Set per read_tikz call.
+_local_colours: set = set()
+
+
 def _check_style(opts: str | None, line: int, what: str):
     for opt in (opts or "").split(","):
-        if not _COSMETIC.fullmatch(opt.strip()):
-            raise DialectError(f"{what} option '{opt.strip()}' outside dialect", line)
+        o = opt.strip()
+        if _COSMETIC.fullmatch(o):
+            continue
+        base = o.split("!", 1)[0].split("=", 1)[0].strip()
+        if base in _local_colours:
+            continue
+        raise DialectError(f"{what} option '{o}' outside dialect", line)
     return (opts or "")
 
 _STMT = re.compile(r"\\(draw|fill|node|path)\b([^;]*);", re.DOTALL)
@@ -142,15 +153,36 @@ def read_tikz(text: str, registry: SymbolRegistry | None = None) -> Schematic:
     # figure defines locally (\newcommand{\xl}{2.4}) - substitute them so
     # coordinates like (\xl,0) or (0,\grid/4) become plain arithmetic.
     consts = dict(_lib_constants())
-    consts.update(
-        re.findall(r"\\(?:newcommand|def)\{?\\(\w+)\}?\{(-?[\d.]+)\}", stripped)
-    )
-    stripped = re.sub(r"\\(?:newcommand|def)\{?\\\w+\}?\{-?[\d.]+\}", "", stripped)
+    #- Constant bodies may be expressions over earlier constants
+    #  (\def\xr{\grid*2.5}); resolve iteratively until nothing new.
+    defs = re.findall(r"\\(?:newcommand|def)\{?\\(\w+)\}?\{([-\d.*/+() \\\w]+)\}",
+                      stripped)
+    pending = [(n, b) for n, b in defs]
+    for _ in range(4):
+        still = []
+        for n, body in pending:
+            expr = re.sub(r"\\(\w+)",
+                          lambda m: consts.get(m.group(1), m.group(0)), body)
+            if re.fullmatch(r"[-\d.*/+() ]+", expr):
+                try:
+                    consts[n] = repr(eval(expr, {"__builtins__": {}}, {}))
+                    continue
+                except Exception:
+                    pass
+            still.append((n, body))
+        if not still:
+            break
+        pending = still
+    stripped = re.sub(r"\\(?:newcommand|def)\{?\\\w+\}?\{[-\d.*/+() \\\w]+\}",
+                      "", stripped)
     stripped = re.sub(
         r"\\(" + "|".join(re.escape(c) for c in consts) + r")\b",
         lambda m: consts[m.group(1)],
         stripped,
     )
+
+    _local_colours.clear()
+    _local_colours.update(re.findall(r"\\definecolor\{(\w+)\}", text))
 
     covered = []
     for m in _STMT.finditer(stripped):
@@ -161,7 +193,7 @@ def read_tikz(text: str, registry: SymbolRegistry | None = None) -> Schematic:
             _expect_junction(body, line)
             continue
         if kind == "node":
-            _read_node_stmt(body, sch, line)
+            _read_node_stmt(body, sch, line, coords)
             continue
         _read_path(kind, body, sch, coords, counter, registry, line, stripped, m.start(2))
 
@@ -183,7 +215,46 @@ def _expect_junction(body: str, line: int):
     _check_style(m.group("opts"), line, "fill")
 
 
-def _read_node_stmt(body: str, sch: Schematic, line: int):
+_BJT = re.compile(r"\s*(pnp|npn)\s*(?:,|$)")
+
+#- circuitikz BJT anchors, measured from the rendered node (probe
+#  with \pgfpointanchor): npn collector up, pnp collector down.
+_BJT_PINS = {
+    "npn": {"C": (0.0, 0.77), "B": (-0.84, 0.0), "E": (0.0, -0.77)},
+    "pnp": {"C": (0.0, -0.77), "B": (-0.84, 0.0), "E": (0.0, 0.77)},
+}
+
+
+def _read_node_stmt(body: str, sch: Schematic, line: int, coords=None):
+    #- BJTs: the house has no bipolar macro, so \node[pnp]/[npn] is the
+    #  house way to draw one - a component, not a label.
+    bm = re.fullmatch(
+        rf"\s*\[(?P<opts>[^\]]*)\]\s*(?:\((?P<name>[\w\[\]]+)\)\s*)?at\s*"
+        rf"\(\s*(?P<x>{_EXPR})\s*,\s*(?P<y>{_EXPR})\s*\)\s*\{{\s*\}}\s*",
+        body,
+    )
+    if bm and _BJT.match(bm.group("opts") or ""):
+        opts = [o.strip() for o in bm.group("opts").split(",")]
+        kind = opts[0]
+        anchor = "center"
+        for o in opts[1:]:
+            if o.startswith("anchor="):
+                anchor = o.removeprefix("anchor=")
+            elif not _COSMETIC.fullmatch(o):
+                raise DialectError(f"node option '{o}' outside dialect", line)
+        pins = dict(_BJT_PINS[kind])
+        off = pins.get(anchor, (0.0, 0.0))
+        cx = _num(bm.group("x")) - off[0]
+        cy = _num(bm.group("y")) - off[1]
+        name = bm.group("name") or f"Q{line}"
+        from ..schematic import Instance
+        sch.add(Instance(name, kind, pos=(cx, cy), args=opts[1:]))
+        if coords is not None:
+            for pn, (px, py) in pins.items():
+                coords[f"{name}.{pn}"] = (round(cx + px, 6), round(cy + py, 6))
+            coords[f"{name}.center"] = (round(cx, 6), round(cy, 6))
+        return
+
     m = re.fullmatch(
         rf"\s*(?:\[(?P<opts>[^\]]*)\])?\s*(?:\(\w+\)\s*)?at\s*\(\s*(?P<x>{_EXPR})\s*,\s*(?P<y>{_EXPR})\s*\)\s*\{{(?P<text>{_NEST})\}}\s*",
         body,
