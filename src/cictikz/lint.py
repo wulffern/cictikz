@@ -255,9 +255,27 @@ def _number(expr: str, consts: dict[str, str]) -> float | None:
 _COORD = re.compile(r"(\+\+|\+)?\(\s*([^()]*?(?:\([^()]*\)[^()]*?)*)\s*\)")
 
 
-def _parse_coord(body: str, consts: dict[str, str]) -> Point | str | None:
-    """A coordinate body is either two arithmetic components or a node
-    name we keep opaque."""
+_PERP = re.compile(r"^(.+?)\s(-\||\|-)\s(.+)$")
+
+
+def _parse_coord(body: str, consts: dict[str, str], named: dict | None = None
+                 ) -> Point | str | None:
+    """A coordinate body is either two arithmetic components, a pair
+    joined by TikZ's -| or |- operator, or a node name we keep opaque."""
+    m = _PERP.match(body.strip())
+    if m and named is not None:
+        # (A -| B) is the point with B's x and A's y; (A |- B) the other
+        # way round. Without this the wire that uses one looks like it
+        # ends nowhere.
+        a = _parse_coord(m.group(1), consts, named)
+        b = _parse_coord(m.group(3), consts, named)
+        if isinstance(a, str):
+            a = named.get(a, a)
+        if isinstance(b, str):
+            b = named.get(b, b)
+        if isinstance(a, Point) and isinstance(b, Point):
+            return Point(b.x, a.y) if m.group(2) == "-|" else Point(a.x, b.y)
+        return body.strip()
     if ":" in body and "," not in body:      # polar, e.g. (30:1.2)
         return "polar"
     parts = _split_top(body)
@@ -647,7 +665,7 @@ def _read_path(body: str, lineno: int, consts, fig: Figure,
     # box, a shaded region. Wires do not close on themselves.
     closed = "cycle" in stripped
 
-    tokens = _tokenise(stripped, consts)
+    tokens = _tokenise(stripped, consts, fig.named)
     cur: Point | str | None = None
     pending: str | None = None
     depth = 0
@@ -681,11 +699,8 @@ def _read_path(body: str, lineno: int, consts, fig: Figure,
             if isinstance(cur, Point) and depth == 0 and text.strip():
                 fig.nodes.append((cur, opts, text, lineno))
             continue
-        if kind in ("coord", "rel"):
-            if isinstance(value, str):
-                unresolved = True
-            elif isinstance(value, Point) and kind == "coord":
-                numeric_here.append(value)
+        if kind in ("coord", "rel") and isinstance(value, str):
+            unresolved = True
         if kind == "name":
             # "coordinate (n)" plants a name on the point we are standing
             # on, so a later (n) resolves instead of breaking the chain.
@@ -698,6 +713,12 @@ def _read_path(body: str, lineno: int, consts, fig: Figure,
                 pt = Point(pt.x + offset[0], pt.y + offset[1])
             elif isinstance(pt, str) and pt in fig.named:
                 pt = fig.named[pt]
+            # Recorded after resolution, not before: a name that the
+            # figure defined does have a position, and it is that
+            # position which becomes uncertain when something else in
+            # the same statement cannot be resolved.
+            if isinstance(pt, Point):
+                numeric_here.append(pt)
             if pending and cur is not None:
                 _emit(fig, cur, pt, lineno, pending, source, depth > 0 or closed, wide, mirrored)
             cur = pt
@@ -770,7 +791,7 @@ _SYMCLOSE = re.compile(r"\}SYM@")
 _CIRC = re.compile(r"circle\s*\(\s*([^()]*)\s*\)")
 
 
-def _tokenise(body: str, consts) -> list[tuple[str, object]]:
+def _tokenise(body: str, consts, named: dict | None = None) -> list[tuple[str, object]]:
     out: list[tuple[str, object]] = []
     i = 0
     while i < len(body):
@@ -801,7 +822,7 @@ def _tokenise(body: str, consts) -> list[tuple[str, object]]:
             continue
         m = _COORD.match(body, i)
         if m:
-            pt = _parse_coord(m.group(2), consts)
+            pt = _parse_coord(m.group(2), consts, named)
             out.append(("rel" if m.group(1) else "coord", pt))
             i = m.end()
             continue
