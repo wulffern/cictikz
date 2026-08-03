@@ -12,7 +12,7 @@ GOOD = r"""
   \draw (0,0) -- (0,2);
   \draw (0,2) -- (3,2);
   \draw (3,2) -- (3,0);
-  \draw (0,1) -- (3,1);
+  \draw (0,1) to [R] (3,1);
   \fill (0,1) circle (0.075);
   \fill (3,1) circle (0.075);
 \end{circuitikz}
@@ -29,8 +29,8 @@ def test_clean_figure_is_quiet():
 
 
 def test_overlapping_wire():
-    bad = GOOD.replace(r"\draw (0,1) -- (3,1);",
-                       "\\draw (0,1) -- (3,1);\n  \\draw (0,2) -- (2,2);")
+    bad = GOOD.replace(r"\draw (0,2) -- (3,2);",
+                       "\\draw (0,2) -- (3,2);\n  \\draw (0,2) -- (2,2);")
     assert "overlapping-wire" in rules(bad)
 
 
@@ -44,6 +44,16 @@ def test_a_stroke_free_at_both_ends_is_not_a_wire():
     # a rule in a truth table, a capacitor plate, a tick
     fine = GOOD.replace(r"\end{circuitikz}", "\\draw (6,4) -- (8,4);\n\\end{circuitikz}")
     assert "open-wire" not in rules(fine)
+
+
+def test_a_plot_is_not_a_schematic():
+    # a staircase against a sine, drawn in a circuitikz environment for
+    # the preamble: the strokes overlap on purpose
+    plot = r"""\begin{circuitikz}
+  \draw (0,0) -- (1,0) -- (1,1) -- (2,1);
+  \draw (0,0) -- (1,0) -- (1,1) -- (2,1);
+\end{circuitikz}"""
+    assert "overlapping-wire" not in rules(plot)
 
 
 def test_foreach_is_unrolled():
@@ -70,8 +80,8 @@ def test_missing_junction_dot():
 
 
 def test_crowded_wires():
-    bad = GOOD.replace(r"\draw (0,1) -- (3,1);",
-                       "\\draw (0,1) -- (3,1);\n  \\draw (0,1.1) -- (3,1.1);")
+    bad = GOOD.replace(r"\draw (0,2) -- (3,2);",
+                       "\\draw (0,2) -- (3,2);\n  \\draw (0,2.1) -- (3,2.1);")
     assert "crowded-wires" in rules(bad)
 
 

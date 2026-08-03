@@ -1116,15 +1116,23 @@ RULES = (
 )
 
 
-def is_schematic(text: str) -> bool:
+def is_schematic(text: str, fig: Figure | None = None) -> bool:
     """Is this a circuit, or a drawing?
 
-    The wire checks only mean anything on a schematic. A band diagram or
-    a timeline is built from strokes that are not wires, end where the
-    author wanted them to end, and cross without connecting - running
-    the topology rules over one produces nothing but noise.
+    The wire checks only mean anything on a schematic. A band diagram, a
+    timeline, a plot of a staircase against a sine - these are built
+    from strokes that are not wires, end where the author wanted them to
+    end, and overlap on purpose.
+
+    Being inside a circuitikz environment is not enough on its own:
+    plenty of plots are drawn in one for the preamble. A schematic has
+    devices in it.
     """
-    return "\\begin{circuitikz}" in text
+    if "\\begin{circuitikz}" not in text:
+        return False
+    if fig is None:
+        return True
+    return any(s.component for s in fig.segments)
 
 
 def lint_text(text: str, base: Path | None = None) -> tuple[list[Finding], Figure]:
@@ -1132,7 +1140,7 @@ def lint_text(text: str, base: Path | None = None) -> tuple[list[Finding], Figur
     lib_colours = {c.lower() for c in re.findall(
         r"\\definecolor\{([^}]+)\}", _libraries(text, base))}
     findings = check_style(text, lib_colours) + check_text(fig)
-    if is_schematic(text):
+    if is_schematic(text, fig):
         findings += (check(fig) + check_dots_extra(fig) + check_crowding(fig)
                      + check_floating(fig) + check_labels(fig))
     order = {r: i for i, r in enumerate(RULES)}
