@@ -434,17 +434,21 @@ def _expand_foreach(text: str, depth: int = 3) -> str:
                 chunk = re.sub(re.escape(name) + r"(?![A-Za-z])",
                                lambda _m, v=value: v, chunk)
             pieces.append(chunk)
-        text = text[:m.start()] + " ".join(" ".join(p.split("\n")) for p in pieces) + text[end:]
+        # The unrolled copies go on one line, and the newlines the loop
+        # occupied are put back after it, so every line below keeps its
+        # number.
+        eaten = text.count("\n", m.start(), end)
+        text = (text[:m.start()]
+                + " ".join(" ".join(p.split("\n")) for p in pieces)
+                + "\n" * eaten + text[end:])
     return text
 
 
 def _expand_local_calls(lines: list[str], local: dict, consts: dict) -> str:
     """Expand the figure's own macros where they are called."""
-    text = _expand_foreach(_blank_definitions("\n".join(lines)))
+    text = _blank_definitions("\n".join(lines))
     # Constants are not path macros; leave them for the evaluator.
     callable_ = {k: v for k, v in local.items() if k not in consts}
-    if not callable_:
-        return text
     out = []
     for line in text.split("\n"):
         if any("\\" + name in line for name in callable_):
@@ -453,8 +457,14 @@ def _expand_local_calls(lines: list[str], local: dict, consts: dict) -> str:
             # after the call, so findings would cite the wrong place and
             # the scope table would be read at the wrong offset.
             line = " ".join(expand(line, callable_, fence=set()).split("\n"))
+        # Loops are unrolled after the macros, not before: a loop inside
+        # a macro body only exists once the macro has been expanded, and
+        # the definition itself is blanked.
         out.append(line)
-    return "\n".join(out)
+    # Loops are unrolled after the macros, not before: a loop inside a
+    # macro body only exists once the macro has been expanded, and the
+    # definition itself is blanked.
+    return _expand_foreach("\n".join(out))
 
 
 def parse(text: str, base: Path | None = None) -> Figure:
