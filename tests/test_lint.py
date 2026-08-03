@@ -35,8 +35,27 @@ def test_overlapping_wire():
 
 
 def test_open_wire():
-    bad = GOOD.replace(r"\end{circuitikz}", "\\draw (6,4) -- (8,4);\n\\end{circuitikz}")
+    # attached at one end, dangling at the other: the fault
+    bad = GOOD.replace(r"\end{circuitikz}", "\\draw (3,2) -- (6,2);\n\\end{circuitikz}")
     assert "open-wire" in rules(bad)
+
+
+def test_a_stroke_free_at_both_ends_is_not_a_wire():
+    # a rule in a truth table, a capacitor plate, a tick
+    fine = GOOD.replace(r"\end{circuitikz}", "\\draw (6,4) -- (8,4);\n\\end{circuitikz}")
+    assert "open-wire" not in rules(fine)
+
+
+def test_foreach_is_unrolled():
+    # the wires a loop draws have to exist, or everything they touch
+    # looks orphaned
+    text = r"""\begin{circuitikz}
+  \foreach \i in {1,2,3} { \draw (\i,0) -- (\i,2); }
+  \draw (0,0) -- (4,0);
+  \draw (0,2) -- (4,2);
+\end{circuitikz}"""
+    from cictikz.lint import parse
+    assert len(parse(text).segments) == 5
 
 
 def test_dot_without_junction():

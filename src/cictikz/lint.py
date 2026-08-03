@@ -302,11 +302,54 @@ def _libraries(text: str, base: Path | None) -> str:
         return ""
     out = []
     for rel in _INPUT.findall(text):
-        for cand in (base / rel, base / Path(rel).name, base.parent / rel):
-            if cand.is_file():
-                out.append(cand.read_text())
+        # \input paths are written relative to the repository root, not
+        # to the figure, so a figure in tikz/l13/ has to look upwards for
+        # them. Without this the whole symbol library is missing for
+        # every figure in a subdirectory, and its geometry comes out
+        # wrong rather than merely unknown.
+        found = None
+        for root in [base, *base.parents][:6]:
+            for cand in (root / rel, root / Path(rel).name):
+                if cand.is_file():
+                    found = cand
+                    break
+            if found:
                 break
+        if found:
+            out.append(found.read_text())
     return "\n".join(out)
+
+
+_SCOPE_MARK = re.compile(
+    r"(?P<open>\\begin\{scope\})\s*(?P<opts>\[[^\]]*\])?"
+    r"|(?P<close>\\end\{scope\})")
+
+
+def _shift_by_line(text: str, consts: dict, line_of, nlines: int):
+    """The accumulated scope shift in effect on each line."""
+    table = [(0.0, 0.0)] * nlines
+    stack = [(0.0, 0.0)]
+    pos = 1
+    for m in _SCOPE_MARK.finditer(text):
+        line = line_of(m.start())
+        for i in range(pos, min(line + 1, nlines)):
+            table[i] = stack[-1]
+        pos = min(line + 1, nlines)
+        if m.group("open"):
+            opts = m.group("opts") or ""
+            dx = dy = 0.0
+            sm = re.search(r"shift\s*=\s*\{?\(([^)]*)\)\}?", opts)
+            if sm:
+                parts = _split_top(sm.group(1))
+                if len(parts) == 2:
+                    dx = _number(parts[0], consts) or 0.0
+                    dy = _number(parts[1], consts) or 0.0
+            stack.append((stack[-1][0] + dx, stack[-1][1] + dy))
+        elif len(stack) > 1:
+            stack.pop()
+    for i in range(pos, nlines):
+        table[i] = stack[-1]
+    return table
 
 
 def _blank_definitions(text: str) -> str:
@@ -322,9 +365,72 @@ def _blank_definitions(text: str) -> str:
     return "".join(out)
 
 
+_FOREACH = re.compile(r"\\foreach\s+(?P<vars>\\[A-Za-z]+(?:\s*/\s*\\[A-Za-z]+)*)"
+                      r"\s*(?:\[[^\]]*\])?\s*in\s*\{(?P<list>[^{}]*)\}\s*")
+
+
+def _expand_range(items: list[str]) -> list[str]:
+    """Turn 1,...,4 into 1,2,3,4. Anything else is left alone."""
+    out: list[str] = []
+    i = 0
+    while i < len(items):
+        if items[i].strip() == "..." and out and i + 1 < len(items):
+            try:
+                lo = float(out[-1])
+                hi = float(items[i + 1])
+                step = lo - float(out[-2]) if len(out) > 1 else 1.0
+            except ValueError:
+                out.append(items[i])
+                i += 1
+                continue
+            v = lo + step
+            while (step > 0 and v <= hi + 1e-9) or (step < 0 and v >= hi - 1e-9):
+                out.append(f"{v:g}")
+                v += step
+            i += 2
+            continue
+        out.append(items[i])
+        i += 1
+    return out
+
+
+def _expand_foreach(text: str, depth: int = 3) -> str:
+    """Unroll \\foreach loops.
+
+    Without this the wires a loop draws do not exist as far as the
+    checks are concerned, and everything they connect to looks orphaned
+    - a truth table's rules, a bus, a row of identical cells.
+    """
+    for _ in range(depth):
+        m = _FOREACH.search(text)
+        if not m:
+            break
+        brace = text.find("{", m.end() - 1)
+        if brace == -1:
+            break
+        body, end = _balanced(text, brace)
+        names = [v.strip() for v in m.group("vars").split("/")]
+        rows = _expand_range([v.strip() for v in m.group("list").split(",")])
+        pieces = []
+        for row in rows:
+            values = [v.strip() for v in row.split("/")]
+            if len(values) < len(names):
+                continue
+            chunk = body
+            for name, value in zip(names, values):
+                # Longest names first: \ab must not be hit by \a.
+                # A literal replacement: a loop value may itself contain
+                # backslashes, which re.sub would read as escapes.
+                chunk = re.sub(re.escape(name) + r"(?![A-Za-z])",
+                               lambda _m, v=value: v, chunk)
+            pieces.append(chunk)
+        text = text[:m.start()] + " ".join(" ".join(p.split("\n")) for p in pieces) + text[end:]
+    return text
+
+
 def _expand_local_calls(lines: list[str], local: dict, consts: dict) -> str:
     """Expand the figure's own macros where they are called."""
-    text = _blank_definitions("\n".join(lines))
+    text = _expand_foreach(_blank_definitions("\n".join(lines)))
     # Constants are not path macros; leave them for the evaluator.
     callable_ = {k: v for k, v in local.items() if k not in consts}
     if not callable_:
@@ -332,7 +438,11 @@ def _expand_local_calls(lines: list[str], local: dict, consts: dict) -> str:
     out = []
     for line in text.split("\n"):
         if any("\\" + name in line for name in callable_):
-            line = expand(line, callable_, fence=set())
+            # Flattened onto the one line: a macro body spans several,
+            # and letting them through would shift every line number
+            # after the call, so findings would cite the wrong place and
+            # the scope table would be read at the wrong offset.
+            line = " ".join(expand(line, callable_, fence=set()).split("\n"))
         out.append(line)
     return "\n".join(out)
 
@@ -363,8 +473,11 @@ def parse(text: str, base: Path | None = None) -> Figure:
     fig.consts = consts
 
     # Line numbers: map an offset in `joined` back to a 1-based line.
+    # Offsets are measured in the expanded text, which is what every
+    # scanner below actually searches. The line count is unchanged, so
+    # the numbers still refer to the file the author edits.
     starts = [0]
-    for line in lines:
+    for line in joined.split("\n"):
         starts.append(starts[-1] + len(line) + 1)
 
     def line_of(offset: int) -> int:
@@ -388,6 +501,10 @@ def parse(text: str, base: Path | None = None) -> Figure:
             pt = _parse_coord(cm.group(2), consts)
             if isinstance(pt, Point):
                 fig.named[m.group(1).strip()] = pt
+
+    # The shift in effect on each line, so the node scan below can place
+    # a label drawn inside a shifted scope where it is actually drawn.
+    line_shift = _shift_by_line(joined, consts, line_of, len(lines) + 2)
 
     shift = [(0.0, 0.0)]
     poisoned = [False]
@@ -438,18 +555,23 @@ def parse(text: str, base: Path | None = None) -> Figure:
     # Node labels, for the text-over-wire check. Expanded a line at a
     # time so a label drawn by the figure's own shorthand - \dsize and
     # friends - is checked too, without losing the line number.
-    for lineno, raw in enumerate(lines, start=1):
+    # Scanned over the same text the statements came from: with the
+    # macro definitions blanked, so a label inside a definition is not
+    # counted alongside the label its expansion produces.
+    for lineno, raw in enumerate(joined.split("\n"), start=1):
         if "\\node" not in raw and not any(
                 "\\" + name in raw for name in macros):
             continue
         line = expand(raw, macros, fence=fence)
+        dx, dy = line_shift[min(lineno, len(line_shift) - 1)]
         for m in _NODE.finditer(line):
             body, _ = _balanced(line, m.end() - 1)
             pt = _parse_coord(m.group("pos"), consts)
             if isinstance(pt, str) and pt in fig.named:
                 pt = fig.named[pt]
             if isinstance(pt, Point):
-                fig.nodes.append((pt, m.group("opts") or "", body, lineno))
+                fig.nodes.append((Point(pt.x + dx, pt.y + dy),
+                                  m.group("opts") or "", body, lineno))
 
     return fig
 
@@ -904,6 +1026,21 @@ def check(fig: Figure) -> list[Finding]:
             for other in fig.segments if not other.symbol and other is not seg
             for q in (_pts(other) or ()))
         if interior:
+            continue
+        # A wire that stops in mid air has one end attached to the
+        # circuit and one end free. A stroke with BOTH ends free is not a
+        # wire at all - it is a capacitor plate, an arrow, a tick, one
+        # line of a hand-drawn symbol - and reporting those buries the
+        # real ones.
+        free = [q for q in p
+                if _connections_at(q, fig) < 2
+                and not any(q.close(d) for d in dotted)
+                and not _terminated(q, seg, fig) and not _at_component(q, fig)]
+        # Exactly one free end. A stroke free at BOTH ends is not a wire
+        # that goes nowhere - it is a rule in a table, a capacitor plate,
+        # a tick, one line of a hand-drawn symbol - and reporting those
+        # buries the fault this rule exists to find.
+        if len(free) != 1:
             continue
         for pt in p:
             if _connections_at(pt, fig) >= 2:
