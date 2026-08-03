@@ -111,6 +111,9 @@ class Figure:
     # bound rather than the truth.
     uncertain: list = field(default_factory=list)
     nodes: list = field(default_factory=list)   # (Point, anchor, text, scale, line)
+    # devices whose terminals are wired through a circuitikz anchor the
+    # linter cannot resolve
+    anchored: set = field(default_factory=set)
 
 
 # --------------------------------------------------------------------
@@ -344,6 +347,13 @@ def _shift_by_line(text: str, consts: dict, line_of, nlines: int):
                 if len(parts) == 2:
                     dx = _number(parts[0], consts) or 0.0
                     dy = _number(parts[1], consts) or 0.0
+            for key, axis in (("xshift", "x"), ("yshift", "y")):
+                km = re.search(key + r"\s*=\s*(-?[\d.]+)\s*cm", opts)
+                if km:
+                    if axis == "x":
+                        dx += float(km.group(1))
+                    else:
+                        dy += float(km.group(1))
             stack.append((stack[-1][0] + dx, stack[-1][1] + dy))
         elif len(stack) > 1:
             stack.pop()
@@ -648,7 +658,8 @@ def _read_path(body: str, lineno: int, consts, fig: Figure,
                     fig.segments.append(Segment(start, cur, lineno,
                                                 component=True,
                                                 raw=source.strip()[:70],
-                                                synthetic=True))
+                                                synthetic=True,
+                                                mirrored=mirrored))
             depth += value
             continue
         if kind == "circle":
@@ -700,6 +711,12 @@ def _read_path(body: str, lineno: int, consts, fig: Figure,
     # the missing one is simply invisible from here.
     if unresolved:
         fig.uncertain.extend(numeric_here)
+    # An anchor like (MP1.source) names a terminal of a device drawn
+    # elsewhere. The position is unknowable here, but the fact that
+    # something connects to that device is not, so record the name: its
+    # terminals are connected to something the linter cannot see.
+    for anchor in re.findall(r"\(\s*([A-Za-z][\w]*)\.(?:\w+)\s*\)", body):
+        fig.anchored.add(anchor)
 
 
 def _emit(fig: Figure, a, b, lineno: int, conn: str, raw: str,
@@ -1360,6 +1377,16 @@ def _in_body(pt: Point, seg: Segment) -> bool:
     return 0.32 < t < 0.68
 
 
+def _anchor_wired(seg: Segment, fig: Figure) -> bool:
+    """Is this device wired up through an anchor we cannot resolve?"""
+    for name in fig.anchored:
+        if re.search(r"n=" + re.escape(name) + r"\b", seg.raw or ""):
+            return True
+        if re.search(r"\{" + re.escape(name) + r"\}", seg.raw or ""):
+            return True
+    return False
+
+
 def check_floating(fig: Figure) -> list[Finding]:
     """A device with a terminal connected to nothing.
 
@@ -1372,6 +1399,8 @@ def check_floating(fig: Figure) -> list[Finding]:
     dotted = [d.at for d in fig.dots if isinstance(d.at, Point)]
     for seg in fig.segments:
         if not seg.component:
+            continue
+        if _anchor_wired(seg, fig):
             continue
         p = _pts(seg)
         if not p:
