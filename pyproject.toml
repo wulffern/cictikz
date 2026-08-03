@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "cictikz"
-version = "0.1.0"
+version = "0.1.1"
 description = "AI-driven TikZ circuit schematics: symbol library, renderer, linter, MCP server, xschem bridge"
 readme = "README.md"
 license = { text = "MIT" }
