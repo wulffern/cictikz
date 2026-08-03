@@ -309,6 +309,34 @@ def _libraries(text: str, base: Path | None) -> str:
     return "\n".join(out)
 
 
+def _blank_definitions(text: str) -> str:
+    """Blank out \\newcommand bodies, keeping newlines so line numbers
+    survive. Their statements carry #1 placeholders and mean nothing
+    until the macro is called."""
+    out = list(text)
+    for m in _NEWCMD.finditer(text):
+        _, end = _balanced(text, m.end() - 1)
+        for i in range(m.start(), end):
+            if out[i] != "\n":
+                out[i] = " "
+    return "".join(out)
+
+
+def _expand_local_calls(lines: list[str], local: dict, consts: dict) -> str:
+    """Expand the figure's own macros where they are called."""
+    text = _blank_definitions("\n".join(lines))
+    # Constants are not path macros; leave them for the evaluator.
+    callable_ = {k: v for k, v in local.items() if k not in consts}
+    if not callable_:
+        return text
+    out = []
+    for line in text.split("\n"):
+        if any("\\" + name in line for name in callable_):
+            line = expand(line, callable_, fence=set())
+        out.append(line)
+    return "\n".join(out)
+
+
 def parse(text: str, base: Path | None = None) -> Figure:
     """Recover the wires and dots from figure source."""
     libs = _libraries(text, base)
@@ -323,7 +351,13 @@ def parse(text: str, base: Path | None = None) -> Figure:
     for name in list(macros):
         if name in consts:
             del macros[name]
-    joined = "\n".join(lines)
+    # A figure often defines its own shorthand for a repeated branch,
+    # and that shorthand contains whole statements. Those statements are
+    # only real once the macro is called, so blank the definitions and
+    # expand the calls in place - line by line, so a finding still cites
+    # the line the call is on.
+    local = read_macros("\n".join(lines))
+    joined = _expand_local_calls(lines, local, consts)
     fig = Figure()
     fig.macros = macros
     fig.consts = consts
@@ -346,6 +380,15 @@ def parse(text: str, base: Path | None = None) -> Figure:
     # Scopes move what is drawn inside them. Without following the
     # shift, a truth table drawn in a shifted scope lands on top of the
     # schematic and every wire looks like it overlaps something.
+    # \coordinate (name) at (x,y) is resolved up front: a \fill that
+    # names one may be written before the definition is reached.
+    for m in re.finditer(r"\\coordinate\s*\(([^)]+)\)\s*at\s*", joined):
+        cm = _COORD.match(joined, m.end())
+        if cm:
+            pt = _parse_coord(cm.group(2), consts)
+            if isinstance(pt, Point):
+                fig.named[m.group(1).strip()] = pt
+
     shift = [(0.0, 0.0)]
     poisoned = [False]
     for m in _SCOPED.finditer(joined):
@@ -408,13 +451,6 @@ def parse(text: str, base: Path | None = None) -> Figure:
             if isinstance(pt, Point):
                 fig.nodes.append((pt, m.group("opts") or "", body, lineno))
 
-    # \coordinate (name) at (x,y), which the path walker also needs
-    for m in re.finditer(r"\\coordinate\s*\(([^)]+)\)\s*at\s*", joined):
-        cm = _COORD.match(joined, m.end())
-        if cm:
-            pt = _parse_coord(cm.group(2), consts)
-            if isinstance(pt, Point):
-                fig.named[m.group(1).strip()] = pt
     return fig
 
 
@@ -426,6 +462,8 @@ def _read_dot(body: str, lineno: int, consts, fig: Figure,
     if not coords:
         return
     pt = _parse_coord(coords[-1].group(2), consts)
+    if isinstance(pt, str) and pt in fig.named:
+        pt = fig.named[pt]
     if pt is None:
         return
     # A big filled circle is a blob in a drawing, not a junction dot.
@@ -656,6 +694,18 @@ def _on_segment(pt: Point, seg: Segment) -> bool:
         return False
     a, b = p
     ax = _axis(seg)
+    if ax is None:
+        # A slanted edge: the sloping side of an inverter or a
+        # comparator, which wires do legitimately land on.
+        dx, dy = b.x - a.x, b.y - a.y
+        length = (dx * dx + dy * dy) ** 0.5
+        if length < MIN_LEN:
+            return False
+        cross = abs((pt.x - a.x) * dy - (pt.y - a.y) * dx) / length
+        if cross > 0.06:
+            return False
+        along = ((pt.x - a.x) * dx + (pt.y - a.y) * dy) / (length * length)
+        return 0.02 < along < 0.98
     if ax == "h":
         if abs(pt.y - a.y) > TOL:
             return False
@@ -891,6 +941,10 @@ def _terminated(pt: Point, seg: Segment, fig: Figure) -> bool:
     for other in fig.segments:
         if not other.symbol:
             continue
+        # A symbol's own strokes cannot vouch for the symbol's terminal:
+        # a resistor whose lead ends in mid air ends in its own lead.
+        if other.line == seg.line:
+            continue
         q = _pts(other)
         if q and (q[0].close(pt, 0.1) or q[1].close(pt, 0.1)
                   or _on_segment(pt, other)):
@@ -901,7 +955,8 @@ def _terminated(pt: Point, seg: Segment, fig: Figure) -> bool:
 RULES = (
     "overlapping-wire", "open-wire", "dot-without-junction",
     "missing-junction-dot", "duplicate-dot", "dot-on-component",
-    "crowded-wires", "crowded-dots", "text-over-device",
+    "floating-terminal", "crowded-wires", "crowded-dots",
+    "overlapping-labels", "text-over-device",
     "text-over-wire", "invisible-ground", "calc-syntax",
     "off-palette-colour",
 )
@@ -924,7 +979,8 @@ def lint_text(text: str, base: Path | None = None) -> tuple[list[Finding], Figur
         r"\\definecolor\{([^}]+)\}", _libraries(text, base))}
     findings = check_style(text, lib_colours) + check_text(fig)
     if is_schematic(text):
-        findings += (check(fig) + check_dots_extra(fig) + check_crowding(fig))
+        findings += (check(fig) + check_dots_extra(fig) + check_crowding(fig)
+                     + check_floating(fig) + check_labels(fig))
     order = {r: i for i, r in enumerate(RULES)}
     findings.sort(key=lambda f: (order.get(f.rule, 99), f.line))
     return findings, fig
@@ -1058,7 +1114,7 @@ def check_text(fig: Figure) -> list[Finding]:
             if not seg.component:
                 continue
             dbox = _device_box(seg)
-            if dbox and _boxes_overlap(box, dbox) > 0.15:
+            if dbox and _boxes_overlap(box, dbox) > 0.10:
                 label = re.sub(r"\s+", " ", text)[:28]
                 out.append(Finding(
                     "text-over-device", lineno,
@@ -1165,6 +1221,58 @@ def _in_body(pt: Point, seg: Segment) -> bool:
     else:
         return False
     return 0.32 < t < 0.68
+
+
+def check_floating(fig: Figure) -> list[Finding]:
+    """A device with a terminal connected to nothing.
+
+    The wire checks skip component segments, because a device is not a
+    wire - which means an unconnected resistor or capacitor terminal was
+    invisible to every other rule. It shows on the page as a lead
+    sticking out past the junction with nothing on the end of it.
+    """
+    out = []
+    dotted = [d.at for d in fig.dots if isinstance(d.at, Point)]
+    for seg in fig.segments:
+        if not seg.component:
+            continue
+        p = _pts(seg)
+        if not p:
+            continue
+        for pt in p:
+            if _connections_at(pt, fig) >= 2:
+                continue
+            if any(pt.close(d) for d in dotted):
+                continue
+            if any(pt.close(u, 0.05) for u in fig.uncertain):
+                continue
+            if _terminated(pt, seg, fig):
+                continue
+            out.append(Finding(
+                "floating-terminal", seg.line,
+                f"the device terminal at ({pt.x:g},{pt.y:g}) connects to "
+                f"nothing, so its lead hangs past the junction"))
+    return out
+
+
+def check_labels(fig: Figure) -> list[Finding]:
+    """Two labels printed on top of each other.
+
+    Nothing else notices this: both are legal, both are where the author
+    put them, and the collision only exists once they are typeset.
+    """
+    out = []
+    boxes = [(_text_box(pos, opts, text), text, lineno)
+             for pos, opts, text, lineno in fig.nodes
+             if isinstance(pos, Point) and text.strip()]
+    for i, (b1, t1, l1) in enumerate(boxes):
+        for b2, t2, l2 in boxes[i + 1:]:
+            if _boxes_overlap(b1, b2) > 0.1:
+                out.append(Finding(
+                    "overlapping-labels", l2,
+                    f'"{re.sub(r"\s+", " ", t2)[:20]}" is printed on top of '
+                    f'"{re.sub(r"\s+", " ", t1)[:20]}" from line {l1}'))
+    return out
 
 
 def check_crowding(fig: Figure) -> list[Finding]:
