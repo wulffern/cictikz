@@ -73,6 +73,7 @@ class Segment:
     wide: bool = False       # a heavy supply rail
     mirrored: bool = False   # device symbol drawn with its gate to the other side
     synthetic: bool = False  # stands in for a symbol macro's two terminals
+    pinned: bool = False     # that symbol exports named pins of its own
 
 
 @dataclass
@@ -675,19 +676,25 @@ def _read_path(body: str, lineno: int, consts, fig: Figure,
     for kind, value in tokens:
         if kind == "sym":
             if value > 0:
-                sym_entry.append(cur)
+                sym_entry.append((cur, len(fig.named)))
             elif sym_entry:
-                start = sym_entry.pop()
+                start, named_before = sym_entry.pop()
                 # A resistor or a capacitor carries the wire through it;
                 # without this the node at either end looks like it has
                 # one connection fewer than it really has.
                 if (isinstance(start, Point) and isinstance(cur, Point)
                         and not start.close(cur)):
+                    # A symbol that exported pin coordinates - a gate
+                    # with in1/in2/out - is connected through those, not
+                    # through where the path happened to enter and
+                    # leave. Only a two terminal device's ends are
+                    # terminals.
                     fig.segments.append(Segment(start, cur, lineno,
                                                 component=True,
                                                 raw=source.strip()[:70],
                                                 synthetic=True,
-                                                mirrored=mirrored))
+                                                mirrored=mirrored,
+                                                pinned=len(fig.named) > named_before))
             depth += value
             continue
         if kind == "circle":
@@ -1301,6 +1308,9 @@ def check_text(fig: Figure) -> list[Finding]:
     for pos, opts, text, lineno in fig.nodes:
         if not isinstance(pos, Point) or not text.strip():
             continue
+        # A bare + or - is an input marking: it belongs on the symbol.
+        if re.sub(r"[$\\ {}]", "", text) in ("+", "-", "\u2212"):
+            continue
         box = _text_box(pos, opts, text)
         hit = False
         for seg in fig.segments:
@@ -1439,7 +1449,7 @@ def check_floating(fig: Figure) -> list[Finding]:
     for seg in fig.segments:
         if not seg.component:
             continue
-        if _anchor_wired(seg, fig):
+        if seg.pinned or _anchor_wired(seg, fig):
             continue
         p = _pts(seg)
         if not p:
