@@ -79,6 +79,24 @@ def lint(texfiles, rule, quiet):
         sys.exit(1)
 
 
+@main.command("sym2tikz")
+@click.argument("symfile", type=click.Path(exists=True, path_type=Path))
+@click.option("--macro", default=None, help="Name of the generated macro.")
+@click.option("--labels", is_flag=True, help="Keep the symbol's pin labels.")
+@click.option("--scale", default=None, type=float,
+              help="Figure units per xschem unit (default puts a standard "
+                   "cell body at 1.1).")
+def sym2tikz(symfile, macro, labels, scale):
+    """Turn an xschem .sym into a TikZ path-fragment macro.
+
+    Useful where a figure should show the symbol a reader will actually
+    place in xschem, rather than a redrawing of it.
+    """
+    from .readers.xschem_sym import SCALE, convert
+
+    click.echo(convert(symfile, macro, labels, scale or SCALE))
+
+
 @main.command()
 @click.argument("query", default="")
 def symbols(query):
