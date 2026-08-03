@@ -50,3 +50,11 @@ def test_generated_macro_exports_pin_coordinates():
     assert "\\newcommand{\\jnwInv}[1]{" in out
     assert "coordinate (#1_a)" in out
     assert "coordinate (#1_y)" in out
+
+
+def test_macro_name_is_letters_only():
+    # \newcommand{\jnwNch4C5F0} is not a control sequence, and TeX's
+    # complaint about it says nothing about where the name came from.
+    out = to_tikz(parse_sym(INV, name="JNWATR_NCH_4C5F0", scale=1.0))
+    assert "4" not in out.split("\n")[1]
+    assert "_" not in out.split("\n")[1]

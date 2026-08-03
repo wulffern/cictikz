@@ -118,6 +118,21 @@ def parse_sym(text: str, name: str = "sym", scale: float = SCALE) -> Symbol:
     return sym
 
 
+_DIGITS = {"0": "Zero", "1": "One", "2": "Two", "3": "Three", "4": "Four",
+           "5": "Five", "6": "Six", "7": "Seven", "8": "Eight", "9": "Nine"}
+
+
+def _sanitise(name: str) -> str:
+    """A macro name TeX will accept: letters, nothing else."""
+    out = []
+    for ch in name:
+        if ch.isalpha():
+            out.append(ch)
+        elif ch in _DIGITS:
+            out.append(_DIGITS[ch])
+    return "".join(out) or "cicSym"
+
+
 def _fmt(v: float) -> str:
     return f"{v:.5g}"
 
@@ -129,7 +144,10 @@ def to_tikz(sym: Symbol, macro: str | None = None, labels: bool = False) -> str:
     point, draws, and exports the pins as coordinates named after the
     instance, so it chains like every other symbol here.
     """
-    macro = macro or "cic" + re.sub(r"\W", "", sym.name.title())
+    # A TeX control sequence is letters only: JNWATR_NCH_4C5F0 cannot be
+    # a macro name, and TeX's complaint about it ("Missing number") says
+    # nothing about where it came from.
+    macro = _sanitise(macro or "cic" + sym.name.title())
     out = [f"% Generated from {sym.name}.sym - edit the symbol, not this file.",
            f"\\newcommand{{\\{macro}}}[1]{{",
            "  ++(0,0) coordinate (#1_org)"]
