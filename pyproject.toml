@@ -33,6 +33,9 @@ classifiers = [
 
 [project.optional-dependencies]
 mcp = ["mcp[cli]"]
+# pytest, not unittest: the tests are written as plain functions, and
+# unittest discover silently collects none of those.
+dev = ["pytest", "build", "twine"]
 
 [project.urls]
 "Homepage" = "https://github.com/wulffern/cictikz"

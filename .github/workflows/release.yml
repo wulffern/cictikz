@@ -32,7 +32,7 @@ jobs:
       # is exactly what a packaging change tends to drop.
       - name: Run the tests
         run: |
-          pip install -e ".[mcp]"
+          pip install -e ".[mcp,dev]"
           python -m pytest -q
 
       - name: Build sdist and wheel

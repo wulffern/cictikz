@@ -8,7 +8,7 @@ install: ## Install package
 	pip install .
 
 test: ## Run unit tests
-	python3 -m unittest discover -s tests -p 'test_*.py' -v
+	python3 -m pytest -q
 
 lint: ## Ruff, if available
 	-ruff check src tests
