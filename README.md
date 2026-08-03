@@ -2,9 +2,12 @@
 
 AI-driven TikZ circuit schematics.
 
-**Docs:** [overview](docs/index.md) · [CLI](docs/cli.md) ·
-[MCP server](docs/mcp.md) · [dialect & converters](docs/dialect.md) ·
-[symbol gallery](docs/symbols.md) · [domain libraries](docs/libraries.md)
+**Docs:** [overview](https://analogicus.com/cictikz/) ·
+[CLI](https://analogicus.com/cictikz/cli) ·
+[MCP server](https://analogicus.com/cictikz/mcp) ·
+[dialect & converters](https://analogicus.com/cictikz/dialect) ·
+[symbol gallery](https://analogicus.com/cictikz/symbols) ·
+[domain libraries](https://analogicus.com/cictikz/libraries)
 
 A standalone Python package that ships the full aic2026 TikZ macro
 vocabulary as package data — `cictikz_lib` (the `ckt_lib` schematic

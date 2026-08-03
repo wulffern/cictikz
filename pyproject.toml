@@ -5,23 +5,39 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "cictikz"
 version = "0.1.0"
-description = "AI-driven TikZ circuit schematics: symbol library, renderer, MCP server, xschem bridge"
+description = "AI-driven TikZ circuit schematics: symbol library, renderer, linter, MCP server, xschem bridge"
 readme = "README.md"
 license = { text = "MIT" }
 authors = [{ name = "Carsten Wulff", email = "carsten@wulff.no" }]
 requires-python = ">=3.10"
 dependencies = ["click", "pyyaml"]
+keywords = ["tikz", "circuitikz", "schematic", "xschem", "eda", "latex"]
 classifiers = [
-    "Programming Language :: Python :: 3",
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Education",
+    "Intended Audience :: Science/Research",
     "License :: OSI Approved :: MIT License",
+    "Natural Language :: English",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering",
     "Topic :: Scientific/Engineering :: Electronic Design Automation (EDA)",
+    "Topic :: Text Processing :: Markup :: LaTeX",
+    "Topic :: Utilities",
 ]
 
 [project.optional-dependencies]
 mcp = ["mcp[cli]"]
 
 [project.urls]
-Homepage = "https://github.com/wulffern/cictikz"
+"Homepage" = "https://github.com/wulffern/cictikz"
+"Documentation" = "https://analogicus.com/cictikz"
+"Bug Tracker" = "https://github.com/wulffern/cictikz/issues"
 
 [project.scripts]
 cictikz = "cictikz.cli:main"
@@ -33,5 +49,11 @@ package-dir = { "" = "src" }
 [tool.setuptools.packages.find]
 where = ["src"]
 
+# The TeX libraries and the symbol metadata are the package: without them
+# an installed cictikz can neither render a figure nor describe a symbol.
 [tool.setuptools.package-data]
-cictikz = ["data/tex/*.tex", "data/symbols/*.yaml", "data/*.md"]
+cictikz = [
+    "data/tex/*.tex",
+    "data/symbols/*.yaml",
+    "data/*.md",
+]

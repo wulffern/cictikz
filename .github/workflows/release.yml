@@ -1,0 +1,84 @@
+name: Release
+
+# Tag the commit with the version and push the tag. Both 0.1.0 and
+# v0.1.0 are accepted, because the two sibling repositories disagree
+# about the leading v and a release should not fail over that.
+on:
+  push:
+    tags:
+      - "[0-9]+.[0-9]+.[0-9]+"
+      - "v[0-9]+.[0-9]+.[0-9]+"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Install build tools
+        run: pip install build twine
+
+      # A release that cannot render is worse than no release: the TeX
+      # libraries and symbol metadata are package data, and package data
+      # is exactly what a packaging change tends to drop.
+      - name: Run the tests
+        run: |
+          pip install -e ".[mcp]"
+          python -m pytest -q
+
+      - name: Build sdist and wheel
+        run: python -m build
+
+      - name: Check the metadata
+        run: python -m twine check dist/*
+
+      - name: Check the wheel carries its data
+        run: |
+          python - <<'PY'
+          import zipfile, glob
+          whl = glob.glob("dist/*.whl")[0]
+          names = zipfile.ZipFile(whl).namelist()
+          tex = [n for n in names if n.endswith(".tex")]
+          yml = [n for n in names if n.endswith(".yaml")]
+          assert any("cictikz_lib.tex" in n for n in tex), "symbol library missing"
+          assert any("cictikz_preamble.tex" in n for n in tex), "preamble missing"
+          assert len(yml) > 20, f"only {len(yml)} symbol descriptions"
+          print(f"{len(tex)} tex, {len(yml)} yaml in {whl}")
+          PY
+
+      - name: Upload dist artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          files: dist/*
+
+  publish:
+    needs: release
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      id-token: write
+    steps:
+      - name: Download dist artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1

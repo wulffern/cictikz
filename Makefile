@@ -16,10 +16,17 @@ lint: ## Ruff, if available
 check: ## Import and print version
 	python3 -c "import cictikz; print(cictikz.__version__)"
 
-build: ## Build sdist + wheel
+build: clean ## Build sdist + wheel
 	python3 -m build
+	python3 -m twine check dist/*
+
+test_upload: build ## Upload to Test PyPI
+	python3 -m twine upload --repository testpypi dist/*
+
+upload: build ## Upload to PyPI (the first release is done this way)
+	python3 -m twine upload dist/*
 
 clean: ## Remove build artefacts
 	rm -rf build dist src/*.egg-info
 
-.PHONY: help dev-install install test lint check build clean
+.PHONY: help dev-install install test lint check build test_upload upload clean
