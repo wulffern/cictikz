@@ -340,17 +340,26 @@
   ++(1.5,0.6) coordinate (#1_out)
 }
 
+% The logic cells carry a short lead on each terminal. Without one the
+% flat edge of the triangle sits directly on whatever wire connects to
+% it, and on a rail with a junction dot the two touch: the reader cannot
+% see where the wire stops and the gate starts. A quarter unit is enough
+% to read, and makes an inverter exactly one grid long.
 \newcommand{\cicInv}[1]{
   ++(0,0) coordinate (#1_in)
+  -- ++(0.25,0)
   ++(0,-0.55) -- ++(0,1.1) -- ++(0.9,-0.55) -- ++(-0.9,-0.55)
   ++(1.0,0.55) circle (0.1)
-  ++(0.1,0) coordinate (#1_out)
+  ++(0.1,0) -- ++(0.25,0)
+  coordinate (#1_out)
 }
 
 \newcommand{\cicBufM}[1]{
   ++(0,0) coordinate (#1_in)
+  -- ++(-0.25,0)
   ++(0,-0.55) -- ++(0,1.1) -- ++(-0.9,-0.55) -- ++(0.9,-0.55)
-  ++(-0.9,0.55) coordinate (#1_out)
+  ++(-0.9,0.55) -- ++(-0.25,0)
+  coordinate (#1_out)
 }
 
 \newcommand{\cicTgate}[1]{
@@ -379,15 +388,19 @@
 
 \newcommand{\cicInvM}[1]{
   ++(0,0) coordinate (#1_in)
+  -- ++(-0.25,0)
   ++(0,-0.55) -- ++(0,1.1) -- ++(-0.9,-0.55) -- ++(0.9,-0.55)
   ++(-1.0,0.55) circle (0.1)
-  ++(-0.1,0) coordinate (#1_out)
+  ++(-0.1,0) -- ++(-0.25,0)
+  coordinate (#1_out)
 }
 
 \newcommand{\cicBuf}[1]{
   ++(0,0) coordinate (#1_in)
+  -- ++(0.25,0)
   ++(0,-0.55) -- ++(0,1.1) -- ++(0.9,-0.55) -- ++(-0.9,-0.55)
-  ++(0.9,0.55) coordinate (#1_out)
+  ++(0.9,0.55) -- ++(0.25,0)
+  coordinate (#1_out)
 }
 
 %---------------------------------------------------------
