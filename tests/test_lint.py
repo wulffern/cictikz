@@ -109,3 +109,28 @@ def test_scope_shift_is_followed():
   \end{scope}
 \end{circuitikz}"""
     assert "overlapping-wire" not in rules(text)
+
+
+def test_source_parses_on_the_oldest_python_supported():
+    """pyproject says 3.10, so the source has to be 3.10.
+
+    A backslash inside an f-string expression is 3.12 syntax and parses
+    fine here, which is how a release went out that could not even be
+    imported on 3.11. ast.parse's feature_version does not catch it -
+    the f-string tokenizer changed in 3.12 - so look for the shape.
+    """
+    import glob
+    import re
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parent.parent
+    offenders = []
+    for path in glob.glob(str(root / "src" / "**" / "*.py"), recursive=True):
+        for lineno, line in enumerate(Path(path).read_text().splitlines(), 1):
+            # a backslash inside the {...} of an f-string
+            for m in re.finditer(r'(?<![rb])f(["\'])', line):
+                rest = line[m.end():]
+                for expr in re.findall(r"\{([^{}]*)\}", rest):
+                    if "\\" in expr:
+                        offenders.append(f"{Path(path).name}:{lineno}")
+    assert not offenders, f"3.12-only f-strings: {offenders}"

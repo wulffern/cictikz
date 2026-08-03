@@ -1483,10 +1483,14 @@ def check_labels(fig: Figure) -> list[Finding]:
     for i, (b1, t1, l1) in enumerate(boxes):
         for b2, t2, l2 in boxes[i + 1:]:
             if _boxes_overlap(b1, b2) > 0.1:
+                # Flattened before the f-string: a backslash inside an
+                # f-string expression is 3.12 syntax, and this package
+                # says it runs on 3.10.
+                one = re.sub(r"\s+", " ", t1)[:20]
+                two = re.sub(r"\s+", " ", t2)[:20]
                 out.append(Finding(
                     "overlapping-labels", l2,
-                    f'"{re.sub(r"\s+", " ", t2)[:20]}" is printed on top of '
-                    f'"{re.sub(r"\s+", " ", t1)[:20]}" from line {l1}'))
+                    f'"{two}" is printed on top of "{one}" from line {l1}'))
     return out
 
 
